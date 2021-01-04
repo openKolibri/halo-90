@@ -1,0 +1,27 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP C
+D Unpolarized capacitor
+K cap capacitor
+F ~
+$ENDCMP
+#
+$CMP C-0402
+D Unpolarized capacitor
+K cap capacitor
+F ~
+$ENDCMP
+#
+$CMP R
+D Resistor, US symbol
+K R res resistor
+F ~
+$ENDCMP
+#
+$CMP R-0402
+D Resistor, US symbol
+K R res resistor
+F ~
+$ENDCMP
+#
+#End Doc Library

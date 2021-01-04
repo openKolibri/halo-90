@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP CR-2032
+D CR-2032 Coin Cell Holder
+K battery cell
+F https://linxtechnologies.com/wp/wp-content/uploads/bat-hld-001.pdf
+$ENDCMP
+#
+#End Doc Library

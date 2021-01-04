@@ -1,0 +1,26 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP Fiducial
+D Fiducial Marker
+K fiducial marker
+F ~
+$ENDCMP
+#
+$CMP TestPoint_D1.0
+D test point
+K test point tp
+F ~
+$ENDCMP
+#
+$CMP TestPoint_D4.0
+D test point
+K test point tp
+F ~
+$ENDCMP
+#
+$CMP toolingHole
+D Tooling Hole
+F https://support.jlcpcb.com/article/92-how-to-add-tooling-holes-for-smt-assembly-order
+$ENDCMP
+#
+#End Doc Library

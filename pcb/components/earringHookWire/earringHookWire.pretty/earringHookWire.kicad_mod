@@ -1,0 +1,18 @@
+(module "earringHookWire" (layer "F.Cu") (tedit 5FC68496)
+  (attr through_hole)
+  (fp_text reference "REF**" (at 0 1.6) (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp fcc5a08e-bfeb-4731-8993-f2e7439530b7)
+  )
+  (fp_text value "earringHookWire" (at 0 -1.6) (layer "Eco2.User") hide
+    (effects (font (size 1 1) (thickness 0.15)))
+    (tstamp ec99d290-a9d6-402e-997c-25765633167e)
+  )
+  (fp_circle (center 0 0) (end 0.5 -0.25) (layer "F.Fab") (width 0.12) (tstamp 1f45d9dc-2dc7-4e09-90a3-90409e801dec))
+  (pad "1" thru_hole circle (at 0 0) (size 1.5 1.5) (drill 1) (layers *.Cu *.Mask) (tstamp 503cb573-c95f-4285-8b19-65e454160713))
+  (model "${KIPRJMOD}/components/earringHookWire/earringHookWire.stp"
+    (offset (xyz 0 1.3 -0.6))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 -90 0))
+  )
+)
