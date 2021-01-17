@@ -3,7 +3,6 @@
   (lib (name "BL-HUB37A-AV-TRB")(type "KiCad")(uri "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.kicad_sym")(options "")(descr ""))
   (lib (name "earringHookWire")(type "Legacy")(uri "${KIPRJMOD}/components/earringHookWire/earringHookWire.lib")(options "")(descr ""))
   (lib (name "tooling")(type "KiCad")(uri "${KIPRJMOD}/components/tooling/tooling.kicad_sym")(options "")(descr ""))
-  (lib (name "STM32F103C8")(type "KiCad")(uri "${KIPRJMOD}/components/STM32F103C8/STM32F103C8.kicad_sym")(options "")(descr ""))
   (lib (name "nets")(type "KiCad")(uri "${KIPRJMOD}/components/nets/nets.kicad_sym")(options "")(descr ""))
   (lib (name "passives")(type "KiCad")(uri "${KIPRJMOD}/components/passives/passives.kicad_sym")(options "")(descr ""))
   (lib (name "LSM6DSM")(type "KiCad")(uri "${KIPRJMOD}/components/LSM6DSM/LSM6DSM.kicad_sym")(options "")(descr ""))

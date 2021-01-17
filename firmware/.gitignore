@@ -1,12 +1,10 @@
-.pio
 .vscode
-*/adb
+*.adb
 *.asm
-*.cbd
+*.cdb
 *.lk
 *.lst
 *.map
 *.rel
 *.rst
 *.sym
-Result.log

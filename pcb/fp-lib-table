@@ -3,7 +3,6 @@
   (lib (name "earringHookWire")(type "KiCad")(uri "${KIPRJMOD}/components/earringHookWire/earringHookWire.pretty")(options "")(descr ""))
   (lib (name "BL-HUB37A-AV-TRB")(type "KiCad")(uri "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pretty")(options "")(descr ""))
   (lib (name "tooling")(type "KiCad")(uri "${KIPRJMOD}/components/tooling/tooling.pretty")(options "")(descr ""))
-  (lib (name "STM32F103C8")(type "KiCad")(uri "${KIPRJMOD}/components/STM32F103C8/STM32F103C8.pretty")(options "")(descr ""))
   (lib (name "passives")(type "KiCad")(uri "${KIPRJMOD}/components/passives/passives.pretty")(options "")(descr ""))
   (lib (name "STM8L15xxx")(type "KiCad")(uri "${KIPRJMOD}/components/STM8L15xxx/STM8L15xxx.pretty")(options "")(descr ""))
   (lib (name "LSM6DSM")(type "KiCad")(uri "${KIPRJMOD}/components/LSM6DSM/LSM6DSM.pretty")(options "")(descr ""))
