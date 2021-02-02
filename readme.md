@@ -303,12 +303,29 @@ The moulds can create secondary masters out of rsing and then used to make gang 
 Programer has a hole in he top for a pin to be able to push the button for testing.
 THe programmer uses MilMax 09xxxxx spring pins on a PCB that mataches exactly wit
 
+![Programmer](./docs/programmer.jpg)
+
+The #D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCb acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift and 
+
 ## Artwork
 ## Inventory and QC
 ## Packaging
+P
 ## Safety
+Everything is RHOS and assembled in a lead free process. The edges are fully routed when possible or finsihed aftwerwards. The PCB is made from fiberglass so care must be taken as it can be abrasive on the edges. Clearcoat nail poilish can be applied to round an dsoften the edges without changing how it looks.
+
+The CR2032 cells are quite safe as they have very small ammount of lithium in them, and have a fairly high internal resistance. They do need to be disposed of responibily still. LIR2032 or other eacharbable 2032 cells should not be used as they have a higher voltage outside of the gaurentted paramters and a significantly lower (under 25%) capacity.
+
+If the battery is placed in backwards it will drain over time as there is no reverse polarity protection. It will heat up but should not damage anything with the internal resistance liminting the discharge.
 ## Shipping
-Lithium cells have special requirements for shipping 
+Lithium cells have special requirements for shipping. On air mail small cells, up to four, that are packaged securely like in the case may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
+
+`Lithium metal batteries in compliance with Section II of PI969`
+
+
+
+`HALO HS Code - 7117.90.0000	Imitation Jewlery other`
+
 ## Certifications
 ## Liecence
 ## Attribution
