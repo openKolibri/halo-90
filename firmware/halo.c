@@ -1,18 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 // #define __SDCC
 #include "STM8L151G6.h"
 
-
-#define directWaveform 1
-// #define framebuffer 1
-// #define accel 1
-
 // Prototypes
-
-#ifdef directWaveform
 uint16_t readMic();
 void setLed(uint8_t led);
 void ledHigh(uint8_t led);
@@ -27,7 +21,7 @@ void disableButton();
 void initTim2(uint16_t timeout);
 void enableTim2();
 void disableTim2();
-void initTim4(uint16_t timeout);
+void initTim4(uint8_t timeout);
 void enableTim4();
 void disableTim4();
 void initAutoWakeup();
@@ -36,12 +30,10 @@ void disableAutoWakeup();
 
 // Global previousLed
 volatile uint8_t prevLed = 0;
-
 int8_t rotationCenter = 45;
 int8_t rotDir = 1;
 volatile uint8_t patternNum = 0;
 volatile uint8_t sleep = 0;
-#endif  // directWaveform
 
 // CPX-0, PA2
 // CPX-1, PA4
@@ -63,18 +55,16 @@ PORT_t *SW_PORT[] = {&sfr_PORTB, &sfr_PORTB};
 uint8_t SW_PIN[] = {PIN1, PIN6};
 
 
-// Direct Waveform ISR
-#ifdef directWaveform
-
 ISR_HANDLER(RTC_WAKEUP, _RTC_WAKEUP_VECTOR_) {
   switch(patternNum){
     case 1:
-      // Sparkle
-      rand()%20 ? ledLow(prevLed) : setLed(rand() % 90);
+      // Halo
+      setLed((prevLed + 13)%90);
     break;
 
     case 2:
-      setLed((prevLed + 1)%90);
+      // Sparkle
+      rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
     break;
 
     default:
@@ -106,38 +96,50 @@ ISR_HANDLER(ADC1_EOC_ISR, _ADC1_EOC_VECTOR_){
   return;
 }
 
-#endif  // directWaveform
-
 // Button ISR
 ISR_HANDLER(BUTTON_ISR, _EXTI6_VECTOR_){
-  disableButton();
   // Button release debounce
-  for(uint16_t i = 0 ; i < 1000; i++){NOP();}
-  if((SW_PORT[1]->IDR.byte & SW_PIN[1])){
-    initTim4(100);
-    enableTim4();                      // Start timer
+  for(uint16_t i = 0 ; i < 5000; i++){NOP();}
+  if(!(SW_PORT[1]->IDR.byte & SW_PIN[1])){
     if(!sleep){
+      initTim4(244);
+      enableTim4();                      // Start timer
       patternNum = (patternNum+1)%3;     //   Next pattern
       switch(patternNum){
         case 0:
+          sfr_CPU.CFG_GCR.AL = 0; // Enable main WFI loop
           disableAutoWakeup();
           enableADC();
           enableTim2();
         break;
         case 1:
-          disableADC();          // Turn off ADC
           disableTim2();         // Turn off timer
-          enableAutoWakeup(100);
+          disableADC();          // Turn off ADC
+          sfr_CPU.CFG_GCR.AL = 1;// Interupt only based, IRET to HALT
+          enableAutoWakeup(2);
         break;
         case 2:
-          disableTim2();         // Turn off timer
           disableADC();          // Turn off ADC
-          enableAutoWakeup(1);
+          disableTim2();         // Turn off timer
+          sfr_CPU.CFG_GCR.AL = 1;// Interupt only based, IRET to HALT
+          enableAutoWakeup(100);
         break;
       }
+    } else {
+      // I hate this so much, it is so inefficent
+      // Should be implemented as the same TIM4 timeout
+      // At least it lets me debounce better
+      // And a boot animation
+      uint16_t debounce = 0; 
+      for(uint16_t i = 0 ; i < 20000; i++){
+        if(!(SW_PORT[1]->IDR.byte & SW_PIN[1])){
+          debounce++;
+          setLed(debounce/200); 
+        }
+        if(debounce > 18000){SW_RESET();}
+      }
+      ledLow(prevLed);
     }
-  } else {
-    enableButton();
   }
   sfr_ITC_EXTI.SR1.P6F = 1; // Clear button interupt flag
   return;
@@ -145,20 +147,20 @@ ISR_HANDLER(BUTTON_ISR, _EXTI6_VECTOR_){
 
 // Button has been held for timeout period
 ISR_HANDLER(TIM4_UPD_ISR, _TIM4_UIF_VECTOR_) {
-  enableButton();
+  ledLow(prevLed);
   // If button is still down
   if(!(SW_PORT[1]->IDR.byte & SW_PIN[1])){
     if(!sleep){ 
+      sfr_CPU.CFG_GCR.AL = 1;// Interupt only based, IRET to HALT
       disableTim2();         // Turn off timer
       disableADC();          // Turn off ADC
-      // disableTim4();
+      disableTim4();
       disableAutoWakeup();
-      ledLow(prevLed);       // All LEDs off
       sfr_TIM4.SR1.UIF = 0;  // clear timer 4 interrupt flag
       sleep = 1;
+      ledLow(prevLed);       // All LEDs off
       ENTER_HALT();          // Low power mode
-    } else {
-      SW_RESET();
+      return;
     }
   }
   sfr_TIM4.SR1.UIF = 0;  // clear timer 4 interrupt flag
@@ -170,9 +172,6 @@ void main() {
 
   // Bump up clock to 16MHz
   sfr_CLK.CKDIVR.byte = 0x00;
-
-  // Interupt only based, disable main loop
-  sfr_CPU.CFG_GCR.AL = 1;
 
   // Init and Set all CPX pins to hi-z
   for (int k = 0; k < sizeof(CPX_PIN) / sizeof(CPX_PIN[0]); k++) {
@@ -252,6 +251,7 @@ void initAutoWakeup(){
 
 void enableAutoWakeup(uint16_t timeout){
   sfr_CLK.PCKENR2.PCKEN22 = 1;                    // Enable RTC Clock gating
+  sfr_ITC_SPR.SPR2.VECT4SPR = 0b00;               // Interupt Priority to Level 2 (mid)
   sfr_RTC.WPR.KEY = 0xCA;                         // Disable RTC write protection
   sfr_RTC.WPR.KEY = 0x53;                         // Disable RTC write protection
   sfr_RTC.CR2.WUTE = 0;                           // Disable the wakeup timer
@@ -271,8 +271,7 @@ void disableAutoWakeup(){
   sfr_CLK.PCKENR2.PCKEN22 = 0;      // Disable RTC Clock gating
 }
 
-// Initlize Timer 4, timeout in ms
-void initTim4(uint16_t timeout){
+void initTim4(uint8_t timeout){
   sfr_CLK.PCKENR1.PCKEN12 = 1;       // activate tim4 clock gate
   sfr_ITC_SPR.SPR7.VECT25SPR = 0b11; // Interupt Priority to Level 3 (max)
   sfr_TIM4.CR1.CEN = 0;              // disable timer
@@ -281,7 +280,7 @@ void initTim4(uint16_t timeout){
   sfr_TIM4.CR1.URS = 1;              // Overflow only interupt 
   sfr_TIM4.EGR.byte = 0x00;          // clear pending events
   sfr_TIM4.PSCR.PSC = 15;            // set clock to 16Mhz/2^15 = 488.3Hz -> 2.048ms period
-  sfr_TIM4.ARR.byte = 244;           // set autoreload value for 499.7ms (244*2.048ms)
+  sfr_TIM4.ARR.byte = timeout;       // set autoreload value for 499.7ms (244*2.048ms)
   sfr_TIM4.CR1.OPM = 1;              // Single pulse mode
   sfr_CLK.PCKENR1.PCKEN12 = 0;       // disable tim4 clock gate
 }
@@ -304,7 +303,6 @@ void initADC(){
   sfr_ITC_SPR.SPR5.VECT18SPR = 0b01; // ADC Priority to Level 1 (lower)
   sfr_CLK.PCKENR2.PCKEN20 = 1;       // Enable ADC Clock
   sfr_ADC1.CR1.RES = 0b00;           // Set ADC to 12b mode
-  // sfr_ADC1.TRIGR2.byte = 0xFF;       // disable Schmitt trigger
   sfr_ADC1.CR2.SMTP1 = 0b111;        // Sample time 384
   sfr_ADC1.SQR1.DMAOFF = 1;          // DAMOFF for single ch
   sfr_ADC1.CR1.CONT = 0;             // Disable sampling mode
@@ -336,16 +334,7 @@ void initButton(){
   SW_PORT[1]->DDR.byte &= ~SW_PIN[1]; // DDR = 0 Input
   SW_PORT[1]->CR1.byte |= SW_PIN[1];  // CR1 = 1 Pullup
   SW_PORT[1]->CR2.byte |= SW_PIN[1];  // CR2 = 1 Interupt
-  sfr_ITC_EXTI.CR2.P6IS = 2;          // Falling edge
-}
-
-void disableButton(){
-  SW_PORT[1]->CR2.byte &= ~SW_PIN[1];  // CR2 = 0 Disable Interupt
-
-}
-
-void enableButton(){
-  SW_PORT[1]->CR2.byte |= SW_PIN[1];  // CR2 = 1 Interupt
+  sfr_ITC_EXTI.CR2.P6IS = 2;          // Falling edge only
 }
 
 // The previous LED *MUST* be tuned off before lighting another
