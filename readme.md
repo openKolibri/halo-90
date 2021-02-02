@@ -260,9 +260,15 @@ There is a single PCB, although still common, some of the more precise requirmee
 
 The PCB has four layers 
 
-| LF | L1 | L2 | LB |
-| -- | -- | -- | -- |
-| [img]   |    |    |    |
+| Front     | Inner 1   | Inner 2   | Back      |
+| --------- | --------- | --------- | --------- |
+| ![Layer0] | ![Layer1] | ![Layer2] | ![Layer3] |
+
+[Layer0]:   ./docs/layers/L0.png          "Front layer"
+[Layer1]:   ./docs/layers/L1.png          "Inner 1 layer"
+[Layer2]:   ./docs/layers/L2.png          "Inner 2 layer"
+[Layer3]:   ./docs/layers/L3.png          "Back layer"
+
 
 ### PCB Assembly
 
