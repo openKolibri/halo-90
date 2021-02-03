@@ -1,9 +1,9 @@
-[Product gif, worn earrings]
+![Worn earring reacting to music](./docs/intro/wornDynamic.gif)
 
 # Halo-90
 A distinct ring of light, an etherial glow, pattrens that ebb and flow with the music. Ninety tiny lights all controllable, powered by a common coin cell. A engrossing look with retro vibes and a modren touch.
 
-![Halo Set Display](./docs/haloSetDisplay.jpg)
+![Halo Set Display](./docs/intro/haloSetDisplay.jpg)
 
 The *Halo* product series, in which these earrings, Halo-90, are the first item is a fully open source electronic jewlery line. Designed foremeost with elegance and warability in mind. The 90 refers to the 90 individually controllable LEDs and pleanty of compute power for even doing complex patternes. 
 
