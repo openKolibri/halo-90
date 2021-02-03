@@ -6,4 +6,10 @@ K mounting hole
 F ~
 $ENDCMP
 #
+$CMP frenchEarwire
+D Mounting Hole without connection
+K mounting hole
+F ~
+$ENDCMP
+#
 #End Doc Library

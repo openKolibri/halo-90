@@ -1,7 +1,7 @@
 (sym_lib_table
   (lib (name "BAT-HLD-001")(type "Legacy")(uri "${KIPRJMOD}/components/BAT-HLD-001/BAT-HLD-001.lib")(options "")(descr ""))
   (lib (name "BL-HUB37A-AV-TRB")(type "KiCad")(uri "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.kicad_sym")(options "")(descr ""))
-  (lib (name "earringHookWire")(type "Legacy")(uri "${KIPRJMOD}/components/earringHookWire/earringHookWire.lib")(options "")(descr ""))
+  (lib (name "frenchEarwire")(type "Legacy")(uri "${KIPRJMOD}/components/frenchEarwire/frenchEarwire.lib")(options "")(descr ""))
   (lib (name "tooling")(type "KiCad")(uri "${KIPRJMOD}/components/tooling/tooling.kicad_sym")(options "")(descr ""))
   (lib (name "nets")(type "KiCad")(uri "${KIPRJMOD}/components/nets/nets.kicad_sym")(options "")(descr ""))
   (lib (name "passives")(type "KiCad")(uri "${KIPRJMOD}/components/passives/passives.kicad_sym")(options "")(descr ""))

@@ -1,11 +1,11 @@
-![Worn earring reacting to music](./docs/intro/wornDynamic.gif)
+![wornDynamic]
 
-# Halo-90
+# HALO-90
 A distinct ring of light, an etherial glow, pattrens that ebb and flow with the music. Ninety tiny lights all controllable, powered by a common coin cell. A engrossing look with retro vibes and a modren touch.
 
-![Halo Set Display](./docs/intro/haloSetDisplay.jpg)
+![presentedCase]
 
-The *Halo* product series, in which these earrings, Halo-90, are the first item is a fully open source electronic jewlery line. Designed foremeost with elegance and warability in mind. The 90 refers to the 90 individually controllable LEDs and pleanty of compute power for even doing complex patternes. 
+The *HALO* product series, in which these earrings, Halo-90, are the first item is a fully open source electronic jewlery line. Designed foremeost with elegance and warability in mind. The 90 refers to the 90 individually controllable LEDs and pleanty of compute power for even doing complex patternes. 
 
 This is the technical manual for anyone wanting to modify, hack, remix, or put thier own pattrens on the earrings. It goes into quite some detail about the construction, assembly, and firmware but should emcompass the required knowlege.
 
@@ -22,27 +22,41 @@ The electronics are kept minimal for cost reduction and manufacturing simplicity
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing inidivdual control. They are run at as high a current as he battery's internal resistance and GPIO max current allows so no resistors are used. The red LEDs with thier 1.9V{?} forward voltage provide the abilibty to maximize battery useage.
 
-We are using BL-HUB37A-AV-TRB as it is low cost and high avilibilty from multiple vendors across Chnia but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield equivilent battery life.
+We are using [BL-HUB37A-AV-TRB] as it is low cost and high avilibilty from multiple vendors across Chnia but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield equivilent battery life.
+
+![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-STMicroelectonics's [STM8L151]() acts as the main controller of the earring. The low power microcroller has a wide range of prepherials, a long expected production life, and low cost and availibility in high quantities. Running at its max speed of 16Mhz it is able to to easily carliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone ans has pleanty of (up to 32k) flash to store a assortment of pattrens or complex processed designs.
+STMicroelectonics's [STM8L15xxx] acts as the main controller of the earring. The low power microcroller has a wide range of prepherials, a long expected production life, and low cost and availibility in high quantities. Running at its max speed of 16Mhz it is able to to easily carliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone ans has pleanty of (up to 32k) flash to store a assortment of pattrens or complex processed designs.
+
+![IMG-STM8L15xxx]
 
 #### Battery
 Linx Technologie's aptly named BAT-HLD-001 is a stamped die cut sheet metal battery holder that is as low pofile as possible. It is sized for a CR2032 lithium cell. THe metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with as over its life as the internal resistance of the battery increses and the voltage drops the current possible drops as does the brightness.
 
+![IMG-BAT-HLD-001]
+
 #### Microphone
 The microphone selection was rather difficult due to a lack of specificaitons providided with amplified MEMS mirophones. Knowles P/N-xxxx was selected as it seemed reasonable and could be easilty tested with Adafruit's breakout board.
 
-Using a built in amplified memes microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
+Using a built in amplified MEMS microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
+
+![IMG-SPW2430HR5H-B]
 
 #### Button
-C&K [KXT3]() series provies ultra low profile minuture tactile switches and we chose `KXT311LHS` with a low actuaiton force of `100g`. It can be easily pressed with the edge of a nail, or a bit less confrotably with the back.
+C&K [KXT3] series provies ultra low profile minuture tactile switches and we chose `KXT311LHS` with a low actuaiton force of `100g`. It can be easily pressed with the edge of a nail, or a bit less confrotably with the back.
 
 The button provies the functionality of changing the patterns by pressing, and putting into low power sleep mode by holding for 3s. COmplely avilible as a interupt to the microcontroller, so other uses can be implemented. 
 
+![IMG-KXT3]
 
 #### IMU
-LSD6M is a 6DOF IMU with a three axis accelometer and three axis gyroscope. It communicates over I2C and is connected to the hardware I2C periphiral in the microcontorller. It allows a fast data stream at a very low power. It also has additional low power modes as well as the ability to wake the main microcontrller over interupt with the routed interupt pin. 
+[LSM6DSM] is a 6DOF IMU with a three axis accelometer and three axis gyroscope. It communicates over I2C and is connected to the hardware I2C periphiral in the microcontorller. It allows a fast data stream at a very low power. It also has additional low power modes as well as the ability to wake the main microcontrller over interupt with the routed interupt pin. 
+
+![IMG-LSM6DSM]
+
+#### Alignment Pins
+There are four tooling holes/alignment pins that can be used for addons. They are 1.152 mm (45.35 mil) in diameter and are placed 2.8mm and 5.5mm from the center. The earring is 24mm in diameter, weighs 5.5g and the top eyelte extends 2mm extra, yeilding a size of 24mm x 26mm.
 
 #### Connectors
 The only connectors the the board are six ⌀1mm copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it recives abalnced froce from the programmer or testing jig.
@@ -271,6 +285,7 @@ The PCB has four layers
 
 
 ### PCB Assembly
+The whole board can be pick and placed
 
 | Parameter         | Value |
 | ----------------- | -----:|
@@ -281,21 +296,39 @@ The PCB has four layers
 | Front Components  |    96 |
 | Back Components   |     1 |
 
-ALTs
-SPW2430HR5H-B - ZILLTEK ZTS6016
-BAT-HLD-001 - MY-2032-08
-STM8L151G4U6 - STM8L151G6
+#### Assembly Detail Pictures
+
+| Assembly    | Front       |
+| ----------- | ----------- |
+| ![assembly] | ![front]    |
+
+| Front Detail   | Back Detail   |
+| -------------- | ------------- |
+| ![frontDetail] | ![backDetail] |
+
+| Front ISO   | Back ISO    |
+| ----------- | ----------- |
+| ![frontIso] | ![backIso]  |
+
+#### Potential Alternates
+| Stated            | Alternetive      |
+| ----------------- | ---------------- |
+| SPW2430HR5H-B     | ZILLTEK ZTS6016  |
+| BAT-HLD-001       | MY-2032-08       |
+| STM8L151G4U6      | STM8L151G6U*     |
 
 ### Physical Assembly
 
-Earwire is attached with jwelery pliers throug the hole. The 1mm hole 
+Earwire is attached with jwelery pliers throug the hole. The 1mm hole is made for up to 0.8mm wire, over 20ga. Gold plated french hooks are used.
+
+![frenchEarwire]
 
 ### Production Scaling
+The baord can be haxagonaly packed into a panel with tiny tabs since its held on all sides. To increse produciton sepeed only one side can be PnP and the battery holder added afterwards by hand.
 
 #### Electronics
 All the componets aused are commonly availbile in high volumes mostly from multiple suppliers. THe microphone and battery holder are from single vendors but they hae proven track records and known supply chains. The microphone alternetive can be found 
 
-The PCBs can be panelized and 
 #### Case
 The moulds can create secondary masters out of rsing and then used to make gang moulds allowing multiple castings in pararell. 
 
@@ -310,21 +343,24 @@ The #D printed base holds the board in place while the PCB is held to it with 3m
 ## Artwork
 ## Inventory and QC
 ## Packaging
-P
+We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow internatinal shipping. The envelopes are verifed to be under 3 cm before dispaching. 
+
+The labels are printed with CN22 on the harmonized label schedule.
+## Shipping
+Lithium cells have special requirements for shipping. On air mail small cells, up to four, that are packaged securely like in the case may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
+
+`Lithium metal batteries in compliance with Section II of PI969`
+
+For interhational shipping the following HS code is used.
+
+`HALO HS Code - 7117.90.0000	Imitation Jewlery other`
+
 ## Safety
 Everything is RHOS and assembled in a lead free process. The edges are fully routed when possible or finsihed aftwerwards. The PCB is made from fiberglass so care must be taken as it can be abrasive on the edges. Clearcoat nail poilish can be applied to round an dsoften the edges without changing how it looks.
 
 The CR2032 cells are quite safe as they have very small ammount of lithium in them, and have a fairly high internal resistance. They do need to be disposed of responibily still. LIR2032 or other eacharbable 2032 cells should not be used as they have a higher voltage outside of the gaurentted paramters and a significantly lower (under 25%) capacity.
 
 If the battery is placed in backwards it will drain over time as there is no reverse polarity protection. It will heat up but should not damage anything with the internal resistance liminting the discharge.
-## Shipping
-Lithium cells have special requirements for shipping. On air mail small cells, up to four, that are packaged securely like in the case may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
-
-`Lithium metal batteries in compliance with Section II of PI969`
-
-
-
-`HALO HS Code - 7117.90.0000	Imitation Jewlery other`
 
 ## Certifications
 ## Liecence
@@ -335,7 +371,49 @@ Lithium cells have special requirements for shipping. On air mail small cells, u
 - STM8Flash
 - STM8L151G6 Header - Georg Icking-Konert
 ### Fonts
+- Nonita
+- IBM PLEX Mono
+- DejaVu 
 ### Libraries
 
 ## Reccomended Reading
 ## ToDo
+
+
+<!-- Images and Links -->
+
+<!-- Files -->
+[BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.pdf
+[BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf
+[KXT3]:                ./pcb/components/KXT3/KXT3.pdf
+[LSM6DSM]:             ./pcb/components/LSM6DSM/LSM6DSM.pdf
+[SPW2430HR5H-B]:       ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf
+[STM8L15xxx]:          ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
+
+<!-- Links -->
+
+<!-- Internal Links -->
+
+<!-- Intro -->
+[wornDynamic]:              ./docs/intro/wornDynamic.gif                              "Worn earring reacting to music Model: Greta"
+[presentedCase]:            ./docs/intro/haloSetDisplay.jpg                           "Pair of earings in holder"
+<!-- Components -->
+[IMG-BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg               "CR2032 Battery Holder"
+[IMG-BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.jpg     "0402 Red LED"
+[IMG-KXT3]:                ./pcb/components/KXT3/KXT3.jpg                             "Miniature low profile button"
+[IMG-LSM6DSM]:             ./pcb/components/LSM6DSM/LSM6DSM.jpg                       "6 axis IMU"
+[IMG-SPW2430HR5H-B]:       ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.jpg           "MEMS Microphone"
+[IMG-STM8L15xxx]:          ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                 "Low power microcontroller"
+[IMG-frenchEarwire]:       ./pcb/components/frenchEarwire/frenchEarwire.jpg           "Gold plated french earwire"
+
+<!-- PCB Assembly -->
+[assembly]:         ./docs/pcbAssembly/assemblyDraw.png
+[backDetail]:       ./docs/pcbAssembly/back-detail.jpg
+[backIso]:          ./docs/pcbAssembly/back-iso.jpg
+[frontDetail]:      ./docs/pcbAssembly/front-detail.jpg
+[front]:            ./docs/pcbAssembly/front-full.jpg
+[frontIso]:         ./docs/pcbAssembly/front-iso.jpg
+
+
+
+<!-- Fonts -->

@@ -1,6 +1,6 @@
 (fp_lib_table
   (lib (name "BAT-HLD-001")(type "KiCad")(uri "${KIPRJMOD}/components/BAT-HLD-001/BAT-HLD-001.pretty")(options "")(descr ""))
-  (lib (name "earringHookWire")(type "KiCad")(uri "${KIPRJMOD}/components/earringHookWire/earringHookWire.pretty")(options "")(descr ""))
+  (lib (name "frenchEarwire")(type "KiCad")(uri "${KIPRJMOD}/components/frenchEarwire/frenchEarwire.pretty")(options "")(descr ""))
   (lib (name "BL-HUB37A-AV-TRB")(type "KiCad")(uri "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pretty")(options "")(descr ""))
   (lib (name "tooling")(type "KiCad")(uri "${KIPRJMOD}/components/tooling/tooling.pretty")(options "")(descr ""))
   (lib (name "passives")(type "KiCad")(uri "${KIPRJMOD}/components/passives/passives.pretty")(options "")(descr ""))
