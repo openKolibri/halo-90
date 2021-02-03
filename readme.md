@@ -278,11 +278,6 @@ The PCB has four layers
 | --------- | --------- | --------- | --------- |
 | ![Layer0] | ![Layer1] | ![Layer2] | ![Layer3] |
 
-[Layer0]:   ./docs/layers/L0.png          "Front layer"
-[Layer1]:   ./docs/layers/L1.png          "Inner 1 layer"
-[Layer2]:   ./docs/layers/L2.png          "Inner 2 layer"
-[Layer3]:   ./docs/layers/L3.png          "Back layer"
-
 
 ### PCB Assembly
 The whole board can be pick and placed
@@ -406,13 +401,21 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [IMG-STM8L15xxx]:          ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                 "Low power microcontroller"
 [IMG-frenchEarwire]:       ./pcb/components/frenchEarwire/frenchEarwire.jpg           "Gold plated french earwire"
 
+<!-- Connectors and pads -->
+
+
+<!-- PCB Layers -->
+[Layer0]:   ./docs/layers/L0.png          "Front layer"
+[Layer1]:   ./docs/layers/L1.png          "Inner 1 layer"
+[Layer2]:   ./docs/layers/L2.png          "Inner 2 layer"
+[Layer3]:   ./docs/layers/L3.png          "Back layer"
 <!-- PCB Assembly -->
-[assembly]:         ./docs/pcbAssembly/assemblyDraw.png
-[backDetail]:       ./docs/pcbAssembly/back-detail.jpg
-[backIso]:          ./docs/pcbAssembly/back-iso.jpg
-[frontDetail]:      ./docs/pcbAssembly/front-detail.jpg
-[front]:            ./docs/pcbAssembly/front-full.jpg
-[frontIso]:         ./docs/pcbAssembly/front-iso.jpg
+[assembly]:         ./docs/pcbAssembly/assemblyDraw.png                               "Drawing showing led and chip orentations"
+[backDetail]:       ./docs/pcbAssembly/back-detail.jpg                                "Detail view of back assembled"
+[backIso]:          ./docs/pcbAssembly/back-iso.jpg                                   "Isometric view of assembled back"
+[frontDetail]:      ./docs/pcbAssembly/front-detail.jpg                               "Detail view of assembled front"
+[front]:            ./docs/pcbAssembly/front-full.jpg                                 "Front view of assembled board"
+[frontIso]:         ./docs/pcbAssembly/front-iso.jpg                                  "Isometric view of front assembled"
 
 
 
