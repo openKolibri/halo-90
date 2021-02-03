@@ -316,7 +316,7 @@ The whole board can be pick and placed
 
 Earwire is attached with jwelery pliers throug the hole. The 1mm hole is made for up to 0.8mm wire, over 20ga. Gold plated french hooks are used.
 
-![frenchEarwire]
+![IMG-frenchEarwire]
 
 ### Production Scaling
 The baord can be haxagonaly packed into a panel with tiny tabs since its held on all sides. To increse produciton sepeed only one side can be PnP and the battery holder added afterwards by hand.
