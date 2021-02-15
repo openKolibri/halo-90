@@ -74,7 +74,7 @@ This is the technical manual for anyone wanting to modify, hack, remix, or put t
 ## Design
 Design was always a core part from the very beignening, It *has* to look good, even more important that nit being funcitonal as it is a piece of jelery that people are going to wear. If it looks too complex or is even a little bit difficult to use, noone will want to waer it. Comfort was also a major goal as heavy earrings are painful to wear for extended time and no matter how stunning they are, its not worth the pain.
 
-![short](./docs/render.jpg)
+![render]
 
 The desing also had to allow for subtle as well as the onstentations led pattrens that would be expected. Sensors were added on to make the pattrens personal or location dependent. Such as the muted audio based pattren that would befit a quiet resturaunt transforms into the flashy wide pattren at a concert.
 
@@ -144,32 +144,32 @@ The laeft two pins are connectedto the UART interface.
 ### Case
 The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows to easily have arround 24 hours of runtime availible and organized. The case is two parts held togethwer with magents. All the edges are filleted and is comfortable to hold and fidget with. One corner is chamfered to make it easier to align the sections together in the correct orentation and the magnets are orented to resist trying to close it where the direction does not match and provides a very satisfying tactile click when they do. The cavities inisde hold all the parts securely so they dont rattle, and present them for display.
 
-[openedFilledCase]
+![caseRender]
 
 #### FDM Printed
 THe first sets are made of 3D printed PLA plastic. The top and bottom have contrasting unique colours that identify the brand. They are printed with a 20% gyroid infill and at 200u layer height. The modles need to be scaled up to 100.2% to account for PLA shrinkage. 
 
-[3dPrintedCase]
+![caseFDM]
 
 #### Cast
 A pebble or smooth seashell like finsih provides a feeling of luxury and the distincive material and stlye solifies the brand. 
 
-[castCase]
+![caseBatch]
 
 ##### Mould Master
 Moulding masters were made out of the same 3D printed designs, printed at a 80u layer height, and then repeatedly filled primed and sanded from P400 to P3000 grit sandpaper on top of a glass plate to keep the straight faces square, this fills all the gaps and allows a very smooth finish. This is then buffed to a shine with nail buffer sponges.
 
-[master]
+![caseMaster]
 
 ##### Silicone Mould
 A platinum cure shore A20 silicone rubber (Troll Factory TYP-1) is used to made a mould of the master. This has a accuracy of ~2u so is able to reproduce the surface finish. As the back is flat, a open faced mould is made. The part as well as walls are held in place with [meuseum wax] and mixing the exact ammount of silicone needed based on a CAD model means a high yield. After curing the mould box walls are cut off and the master is demoulded yeilding a silicone mould.
 
-[mould]
+![caseMould]
 
 #### Stone Casting
 The mould can now be case with many materials including other islicones, polyuretane rubbers and resins, and in our case, plaster. We are using high compressive strength Type-4 low expasninon dental plaster (Ernst Heinrichs). These plasters have a tryxothophic agent that allowsthem to flow better, meaning they mix up thinner and can reproduce finer detail. Applying asurfactant to the mould and mixing with distilled water and using a vibrating table yields low bubble castings. The back is roughly leveled off and let to cure. The part is then demoulded and the back is finsihed by hand with P320-P3000 grit sandpaper in several steps.
 
-[casting]
+![caseCasting]
 
 After 24 hours the part has reached its final hardness and has dried out completely. It can then be processed further with magents and dye. 
 
@@ -406,7 +406,7 @@ Earwire is attached with jwelery pliers throug the hole. The 1mm hole is made fo
 ![IMG-frenchEarwire]
 
 ### Production Scaling
-The baord can be haxagonaly packed into a panel with tiny tabs since its held on all sides. To increse produciton sepeed only one side can be PnP and the battery holder added afterwards by hand.
+The baord can be haxagonaly packed into a panel with tiny tabs since its held on all sides. To increse produciton effiecncy only one side can be PnP and the battery holder added afterwards by hand.
 
 #### Electronics
 All the componets aused are commonly availbile in high volumes mostly from multiple suppliers. THe microphone and battery holder are from single vendors but they hae proven track records and known supply chains. The microphone alternetive can be found 
@@ -481,23 +481,29 @@ If the battery is placed in backwards it will drain over time as there is no rev
 <!-- Intro -->
 [wornDynamic]:              ./docs/intro/wornDynamic.gif                              "Worn earring reacting to music Model: Greta"
 [presentedCase]:            ./docs/intro/haloSetDisplay.jpg                           "Pair of earings in holder"
+[render]:                   ./docs/render.jpg                                         "Render of earrings showing propertions"
 <!-- Components -->
-[IMG-BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg               "CR2032 Battery Holder"
-[IMG-BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.jpg     "0402 Red LED"
-[IMG-KXT3]:                ./pcb/components/KXT3/KXT3.jpg                             "Miniature low profile button"
-[IMG-LSM6DSM]:             ./pcb/components/LSM6DSM/LSM6DSM.jpg                       "6 axis IMU"
-[IMG-SPW2430HR5H-B]:       ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.jpg           "MEMS Microphone"
-[IMG-STM8L15xxx]:          ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                 "Low power microcontroller"
-[IMG-frenchEarwire]:       ./pcb/components/frenchEarwire/frenchEarwire.jpg           "Gold plated french earwire"
+[IMG-BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg              "CR2032 Battery Holder"
+[IMG-BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.jpg    "0402 Red LED"
+[IMG-KXT3]:                ./pcb/components/KXT3/KXT3.jpg                            "Miniature low profile button"
+[IMG-LSM6DSM]:             ./pcb/components/LSM6DSM/LSM6DSM.jpg                      "6 axis IMU"
+[IMG-SPW2430HR5H-B]:       ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.jpg          "MEMS Microphone"
+[IMG-STM8L15xxx]:          ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                "Low power microcontroller"
+[IMG-frenchEarwire]:       ./pcb/components/frenchEarwire/frenchEarwire.jpg          "Gold plated french earwire"
 <!-- Magenets -->
-[6x1-magents]:             ./docs/components/magnets.jpg                              "6mm x 1mm N53 disc mangents"
-[magnetsGlued]:            ./docs/assembly/jigsGlue.jpg                               "Mangents glued using the jig"
-[magnetJig]:               ./docs/assembly/jigs.jpg                                   "Jigs used to glue magents into place in the correct orentation"
-
-
+[6x1-magents]:             ./docs/components/magnets.jpg                             "6mm x 1mm N53 disc mangents"
+[magnetsGlued]:            ./docs/assembly/jigsGlue.jpg                              "Mangents glued using the jig"
+[magnetJig]:               ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
 <!-- Connectors and pads -->
-[alignmentPins]:               ./docs/connectors/pinDim.jpg                               "Holes for tooling and jig alginment"
-[springPins]:                  ./docs/components/springPin.jpg                            "Spring pin for programing"    
+[alignmentPins]:               ./docs/connectors/pinDim.jpg                          "Holes for tooling and jig alginment"
+[springPins]:                  ./docs/components/springPin.jpg                       "Spring pin for programing"    
+<!-- Case -->
+[caseBatch]:                   ./docs/case/batch.jpg
+[caseRender]:                  ./docs/case/caseRender.jpg
+[caseCasting]:                 ./docs/case/casting.jpg
+[caseFDM]:                     ./docs/case/fdmPrinted.jpg
+[caseMaster]:                  ./docs/case/master.jpg
+[caseMould]:                   ./docs/case/mould.jpg
 
 <!-- PCB Layers -->
 [Layer0]:   ./docs/layers/L0.png          "Front layer"
@@ -511,7 +517,5 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [frontDetail]:      ./docs/pcbAssembly/front-detail.jpg                               "Detail view of assembled front"
 [front]:            ./docs/pcbAssembly/front-full.jpg                                 "Front view of assembled board"
 [frontIso]:         ./docs/pcbAssembly/front-iso.jpg                                  "Isometric view of front assembled"
-
-
 
 <!-- Fonts -->
