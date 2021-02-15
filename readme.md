@@ -137,7 +137,7 @@ The only connectors the the board are six ⌀1mm copper circles that are exposed
 ##### Power
 THe bottom two circles are VCC and ground allowing power  to be applied for testing wor programming without the battery as well as for current sensing and power profiling.
 ##### Programing
-The two pins on the right are RST and SWIM interface
+The two pins on the right are RST and SWIM interface. These are pins used for fashing and debugging the main chip.
 ##### UART
 The laeft two pins are connectedto the UART interface. 
 
