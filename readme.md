@@ -491,8 +491,8 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [IMG-frenchEarwire]:       ./pcb/components/frenchEarwire/frenchEarwire.jpg           "Gold plated french earwire"
 <!-- Magenets -->
 [6x1-magents]:             ./docs/components/magnets.jpg                              "6mm x 1mm N53 disc mangents"
-[magnetsGlued]:            ./docs/magnets/jigsGlue.jpg                                "Mangents glued using the jig"
-[magnetJig]:               ./docs/magnets/jigs.jpg                                    "Jigs used to glue magents into place in the correct orentation"
+[magnetsGlued]:            ./docs/assembly/jigsGlue.jpg                               "Mangents glued using the jig"
+[magnetJig]:               ./docs/assembly/jigs.jpg                                   "Jigs used to glue magents into place in the correct orentation"
 
 
 <!-- Connectors and pads -->
