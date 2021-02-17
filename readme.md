@@ -81,29 +81,28 @@ The design also had to allow for a variety of LED patterns from subtle to a bit 
 [patternGif]
 
 ### Hardware
-The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all, but for exampel the IMU and its pullup resistors not mounted as there is no firmware suppourt for that and yields a lower cost variant.
+The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pullup resistors. They are not mounted as there is no firmware support for that and it yields a lower cost variant.
 
 [schematic]
 
 #### LEDs
-There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing inidivdual control. They are run at as high a current as he battery's internal resistance and GPIO max current allows so no resistors are used. The red LEDs with thier 1.9V{?} forward voltage provide the abilibty to maximize battery useage.
-
-We are using [BL-HUB37A-AV-TRB] as it is low cost and high avilibilty from multiple vendors across Chnia but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield equivilent battery life.
+There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their 1.9V{?} forward voltage, provide the abilibty to maximize battery usagein
+We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty across multiple vendors in China, but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield an equivalent battery life.
 
 ![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-STMicroelectonics's [STM8L15xxx] acts as the main controller of the earring. The low power microcroller has a wide range of prepherials, a long expected production life, and low cost and availibility in high quantities. Running at its max speed of 16Mhz it is able to to easily carliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone ans has pleanty of (up to 32k) flash to store a assortment of pattrens or complex processed designs.
+STMicroelectonics's [STM8L15xxx] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of 16Mhz is able to easily charliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone and has plenty of flash (up to 32k) to store a assortment of light patterns or complex processed designs.
 
 ![IMG-STM8L15xxx]
 
 #### Battery
-Linx Technologie's aptly named BAT-HLD-001 is a stamped die cut sheet metal battery holder that is as low pofile as possible. It is sized for a CR2032 lithium cell. THe metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with as over its life as the internal resistance of the battery increses and the voltage drops the current possible drops as does the brightness.
+Linx Technologies's aptly named BAT-HLD-001 is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a CR2032 lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
 
 ![IMG-BAT-HLD-001]
 
 #### Microphone
-The microphone selection was rather difficult due to a lack of specificaitons providided with amplified MEMS mirophones. Knowles P/N-xxxx was selected as it seemed reasonable and could be easilty tested with Adafruit's breakout board.
+The microphone selection was rather difficult due to a lack of specificaitons provided with amplified MEMS microphones. Knowles P/N-xxxx was selected, as it seemed reasonable and could be tested with Adafruit's breakout board fairly easily.
 
 Using a built in amplified MEMS microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
 
