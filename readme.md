@@ -110,19 +110,19 @@ Using a built in amplified MEMS microphones decreses the number of componet plac
 ![IMG-SPW2430HR5H-B]
 
 #### Button
-C&K [KXT3] series provies ultra low profile minuture tactile switches and we chose `KXT311LHS` with a low actuaiton force of `100g`. It can be easily pressed with the edge of a nail, or a bit less confrotably with the back.
+C&K [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
 
-The button provies the functionality of changing the patterns by pressing, and putting into low power sleep mode by holding for 3s. COmplely avilible as a interupt to the microcontroller, so other uses can be implemented. 
+The button provides the functionality of changing light patterns by pressing and triggering it into a low power sleep mode by holding for 3s. Completely available as an interupt to the microcontroller, so other uses can be implemented. 
 
 ![IMG-KXT3]
 
 #### IMU
-[LSM6DSM] is a 6DOF IMU with a three axis accelometer and three axis gyroscope. It communicates over I2C and is connected to the hardware I2C periphiral in the microcontorller. It allows a fast data stream at a very low power. It also has additional low power modes as well as the ability to wake the main microcontrller over interupt with the routed interupt pin. 
+[LSM6DSM] is a 6DOF IMU with a three-axis accelerometer and three-axis gyroscope. It communicates over I2C and is connected to the hardware I2C peripheral in the microcontroller. It allows a fast data stream at very low power. It also has additional low power modes and the ability to wake the main microcontroller over interupt with the routed interupt pin. 
 
 ![IMG-LSM6DSM]
 
 #### Passives
-There are three passives (five if the IMU is populated) that can be any tolerence. There are two 1 uF and 0.1 uF decoupling capacitors and one 10k pullup on the reset of the processor. The tow IMU pullups are 10k I2C pullups.
+There are three passives (five if the IMU is populated) that can be any tolerance. There are two 1 uF and 0.1 uF decoupling capacitors and one 10k pullup on the reset of the processor. The tow IMU pullups are 10k I2C pullups.
 
 #### Alignment Pins
 There are four tooling holes/alignment pins that can be used for addons. They are 1.152 mm (45.35 mil) in diameter and are placed 2.8mm and 5.5mm from the center. The earring is 24mm in diameter, weighs 5.5g and the top eyelte extends 2mm extra, yeilding a size of 24mm x 26mm.
@@ -130,19 +130,19 @@ There are four tooling holes/alignment pins that can be used for addons. They ar
 ![alignmentPins]
 
 #### Connectors
-The only connectors the the board are six ⌀1mm copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it recives abalnced froce from the programmer or testing jig.
+The only connectors on the board are six ⌀1mm copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it receives balanced forces from the custom programmer (or testing jig).
 
 ![front]
 
 ##### Power
-THe bottom two circles are VCC and ground allowing power  to be applied for testing wor programming without the battery as well as for current sensing and power profiling.
+The bottom two circles are VCC and ground which allows power to be applied for testing wor programming without the battery, as well as for current sensing and power profiling.
 ##### Programing
-The two pins on the right are RST and SWIM interface. These are pins used for fashing and debugging the main chip.
+The two pins on the right are RST and SWIM interfaces. These are pins used for flashing and debugging the main chip.
 ##### UART
-The laeft two pins are connectedto the UART interface. 
+The left two pins are connected to the UART interface. 
 
 ### Case
-The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows to easily have arround 24 hours of runtime availible and organized. The case is two parts held togethwer with magents. All the edges are filleted and is comfortable to hold and fidget with. One corner is chamfered to make it easier to align the sections together in the correct orentation and the magnets are orented to resist trying to close it where the direction does not match and provides a very satisfying tactile click when they do. The cavities inisde hold all the parts securely so they dont rattle, and present them for display.
+The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows for approximately 24 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close. The cavities inside the case hold all components securely so that they dont rattle. The earrings display beautifully when the case is opened.
 
 ![caseRender]
 
