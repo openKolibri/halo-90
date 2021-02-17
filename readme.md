@@ -1,13 +1,13 @@
 ![wornDynamic]
 
 # HALO-90
-A distinct ring of light, an etherial glow, pattrens that ebb and flow with the music. Ninety tiny lights all controllable, powered by a common coin cell. A engrossing look with retro vibes and a modren touch.
+A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. Ninety lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes and a modren touch. This is Halo-90.
 
 ![presentedCase]
 
-The *HALO* product series, in which these earrings, Halo-90, are the first item is a fully open source electronic jewlery line. Designed foremeost with elegance and warability in mind. The 90 refers to the 90 individually controllable LEDs and pleanty of compute power for even doing complex patternes. 
+The *HALO* product series, in which these earrings (Halo-90) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. 90 refers to the ninety individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
 
-This is the technical manual for anyone wanting to modify, hack, remix, or put thier own pattrens on the earrings. It goes into quite some detail about the construction, assembly, and firmware but should emcompass the required knowlege.
+This is the technical manual for anyone wanting to modify, hack, remix, or program their own light patterns onto the earrings. The manual goes into detail about construction, assembly, and firmware and should encompass all basic knowlege.
 
 ## Table of Contents
 
@@ -72,11 +72,11 @@ This is the technical manual for anyone wanting to modify, hack, remix, or put t
 * [ToDo](#todo)
 
 ## Design
-Design was always a core part from the very beignening, It *has* to look good, even more important that nit being funcitonal as it is a piece of jelery that people are going to wear. If it looks too complex or is even a little bit difficult to use, noone will want to waer it. Comfort was also a major goal as heavy earrings are painful to wear for extended time and no matter how stunning they are, its not worth the pain.
+Design was always a core part from the very beginning. It *has* to look good. Even more importantly, it must also be functional, as it is a piece of jewelery people are going to wear. If it looks too complex or is too difficult to use, no one will want to wear it. Comfort was another major goal, as heavy earrings are painful to wear for extended amounts of time, no matter how stunning they are. It's simply not worth the pain.
 
 ![render]
 
-The desing also had to allow for subtle as well as the onstentations led pattrens that would be expected. Sensors were added on to make the pattrens personal or location dependent. Such as the muted audio based pattren that would befit a quiet resturaunt transforms into the flashy wide pattren at a concert.
+The design also had to allow for a variety of LED patterns from subtle to a bit ostentatious. Sensors were added to make light patterns more personal or environmentally dependent, such as the muted audio responsive pattern. At one moment, befit for a quiet resturaunt and later a flashy wide pattern at a concert.
 
 [patternGif]
 
