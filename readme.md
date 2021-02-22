@@ -421,7 +421,7 @@ Programer has a hole in he top for a pin to be able to push the button for testi
 
 The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCb acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift and 
 
-THe programmer uses MilMax 09xxxxx spring pins on a PCB that mataches exactly wit
+THe programmer uses MilMax ‎0965-0-15-20-80-14-11-0‎ spring pins on a PCB that mataches exactly wit
 ![springPins]
 
 ## Artwork
