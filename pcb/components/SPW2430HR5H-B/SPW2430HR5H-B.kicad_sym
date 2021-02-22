@@ -1,4 +1,4 @@
-(kicad_symbol_lib (version 20200908) (generator kicad_symbol_editor)
+(kicad_symbol_lib (version 20201005) (generator kicad_symbol_editor)
   (symbol "SPW2430HR5H-B:SPW2430HR5H-B" (pin_numbers hide) (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)
     (property "Reference" "MK" (id 0) (at -5.08 1.27 0)
       (effects (font (size 1.27 1.27)))
@@ -11,16 +11,6 @@
     )
     (property "Datasheet" "${KIPRJMOD}/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf" (id 3) (at 0 -17.145 0)
       (effects (font (size 1.27 1.27)) hide)
-    )
-    (symbol "SPW2430HR5H-B_0_1"
-      (circle (center 0 0) (radius 2.54) (stroke (width 0.0006)) (fill (type none)))
-      (polyline
-        (pts
-          (xy -2.54 2.54)
-          (xy -2.54 -2.54)
-        )
-        (stroke (width 0.0006)) (fill (type none))
-      )
     )
     (symbol "SPW2430HR5H-B_0_0"
       (pin output line (at 5.08 0 180) (length 2.54)
@@ -38,6 +28,16 @@
       (pin power_in line (at 0 5.08 270) (length 2.54)
         (name "VDD" (effects (font (size 1.27 1.27))))
         (number "4" (effects (font (size 1.27 1.27))))
+      )
+    )
+    (symbol "SPW2430HR5H-B_0_1"
+      (circle (center 0 0) (radius 2.54) (stroke (width 0.254)) (fill (type background)))
+      (polyline
+        (pts
+          (xy -2.54 2.54)
+          (xy -2.54 -2.54)
+        )
+        (stroke (width 0.254)) (fill (type none))
       )
     )
   )

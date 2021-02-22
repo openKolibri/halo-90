@@ -5,9 +5,9 @@ A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the mu
 
 ![presentedCase]
 
-The *HALO* product series, in which these earrings (Halo-90) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. 90 refers to the ninety individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
+The *HALO* product series, in which these earrings (Halo-90) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. `90` refers to the ninety individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
 
-This is the technical manual for anyone wanting to modify, hack, remix, or program their own light patterns onto the earrings. The manual goes into detail about construction, assembly, and firmware and should encompass all basic knowlege.
+This is the technical manual for anyone wanting to modify, hack, remix, or program their own light patterns onto the earrings. The manual goes into detail about construction, assembly, and firmware and should encompass all basic knowledge.
 
 ## Table of Contents
 
@@ -78,12 +78,17 @@ Design was always a core part from the very beginning. It *has* to look good. Ev
 
 The design also had to allow for a variety of LED patterns from subtle to a bit ostentatious. Sensors were added to make light patterns more personal or environmentally dependent, such as the muted audio responsive pattern. At one moment, befit for a quiet resturaunt and later a flashy wide pattern at a concert.
 
-[patternGif]
+| Audio        | Halo        | Sparkle        |
+| ------------ | ----------- | -------------- |
+| ![PAT-auido] | ![PAT-halo] | ![PAT-sparkle] |
+
 
 ### Hardware
-The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pullup resistors. They are not mounted as there is no firmware support for that and it yields a lower cost variant.
+The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pullup resistors. They are not mounted as there is no firmware support for that and it yields a lower cost variant. The design is done in [KiCad 5.99 (nightly)](https://kicad.org/) and will be ported and set in the stable version.
 
 [schematic]
+
+THe layout is done partially programatically using text manipulation and template stamping using javascript and node.
 
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their 1.9V{?} forward voltage, provide the abilibty to maximize battery usagein
@@ -481,6 +486,10 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [wornDynamic]:              ./docs/intro/wornDynamic.gif                              "Worn earring reacting to music Model: Greta"
 [presentedCase]:            ./docs/intro/haloSetDisplay.jpg                           "Pair of earings in holder"
 [render]:                   ./docs/render.jpg                                         "Render of earrings showing propertions"
+<!-- Design -->
+[PAT-audio]:                ./docs/patterns/audio.gif                                "Demonstrating animation of audio pattern"
+[PAT-halo]:                 ./docs/patterns/halo.gif                                 "Demonstrating animation of halo pattern"
+[PAT-sparkle]:              ./docs/patterns/sparkle.gif                              "Demonstrating animation of sparkle pattern"
 <!-- Components -->
 [IMG-BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg              "CR2032 Battery Holder"
 [IMG-BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.jpg    "0402 Red LED"
