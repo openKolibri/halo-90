@@ -22,9 +22,6 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
     - [Passives](#passives)
     - [Alignment Pins](#alignment-pins)
     - [Connectors](#connectors)
-      * [Power](#power)
-      * [Programing](#programing)
-      * [UART](#uart)
   + [Case](#case)
     - [FDM Printed](#fdm-printed)
     - [Cast](#cast)
@@ -140,12 +137,14 @@ The only connectors on the board are six ⌀1mm copper circles that are exposed 
 | ----------- | ---------------- |
 | ![pgrmPads] | ![pgrmPlacement] |
 
-##### Power
-The bottom two circles are VCC and ground which allows power to be applied for testing wor programming without the battery, as well as for current sensing and power profiling.
-##### Programing
-The two pins on the right are RST and SWIM interfaces. These are pins used for flashing and debugging the main chip.
-##### UART
-The left two pins are connected to the UART interface. 
+| Pin  | Description                      |
+| ---- | -------------------------------- |
+| 3V0  | Connected to Batt+ and power net |
+| GND  | Connectedto ground net           |
+| TX   | GPIO PB2 for serial out          | 
+| RX   | GPIO PB4 for serial in           | 
+| RST  | Active low, 10k pullup           | 
+| SWIM | Programing interface             | 
 
 ### Case
 The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows for approximately 24 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close. The cavities inside the case hold all components securely so that they dont rattle. The earrings display beautifully when the case is opened.
@@ -198,19 +197,17 @@ The two jigs are colour coded as well. Adhesive is dispensed into the wells and 
 The firmware is coded at the register level in C. The code is fully interupt based yeilding great efficency.The toolchain is bulit on open source tools and is minimalist. That does make it harder to code, but allows for significant optimizations. 
 ### Modes
 There are multiple modes availible on the halo earring that can be switched through by pressing the button. Each press of the button cycles to the next mode, circling back arround.
+
+| Audio         | Halo        | Sparkle        |
+| ------------- | ----------- | -------------- |
+| ![GIF-audio]  | ![GIF-halo] | ![GIF-sparkle] |
+
 #### Dynamic
 The boot mode is the audio based dynamic mode. Every ADC cycle it reads the analog value and 
-#### Sparkle
-The sparkle mode is the best for power draw and is implemented in a single line. At ~320hz the procesor wakes from deep sleep and runs the selection of which led to light if any.
 
-```c
-rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
-```
+![PWR-audio]
 
-Given a 1/15 chance a random LED will light, othwerwise any previously on LEDs will be turned off. This yeilds a more plaesing pattern than randomly lighting LEDs with sharper bursts of light. Also since the processor is only awake 0.002% of the time, and the LED has the chance of being on 6.6% of the time, the power consumption is minimial. 
-
-// Power mesurmeent
-// awake time?
+Power profile readings show no colleration with audio level, and a `11.71 mA` power consuption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
 
 #### Halo
 In the HALO mode, the entire ring is lit. This is done though interlacing the leds lighting up. The deep sleep auto wakup timer is set to wake up every two clock cycles of the low speed 32khz oscilator. On every wake, it changes the led to the 13th following LED, looping arround at 90.
@@ -220,6 +217,23 @@ setLed((prevLed + 13)%90);
 ```
 
 This allows a cleaner and more consistenct scan over the halo ring. As 13 is the greatest interger factor save itself of 91, all the LEDs will be hit evenly arround the ring. The greater spacing causes the *frames* to interlace with each other, yeilinding a cleaner look.
+
+![PWR-halo]
+
+Power profile readings show a `10.88 mA` power consuption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
+
+#### Sparkle
+The sparkle mode is the best for power draw and is implemented in a single line. At ~320hz the procesor wakes from deep sleep and runs the selection of which led to light if any.
+
+```c
+rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
+```
+
+Given a 1/15 chance a random LED will light, othwerwise any previously on LEDs will be turned off. This yeilds a more plaesing pattern than randomly lighting LEDs with sharper bursts of light. Also since the processor is only awake 0.002% of the time, and the LED has the chance of being on 6.6% of the time, the power consumption is minimial. 
+
+![PWR-sparkle]
+
+Power profile readings show a `2.01 mA` power consuption with `327 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~109.5 hours, (over 4.5 days).
 
 #### Power Managment
 Pressing and holding the button for `500 ms` will turn off all LEDs and put the cpu into deep sleep mode. In this mode the current draw is around `15 uA` and the only wake interupt is the button press.
@@ -322,8 +336,8 @@ make flash
 | Parameter              | Min | Max | Unit |
 | ---------------------- | ---:| ---:| ---- |
 | Battery Voltage        | 1.8 | 3.6 | Volt |
-| Operating Temperature  | -20 | 50  | °C   |
-| Storgae Temperature    | -40 | 85  | °C   |
+| Operating Temperature  | -20 |  50 | °C   |
+| Storgae Temperature    | -40 |  85 | °C   |
 
 They should be fine in a hot car (although the printed plastic case could warp) but if you are outside these ratings take care of yourself, you are either freezing or at risk of a heat stroke. The earrings will be fine.
 
@@ -427,16 +441,21 @@ Programer has a hole in he top for a pin to be able to push the button for testi
 
 The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCb acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift and 
 
-THe programmer uses MilMax ‎0965-0-15-20-80-14-11-0‎ spring pins on a PCB that mataches exactly wit
+THe programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that mataches exactly wit
 ![springPins]
 
 ## Artwork
-## Inventory and QC
-## Packaging
-We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow internatinal shipping. The envelopes are verifed to be under 3 cm before dispaching. 
+The design and layout is the main artwork on the 
 
-The labels are printed with CN22 on the harmonized label schedule.
+## Inventory and QC
+Inventory can then be managed with QR coded serialized tags. The serialization also provides better QC as it allows failure analysis and tracking in case of issues traceable to the batch and assembly level.
+
+## Packaging
+We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow internatinal shipping. The envelopes are verifed to be under 3 cm before dispaching. Custom labeled sleves will be used on retail packaging.
+
 ## Shipping
+The labels are printed with CN22 on the harmonized label schedule.
+
 Lithium cells have special requirements for shipping. On air mail small cells, up to four, that are packaged securely like in the case may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
 
 `Lithium metal batteries in compliance with Section II of PI969`
@@ -446,14 +465,36 @@ For interhational shipping the following HS code is used.
 `HALO HS Code - 7117.90.0000	Imitation Jewlery other`
 
 ## Safety
-Everything is RHOS and assembled in a lead free process. The edges are fully routed when possible or finsihed aftwerwards. The PCB is made from fiberglass so care must be taken as it can be abrasive on the edges. Clearcoat nail poilish can be applied to round an dsoften the edges without changing how it looks.
+The edges are fully routed when possible or finsihed aftwerwards. The PCB is made from fiberglass so care must be taken as it can be abrasive on the edges. Clearcoat nail poilish can be applied to round an dsoften the edges without changing how it looks.
 
 The CR2032 cells are quite safe as they have very small ammount of lithium in them, and have a fairly high internal resistance. They do need to be disposed of responibily still. LIR2032 or other eacharbable 2032 cells should not be used as they have a higher voltage outside of the gaurentted paramters and a significantly lower (under 25%) capacity.
 
 If the battery is placed in backwards it will drain over time as there is no reverse polarity protection. It will heat up but should not damage anything with the internal resistance liminting the discharge.
 
+The boards are assembled in a lead-free process and all components are RHOS certified.
+
+The low voltage `3.0` as well as the currents used pose very little risk to healthy humans.
+
 ## Certifications
+Certifications take time and effort but will make a better product by guaranteeing its safety to users and let them use it in other projects. The table below shows the order we will be trying to obtain certifications.
+
+| Cetrtifing Authority     | Status                    |
+| -------------------------| ------------------------- |
+| OSHW                     | Pending [DE000087]        |
+| CE                       | No  (Self Certification)  |
+| FCC                      | No  (Self Certification)  |
+| WEEE                     | No  (yearly fee)          |
+
 ## Liecence
+The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Everything is released under permissive copyleft licenses, and copies of all licenses are included.
+
+| Sector        | License      | Verison |
+| ------------- | ------------ | -------:|
+| Hardware      | [CERN-OHL-S] |     2.0 |
+| Firmware      | [GNU GPL]    |     3.0 |
+| Documentation | [CC BY-SA]   |     4.0 |
+
+
 ## Attribution
 - Make
 - SDCC
@@ -481,7 +522,8 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [STM8L151G4]:          ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
 
 <!-- Links -->
-[KiCad]:      https://kicad.org/
+[KiCad]:                      https://kicad.org/
+[‎0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
 
 <!-- Internal Links -->
 [PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
@@ -522,6 +564,15 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [caseMaster]:                  ./docs/case/master.jpg
 [caseMould]:                   ./docs/case/mould.jpg
 
+<!-- Firmware -->
+[PWR-audio]:                   ./docs/firmware/powerProfile/audioPowerProfile.png
+[PWR-halo]:                    ./docs/firmware/powerProfile/haloPowerProfile.png
+[PWR-sparkle]:                 ./docs/firmware/powerProfile/sparklePowerProfile.png
+[GIF-audio]:                   ./docs/firmware/powerProfile/audio.gif
+[GIF-halo]:                    ./docs/firmware/powerProfile/halo.gif
+[GIF-sparkle]:                 ./docs/firmware/powerProfile/sparkle.gif
+[GIF-boot]:                    ./docs/firmware/boot.gif
+
 <!-- PCB Layers -->
 [Layer0]:   ./docs/layers/L0.png          "Front layer"
 [Layer1]:   ./docs/layers/L1.png          "Inner 1 layer"
@@ -535,4 +586,14 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [front]:            ./docs/pcbAssembly/front-full.jpg                                 "Front view of assembled board"
 [frontIso]:         ./docs/pcbAssembly/front-iso.jpg                                  "Isometric view of front assembled"
 
-<!-- Fonts -->
+<!-- Certifications -->
+[DE000087]:               https://certification.oshwa.org/de000087.html
+
+<!-- Licence -->
+[CERN-OHL-S]:             ./pcb/LICENSE
+[GNU GPL]:                ./firmware/LICENSE
+[CC BY-SA]:               ./docs/LICENSE
+
+<!-- Attribution -->
+[DejaVu]:                 https://dejavu-fonts.github.io/
+[IBM Plex Mono]:          https://www.ibm.com/plex/
