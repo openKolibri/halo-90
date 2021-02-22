@@ -1,13 +1,13 @@
 ![wornDynamic]
 
 # HALO-90
-A distinct ring of light, an etherial glow, pattrens that ebb and flow with the music. Ninety tiny lights all controllable, powered by a common coin cell. A engrossing look with retro vibes and a modren touch.
+A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. Ninety lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes and a modren touch. This is Halo-90.
 
 ![presentedCase]
 
-The *HALO* product series, in which these earrings, Halo-90, are the first item is a fully open source electronic jewlery line. Designed foremeost with elegance and warability in mind. The 90 refers to the 90 individually controllable LEDs and pleanty of compute power for even doing complex patternes. 
+The *HALO* product series, in which these earrings (Halo-90) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. 90 refers to the ninety individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
 
-This is the technical manual for anyone wanting to modify, hack, remix, or put thier own pattrens on the earrings. It goes into quite some detail about the construction, assembly, and firmware but should emcompass the required knowlege.
+This is the technical manual for anyone wanting to modify, hack, remix, or program their own light patterns onto the earrings. The manual goes into detail about construction, assembly, and firmware and should encompass all basic knowlege.
 
 ## Table of Contents
 
@@ -72,57 +72,56 @@ This is the technical manual for anyone wanting to modify, hack, remix, or put t
 * [ToDo](#todo)
 
 ## Design
-Design was always a core part from the very beignening, It *has* to look good, even more important that nit being funcitonal as it is a piece of jelery that people are going to wear. If it looks too complex or is even a little bit difficult to use, noone will want to waer it. Comfort was also a major goal as heavy earrings are painful to wear for extended time and no matter how stunning they are, its not worth the pain.
+Design was always a core part from the very beginning. It *has* to look good. Even more importantly, it must also be functional, as it is a piece of jewelery people are going to wear. If it looks too complex or is too difficult to use, no one will want to wear it. Comfort was another major goal, as heavy earrings are painful to wear for extended amounts of time, no matter how stunning they are. It's simply not worth the pain.
 
 ![render]
 
-The desing also had to allow for subtle as well as the onstentations led pattrens that would be expected. Sensors were added on to make the pattrens personal or location dependent. Such as the muted audio based pattren that would befit a quiet resturaunt transforms into the flashy wide pattren at a concert.
+The design also had to allow for a variety of LED patterns from subtle to a bit ostentatious. Sensors were added to make light patterns more personal or environmentally dependent, such as the muted audio responsive pattern. At one moment, befit for a quiet resturaunt and later a flashy wide pattern at a concert.
 
 [patternGif]
 
 ### Hardware
-The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all, but for exampel the IMU and its pullup resistors not mounted as there is no firmware suppourt for that and yields a lower cost variant.
+The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pullup resistors. They are not mounted as there is no firmware support for that and it yields a lower cost variant.
 
 [schematic]
 
 #### LEDs
-There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing inidivdual control. They are run at as high a current as he battery's internal resistance and GPIO max current allows so no resistors are used. The red LEDs with thier 1.9V{?} forward voltage provide the abilibty to maximize battery useage.
-
-We are using [BL-HUB37A-AV-TRB] as it is low cost and high avilibilty from multiple vendors across Chnia but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield equivilent battery life.
+There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their 1.9V{?} forward voltage, provide the abilibty to maximize battery usagein
+We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty across multiple vendors in China, but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield an equivalent battery life.
 
 ![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-STMicroelectonics's [STM8L15xxx] acts as the main controller of the earring. The low power microcroller has a wide range of prepherials, a long expected production life, and low cost and availibility in high quantities. Running at its max speed of 16Mhz it is able to to easily carliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone ans has pleanty of (up to 32k) flash to store a assortment of pattrens or complex processed designs.
+STMicroelectonics's [STM8L15xxx] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of 16Mhz is able to easily charliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone and has plenty of flash (up to 32k) to store a assortment of light patterns or complex processed designs.
 
 ![IMG-STM8L15xxx]
 
 #### Battery
-Linx Technologie's aptly named BAT-HLD-001 is a stamped die cut sheet metal battery holder that is as low pofile as possible. It is sized for a CR2032 lithium cell. THe metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with as over its life as the internal resistance of the battery increses and the voltage drops the current possible drops as does the brightness.
+Linx Technologies's aptly named BAT-HLD-001 is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a CR2032 lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
 
 ![IMG-BAT-HLD-001]
 
 #### Microphone
-The microphone selection was rather difficult due to a lack of specificaitons providided with amplified MEMS mirophones. Knowles P/N-xxxx was selected as it seemed reasonable and could be easilty tested with Adafruit's breakout board.
+The microphone selection was rather difficult due to a lack of specificaitons provided with amplified MEMS microphones. Knowles P/N-xxxx was selected, as it seemed reasonable and could be tested with Adafruit's breakout board fairly easily.
 
 Using a built in amplified MEMS microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
 
 ![IMG-SPW2430HR5H-B]
 
 #### Button
-C&K [KXT3] series provies ultra low profile minuture tactile switches and we chose `KXT311LHS` with a low actuaiton force of `100g`. It can be easily pressed with the edge of a nail, or a bit less confrotably with the back.
+C&K [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
 
-The button provies the functionality of changing the patterns by pressing, and putting into low power sleep mode by holding for 3s. COmplely avilible as a interupt to the microcontroller, so other uses can be implemented. 
+The button provides the functionality of changing light patterns by pressing and triggering it into a low power sleep mode by holding for 3s. Completely available as an interupt to the microcontroller, so other uses can be implemented. 
 
 ![IMG-KXT3]
 
 #### IMU
-[LSM6DSM] is a 6DOF IMU with a three axis accelometer and three axis gyroscope. It communicates over I2C and is connected to the hardware I2C periphiral in the microcontorller. It allows a fast data stream at a very low power. It also has additional low power modes as well as the ability to wake the main microcontrller over interupt with the routed interupt pin. 
+[LSM6DSM] is a 6DOF IMU with a three-axis accelerometer and three-axis gyroscope. It communicates over I2C and is connected to the hardware I2C peripheral in the microcontroller. It allows a fast data stream at very low power. It also has additional low power modes and the ability to wake the main microcontroller over interupt with the routed interupt pin. 
 
 ![IMG-LSM6DSM]
 
 #### Passives
-There are three passives (five if the IMU is populated) that can be any tolerence. There are two 1 uF and 0.1 uF decoupling capacitors and one 10k pullup on the reset of the processor. The tow IMU pullups are 10k I2C pullups.
+There are three passives (five if the IMU is populated) that can be any tolerance. There are two 1 uF and 0.1 uF decoupling capacitors and one 10k pullup on the reset of the processor. The tow IMU pullups are 10k I2C pullups.
 
 #### Alignment Pins
 There are four tooling holes/alignment pins that can be used for addons. They are 1.152 mm (45.35 mil) in diameter and are placed 2.8mm and 5.5mm from the center. The earring is 24mm in diameter, weighs 5.5g and the top eyelte extends 2mm extra, yeilding a size of 24mm x 26mm.
@@ -130,19 +129,19 @@ There are four tooling holes/alignment pins that can be used for addons. They ar
 ![alignmentPins]
 
 #### Connectors
-The only connectors the the board are six ⌀1mm copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it recives abalnced froce from the programmer or testing jig.
+The only connectors on the board are six ⌀1mm copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it receives balanced forces from the custom programmer (or testing jig).
 
 ![front]
 
 ##### Power
-THe bottom two circles are VCC and ground allowing power  to be applied for testing wor programming without the battery as well as for current sensing and power profiling.
+The bottom two circles are VCC and ground which allows power to be applied for testing wor programming without the battery, as well as for current sensing and power profiling.
 ##### Programing
-The two pins on the right are RST and SWIM interface. These are pins used for fashing and debugging the main chip.
+The two pins on the right are RST and SWIM interfaces. These are pins used for flashing and debugging the main chip.
 ##### UART
-The laeft two pins are connectedto the UART interface. 
+The left two pins are connected to the UART interface. 
 
 ### Case
-The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows to easily have arround 24 hours of runtime availible and organized. The case is two parts held togethwer with magents. All the edges are filleted and is comfortable to hold and fidget with. One corner is chamfered to make it easier to align the sections together in the correct orentation and the magnets are orented to resist trying to close it where the direction does not match and provides a very satisfying tactile click when they do. The cavities inisde hold all the parts securely so they dont rattle, and present them for display.
+The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows for approximately 24 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close. The cavities inside the case hold all components securely so that they dont rattle. The earrings display beautifully when the case is opened.
 
 ![caseRender]
 
