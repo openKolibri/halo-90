@@ -511,8 +511,8 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [magnetJig]:               ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
 <!-- Connectors and pads -->
 [alignmentPins]:               ./docs/connectors/pinDim.jpg                          "Holes for tooling and jig alginment"
-[pgrmPads]:                    ./docs/design.hardware/pgrmPads.png                   "Labeling of the programming pads"
-[pgrmPlacement]:               ./docs/design.hardware/pgrmPlacement.png              "Dimentions of the programming pads"
+[pgrmPads]:                    ./docs/design/hardware/pgrmPads.png                   "Labeling of the programming pads"
+[pgrmPlacement]:               ./docs/design/hardware/pgrmPlacement.png              "Dimentions of the programming pads"
 [springPins]:                  ./docs/components/springPin.jpg                       "Spring pin for programing"    
 <!-- Case -->
 [caseBatch]:                   ./docs/case/batch.jpg
