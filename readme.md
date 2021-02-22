@@ -482,17 +482,17 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [KiCad]:      https://kicad.org/
 
 <!-- Internal Links -->
-[PDF-schematic]:            ./docs/design/schematic.pdf
+[PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
 <!-- Intro -->
-[wornDynamic]:              ./docs/intro/wornDynamic.gif                              "Worn earring reacting to music Model: Greta"
-[presentedCase]:            ./docs/intro/haloSetDisplay.jpg                           "Pair of earings in holder"
-[render]:                   ./docs/render.jpg                                         "Render of earrings showing propertions"
+[wornDynamic]:              ./docs/intro/wornDynamic.gif                             "Worn earring reacting to music Model: Greta"
+[presentedCase]:            ./docs/intro/haloSetDisplay.jpg                          "Pair of earings in holder"
+[render]:                   ./docs/render.jpg                                        "Render of earrings showing propertions"
 <!-- Design -->
 [PAT-audio]:                ./docs/patterns/audio.gif                                "Demonstrating animation of audio pattern"
 [PAT-halo]:                 ./docs/patterns/halo.gif                                 "Demonstrating animation of halo pattern"
 [PAT-sparkle]:              ./docs/patterns/sparkle.gif                              "Demonstrating animation of sparkle pattern"
 <!-- Hardware -->
-[IMG-schematic]:            ./docs/design/schematic.png                              "Image of schematic"
+[IMG-schematic]:            ./docs/design/hardware/schematic.png                     "Image of schematic"
 
 <!-- Components -->
 [IMG-BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg              "CR2032 Battery Holder"
