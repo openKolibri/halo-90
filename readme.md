@@ -203,7 +203,7 @@ There are multiple modes availible on the halo earring that can be switched thro
 | ![GIF-audio]  | ![GIF-halo] | ![GIF-sparkle] |
 
 #### Dynamic
-The boot mode is the audio based dynamic mode. Every ADC cycle it reads the analog value and 
+The boot mode is the audio based dynamic mode. Every ADC cycle it reads the analog value and projects the audio waveform amplitude based arround amoving point on the ring with wrap arround.
 
 ![PWR-audio]
 
@@ -238,7 +238,9 @@ Power profile readings show a `2.01 mA` power consuption with `327 uA` standard 
 #### Power Managment
 Pressing and holding the button for `500 ms` will turn off all LEDs and put the cpu into deep sleep mode. In this mode the current draw is around `15 uA` and the only wake interupt is the button press.
 
-Pressing and holding the button will show a boot up animation that lights up in a ring around the board. Holding the button until it makes a full revolution, about a second, will trigge ra software reset of the halo back to turning on.
+![GIF-boot]
+
+Pressing and holding the button will show a boot up animation that lights up in a ring around the board. Holding the button until it makes a full revolution, about a second, will trigger a software reset of the halo back to turning on.
 
 ### LED control
 Since the LEDs are configured in a charliplex array only one LED can be on at time, some optimization can allow multiples to light, but at a loss of consinstency in brightness and power draw. There are two low level functions that can turn a indivual led on or off, as well as a helper funciton that remembers the last led and turns it off before turning on the next one.
@@ -342,7 +344,7 @@ make flash
 They should be fine in a hot car (although the printed plastic case could warp) but if you are outside these ratings take care of yourself, you are either freezing or at risk of a heat stroke. The earrings will be fine.
 
 ## Manufacturing
-Although taking on novel uses of materials, the ability to manufacture at scale was still a great focus. 
+Although taking on novel uses of materials, the ability to manufacture at scale was still a great focus. Parts were selected with stron supply cahins and alternetives, layout was designed with generous rules to accomodate as many fabs as possible, number of componets and unique componets was minimized. The microphone and battery holder are from single vendors but they hae proven track records and known supply chains, altherentives to be tested are still proposed.
 
 ### BOM
 The BOM was selected with parts that are common to the Chinese high-volume manufacturing market, have strong supply chains, as well as many alternatives wher possible in case a supplier stops manufacture or supply dips. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" options, like SMD pads. The table of BOM is shown below.
@@ -357,6 +359,8 @@ The BOM was selected with parts that are common to the Chinese high-volume manuf
 | R3     |   1 | Uniroyal                  | 0402WGF1002TCE   | RES: 10k 5% 1/16W 0402              |
 | C1     |   1 | Samsung Electro-Mechanics | CL05B104KO5NNNC  | CAP: MLCC 100nF 16V 0402            |
 | C2     |   1 | Samsung Electro-Mechanics | CL05A105KA5NQNC  | CAP: MLCC 1uF 25V 0402              |
+
+The [csv][BOMcsv] is provided with the sources.
 
 ### PCB
 There is a single PCB, although still common, some of the more precise requirmeents were needed to end up with a oard small enough.
@@ -383,9 +387,8 @@ The PCB has four layers
 | --------- | --------- | --------- | --------- |
 | ![Layer0] | ![Layer1] | ![Layer2] | ![Layer3] |
 
-
 ### PCB Assembly
-The whole board can be pick and placed
+The whole board can be pick and placed, the table below shows some data the may be needed when getting a quote.
 
 | Parameter         | Value |
 | ----------------- | -----:|
@@ -411,7 +414,7 @@ The whole board can be pick and placed
 | ![frontIso] | ![backIso]  |
 
 #### Potential Alternates
-Some alternetes a have not been tested, will update when I can get stock or have ot switch suppliers.
+Some alternetes a have not been tested, will update when I can get stock or have to switch suppliers.
 
 | Stated            | Alternetive      | Tested |
 | ----------------- | ---------------- | ------ |
@@ -421,23 +424,24 @@ Some alternetes a have not been tested, will update when I can get stock or have
 
 ### Physical Assembly
 
-Earwire is attached with jwelery pliers throug the hole. The 1mm hole is made for up to 0.8mm wire, over 20ga. Gold plated french hooks are used.
+Earwire is attached with jwelery pliers throug the hole. The 1mm hole is made for up to 0.8mm wire, over 20ga. Gold plated french hooks are used, there are commonly availible as jelery findings.
 
 ![IMG-frenchEarwire]
 
 ### Production Scaling
 The baord can be haxagonaly packed into a panel with tiny tabs since its held on all sides. To increse produciton effiecncy only one side can be PnP and the battery holder added afterwards by hand.
 
-#### Electronics
-All the componets aused are commonly availbile in high volumes mostly from multiple suppliers. THe microphone and battery holder are from single vendors but they hae proven track records and known supply chains. The microphone alternetive can be found 
+[hexpackedPanel]
 
 #### Case
 The moulds can create secondary masters out of rsing and then used to make gang moulds allowing multiple castings in pararell. 
 
+[gangMoulds]
+
 ## Programer
 Programer has a hole in he top for a pin to be able to push the button for testing.
 
-![Programmer](./docs/programmer.jpg)
+![programmer]
 
 The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCb acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift and 
 
@@ -446,6 +450,12 @@ THe programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎ spring pins on a P
 
 ## Artwork
 The design and layout is the main artwork on the 
+
+The accompnying getting started card shown bwlo aslo has artwork, this is completely protected.
+
+| Front        | Back        |
+| ------------ | ----------- |
+| ![cardFront] | ![cardBack] | 
 
 ## Inventory and QC
 Inventory can then be managed with QR coded serialized tags. The serialization also provides better QC as it allows failure analysis and tracking in case of issues traceable to the batch and assembly level.
@@ -480,7 +490,7 @@ Certifications take time and effort but will make a better product by guaranteei
 
 | Cetrtifing Authority     | Status                    |
 | -------------------------| ------------------------- |
-| OSHW                     | Pending [DE000087]        |
+| OSHW                     | Pending [DEXXXXXX]        |
 | CE                       | No  (Self Certification)  |
 | FCC                      | No  (Self Certification)  |
 | WEEE                     | No  (yearly fee)          |
@@ -508,6 +518,7 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 ### Libraries
 
 ## Reccomended Reading
+
 ## ToDo
 
 
@@ -528,6 +539,7 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 <!-- Internal Links -->
 [PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
 [nodeHaloBuilding]:         ./pcb/halo.js
+[BOMcsv]:                   ./pcb/bom.csv
 <!-- Intro -->
 [wornDynamic]:              ./docs/intro/wornDynamic.gif                             "Worn earring reacting to music Model: Greta"
 [presentedCase]:            ./docs/intro/haloSetDisplay.jpg                          "Pair of earings in holder"
@@ -585,6 +597,14 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 [frontDetail]:      ./docs/pcbAssembly/front-detail.jpg                               "Detail view of assembled front"
 [front]:            ./docs/pcbAssembly/front-full.jpg                                 "Front view of assembled board"
 [frontIso]:         ./docs/pcbAssembly/front-iso.jpg                                  "Isometric view of front assembled"
+
+<!-- Programmer -->
+[programmer]:            ./docs/programmer.jpg
+
+<!-- Artwork -->
+[cardFront]:      ./docs/artwork/cardFront.png
+[cardBack]:       ./docs/artwork/cardBack.png
+
 
 <!-- Certifications -->
 [DE000087]:               https://certification.oshwa.org/de000087.html
