@@ -88,10 +88,10 @@ The electronics are kept minimal for cost reduction and manufacturing simplicity
 
 ![IMG-schematic]
 
-Also availible ad a pdf [PDF-schematic] The layout is done partially programatically using text manipulation and template stamping using javascript and node.
+Also availible as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. THe code files is made aviliblile [here][nodeHaloBuilding]
 
 #### LEDs
-There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their 1.9V{?} forward voltage, provide the abilibty to maximize battery usagein
+There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, provide the abilibty to maximize battery usagein
 We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty across multiple vendors in China, but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield an equivalent battery life.
 
 ![IMG-BL-HUB37A-AV-TRB]
@@ -107,11 +107,11 @@ We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty acro
 ![IMG-BAT-HLD-001]
 
 #### Microphone
-The microphone selection was rather difficult due to a lack of specificaitons provided with amplified MEMS microphones. Knowles P/N-xxxx was selected, as it seemed reasonable and could be tested with Adafruit's breakout board fairly easily.
-
-Using a built in amplified MEMS microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
+The microphone selection was rather difficult due to a lack of specificaitons provided with amplified MEMS microphones. *Knowles* [SPW2430HR5H-B] was selected, as it seemed reasonable and could be tested with Adafruit's breakout board fairly easily.
 
 ![IMG-SPW2430HR5H-B]
+
+Using a built in amplified MEMS microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
 
 #### Button
 *C&K* [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
@@ -121,7 +121,7 @@ The button provides the functionality of changing light patterns by pressing and
 ![IMG-KXT3]
 
 #### IMU
-[LSM6DSM] is a 6DOF IMU with a three-axis accelerometer and three-axis gyroscope. It communicates over I2C and is connected to the hardware I2C peripheral in the microcontroller. It allows a fast data stream at very low power. It also has additional low power modes and the ability to wake the main microcontroller over interupt with the routed interupt pin. 
+[LSM6DSM] is a 6DOF IMU with a three-axis accelerometer and three-axis gyroscope by *STMicroelectronics*. It communicates over I2C and is connected to the hardware I2C peripheral in the microcontroller. It allows a fast data stream at very low power. It also has additional low power modes and the ability to wake the main microcontroller over interupt with the routed interupt pin. 
 
 ![IMG-LSM6DSM]
 
@@ -129,14 +129,16 @@ The button provides the functionality of changing light patterns by pressing and
 There are three passives (five if the IMU is populated) that can be any tolerance. There are two 1 uF and 0.1 uF decoupling capacitors and one 10k pullup on the reset of the processor. The tow IMU pullups are 10k I2C pullups.
 
 #### Alignment Pins
-There are four tooling holes/alignment pins that can be used for addons. They are 1.152 mm (45.35 mil) in diameter and are placed 2.8mm and 5.5mm from the center. The earring is 24mm in diameter, weighs 5.5g and the top eyelte extends 2mm extra, yeilding a size of 24mm x 26mm.
+There are four tooling holes/alignment pins that can be used for addons. They are 1.152 mm (45.35 mil) in diameter and are placed 2.8mm and 5.5mm from the center. The earring is 24mm in diameter, weighs 5.5g and the top eylet extends 2mm extra, yeilding a bounding box of 24mm x 26mm.
 
 ![alignmentPins]
 
 #### Connectors
 The only connectors on the board are six ⌀1mm copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it receives balanced forces from the custom programmer (or testing jig).
 
-![front]
+| Labels      | Dimentions       |
+| ----------- | ---------------- |
+| ![pgrmPads] | ![pgrmPlacement] |
 
 ##### Power
 The bottom two circles are VCC and ground which allows power to be applied for testing wor programming without the battery, as well as for current sensing and power profiling.
@@ -483,6 +485,7 @@ If the battery is placed in backwards it will drain over time as there is no rev
 
 <!-- Internal Links -->
 [PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
+[nodeHaloBuilding]:         ./pcb/halo.js
 <!-- Intro -->
 [wornDynamic]:              ./docs/intro/wornDynamic.gif                             "Worn earring reacting to music Model: Greta"
 [presentedCase]:            ./docs/intro/haloSetDisplay.jpg                          "Pair of earings in holder"
@@ -508,6 +511,8 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [magnetJig]:               ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
 <!-- Connectors and pads -->
 [alignmentPins]:               ./docs/connectors/pinDim.jpg                          "Holes for tooling and jig alginment"
+[pgrmPads]:                    ./docs/design.hardware/pgrmPads.png                   "Labeling of the programming pads"
+[pgrmPlacement]:               ./docs/design.hardware/pgrmPlacement.png              "Dimentions of the programming pads"
 [springPins]:                  ./docs/components/springPin.jpg                       "Spring pin for programing"    
 <!-- Case -->
 [caseBatch]:                   ./docs/case/batch.jpg
