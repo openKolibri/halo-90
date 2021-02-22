@@ -97,12 +97,12 @@ We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty acro
 ![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-STMicroelectonics's [STM8L151G4] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of 16Mhz is able to easily charliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone and has plenty of flash (up to 32k) to store a assortment of light patterns or complex processed designs.
+*STMicroelectonics's* [STM8L151G4] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of 16Mhz is able to easily charliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone and has plenty of flash (up to 32k) to store a assortment of light patterns or complex processed designs.
 
 ![IMG-STM8L15xxx]
 
 #### Battery
-Linx Technologies's aptly named [BAT-HLD-001] is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a CR2032 lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
+*Linx Technologies's* aptly named [BAT-HLD-001] is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a CR2032 lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
 
 ![IMG-BAT-HLD-001]
 
@@ -114,7 +114,7 @@ Using a built in amplified MEMS microphones decreses the number of componet plac
 ![IMG-SPW2430HR5H-B]
 
 #### Button
-C&K [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
+*C&K* [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
 
 The button provides the functionality of changing light patterns by pressing and triggering it into a low power sleep mode by holding for 3s. Completely available as an interupt to the microcontroller, so other uses can be implemented. 
 
