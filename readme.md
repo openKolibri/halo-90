@@ -80,15 +80,15 @@ The design also had to allow for a variety of LED patterns from subtle to a bit 
 
 | Audio        | Halo        | Sparkle        |
 | ------------ | ----------- | -------------- |
-| ![PAT-auido] | ![PAT-halo] | ![PAT-sparkle] |
+| ![PAT-audio] | ![PAT-halo] | ![PAT-sparkle] |
 
 
 ### Hardware
-The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pullup resistors. They are not mounted as there is no firmware support for that and it yields a lower cost variant. The design is done in [KiCad 5.99 (nightly)](https://kicad.org/) and will be ported and set in the stable version.
+The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pullup resistors. They are not mounted as there is no firmware support for that and it yields a lower cost variant. The design is done in [KiCad] 5.99 (nightly) and will be ported and set in the stable version. All componets and libaries are embedded in the project. 
 
-[schematic]
+![IMG-schematic]
 
-THe layout is done partially programatically using text manipulation and template stamping using javascript and node.
+Also availible ad a pdf [PDF-schematic] The layout is done partially programatically using text manipulation and template stamping using javascript and node.
 
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their 1.9V{?} forward voltage, provide the abilibty to maximize battery usagein
@@ -97,12 +97,12 @@ We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty acro
 ![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-STMicroelectonics's [STM8L15xxx] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of 16Mhz is able to easily charliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone and has plenty of flash (up to 32k) to store a assortment of light patterns or complex processed designs.
+STMicroelectonics's [STM8L151G4] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of 16Mhz is able to easily charliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone and has plenty of flash (up to 32k) to store a assortment of light patterns or complex processed designs.
 
 ![IMG-STM8L15xxx]
 
 #### Battery
-Linx Technologies's aptly named BAT-HLD-001 is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a CR2032 lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
+Linx Technologies's aptly named [BAT-HLD-001] is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a CR2032 lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
 
 ![IMG-BAT-HLD-001]
 
@@ -476,12 +476,13 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [KXT3]:                ./pcb/components/KXT3/KXT3.pdf
 [LSM6DSM]:             ./pcb/components/LSM6DSM/LSM6DSM.pdf
 [SPW2430HR5H-B]:       ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf
-[STM8L15xxx]:          ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
+[STM8L151G4]:          ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
 
 <!-- Links -->
+[KiCad]:      https://kicad.org/
 
 <!-- Internal Links -->
-
+[PDF-schematic]:            ./docs/design/schematic.pdf
 <!-- Intro -->
 [wornDynamic]:              ./docs/intro/wornDynamic.gif                              "Worn earring reacting to music Model: Greta"
 [presentedCase]:            ./docs/intro/haloSetDisplay.jpg                           "Pair of earings in holder"
@@ -490,6 +491,9 @@ If the battery is placed in backwards it will drain over time as there is no rev
 [PAT-audio]:                ./docs/patterns/audio.gif                                "Demonstrating animation of audio pattern"
 [PAT-halo]:                 ./docs/patterns/halo.gif                                 "Demonstrating animation of halo pattern"
 [PAT-sparkle]:              ./docs/patterns/sparkle.gif                              "Demonstrating animation of sparkle pattern"
+<!-- Hardware -->
+[IMG-schematic]:            ./docs/design/schematic.png                              "Image of schematic"
+
 <!-- Components -->
 [IMG-BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg              "CR2032 Battery Holder"
 [IMG-BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.jpg    "0402 Red LED"
