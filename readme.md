@@ -108,7 +108,7 @@ The microphone selection was rather difficult due to a lack of specificaitons pr
 
 ![IMG-SPW2430HR5H-B]
 
-Using a built in amplified MEMS microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
+Using a built-in amplified MEMS microphone decreases the number of component placements and simplifies layout and verificiton, at the expense of not having instrumentation knowlege of your audio response.
 
 #### Button
 *C&K* [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
@@ -152,84 +152,84 @@ The case is designed in CAD and made to house two earrings (with or without batt
 ![caseRender]
 
 #### FDM Printed
-THe first sets are made of 3D printed PLA plastic. The top and bottom have contrasting unique colours that identify the brand. They are printed with a 20% gyroid infill and at 200u layer height. The modles need to be scaled up to 100.2% to account for PLA shrinkage. 
+The first sets of cases are made of 3D printed PLA plastic. The top and bottom have bold contrasting colors that uniquely identify the brand. They are printed with a 20% gyroid infill and at 200um layer height. The 3D models need to be scaled up to 100.2% to account for PLA shrinkage. 
 
 ![caseFDM]
 
 #### Cast
-A pebble or smooth seashell like finsih provides a feeling of luxury and the distincive material and stlye solifies the brand. 
+A pebble or smooth seashell-like finish provides an air of luxury, with the distinctive material and style, which emboldens the brand. 
 
 ![caseBatch]
 
 ##### Mould Master
-Moulding masters were made out of the same 3D printed designs, printed at a 80u layer height, and then repeatedly filled primed and sanded from P400 to P3000 grit sandpaper on top of a glass plate to keep the straight faces square, this fills all the gaps and allows a very smooth finish. This is then buffed to a shine with nail buffer sponges.
+Moulding masters were made using the same 3D printed designs, printed at an 80um layer height, and then repeatedly filled, primed, and sanded with P400 to P3000 grit sandpaper on top of a glass plate to keep the straight faces square. This fills all of the air gaps which allows for a very smooth finish. It is then buffed to a shine with nail buffer sponges.
 
 ![caseMaster]
 
 ##### Silicone Mould
-A platinum cure shore A20 silicone rubber (Troll Factory TYP-1) is used to made a mould of the master. This has a accuracy of ~2u so is able to reproduce the surface finish. As the back is flat, a open faced mould is made. The part as well as walls are held in place with [meuseum wax] and mixing the exact ammount of silicone needed based on a CAD model means a high yield. After curing the mould box walls are cut off and the master is demoulded yeilding a silicone mould.
+A platinum cure shore A20 silicone rubber (Troll Factory TYP-1) is used to make a mould of the master. This has a accuracy of ~2um so it's able to reproduce a surface finish. Since the back is flat, a open-faced mould is made. The part, as well as the walls, are held in place with [museum wax], and mixing the exact amount of silicone needed (based on a CAD model) means a high yield. After curing, the mould box walls are cut off and the master is demoulded yielding a silicone mould.
 
 ![caseMould]
 
 #### Stone Casting
-The mould can now be case with many materials including other islicones, polyuretane rubbers and resins, and in our case, plaster. We are using high compressive strength Type-4 low expasninon dental plaster (Ernst Heinrichs). These plasters have a tryxothophic agent that allowsthem to flow better, meaning they mix up thinner and can reproduce finer detail. Applying asurfactant to the mould and mixing with distilled water and using a vibrating table yields low bubble castings. The back is roughly leveled off and let to cure. The part is then demoulded and the back is finsihed by hand with P320-P3000 grit sandpaper in several steps.
+The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength type-4 low expansion dental plaster (Ernst Heinrichs). These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying asurfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with P320-P3000 grit sandpaper.
 
 ![caseCasting]
 
-After 24 hours the part has reached its final hardness and has dried out completely. It can then be processed further with magents and dye. 
+After 24 hours, the part has reached its final hardness and has dried out completely. It can then be processed further with magents and dye. 
 
 **Testing, process optimization and verification is still in progress.**
 
 #### Magents
-The magents are 6mmx1mm N52 neodynium magents that are glued in usngin UHU Max repair Extreme. They are coated in Ni-Cu-Ni at around 12 microsn. The magents are a very close fit for alignment and are glued in to secure them and have a fixed orentation among all the parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well bonding two alreaddy hard to glue to materials together. Ceramics and nickel plating.
+The magents are 6mmx1mm N52 neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in Ni-Cu-Ni, at around 12um. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
 
 ![6x1-magents]
 
-The magents are installed using a gluing jig. ONe for the top and one for the bottom. They have manets that are installed as well as a matching chamfer so the part cant be placed backwards or the incorrect part cannot be placed. 
+Magnets are installed using a gluing jig. One jig for the top and one for the bottom. They have magnets that are installed, as well as a matching chamfer which prevents the wrong part from being placed or placing the part backwards by accident. 
 
 ![magnetsGlued]
 
-The two jigs are colour coded as well. Adhesive is dispensed into the wells and the magent is dropped in autmatically orentating itself with the jig magnet. It can then be removed and set to harden.
+The two jigs are color coded as well. Adhesive is dispensed into the wells and the magnet is dropped, which automatically orients itself with the jig magnet. It can then be removed and set to harden.
 
 ![magnetJig]
 
 ## Firmware
-The firmware is coded at the register level in C. The code is fully interupt based yeilding great efficency.The toolchain is bulit on open source tools and is minimalist. That does make it harder to code, but allows for significant optimizations. 
+The firmware is coded at the register level in C. The code is fully interupt based and performs quite efficently. The toolchain is simple and built on open source tools. This makes it harder to code, but allows for significant optimization. 
 ### Modes
-There are multiple modes availible on the halo earring that can be switched through by pressing the button. Each press of the button cycles to the next mode, circling back arround.
+There are multiple modes available on the halo earring that can be switched through when pressing the button. Each press of the button cycles to the next mode, eventually circling back around.
 
 | Audio         | Halo        | Sparkle        |
 | ------------- | ----------- | -------------- |
 | ![GIF-audio]  | ![GIF-halo] | ![GIF-sparkle] |
 
 #### Dynamic
-The boot mode is the audio based dynamic mode. Every ADC cycle it reads the analog value and projects the audio waveform amplitude based arround amoving point on the ring with wrap arround.
+Boot mode is the audio based dynamic mode. During every ADC cycle it reads the analog value and projects the audio waveform amplitude, based around a moving point on the ring with wrap around.
 
 ![PWR-audio]
 
-Power profile readings show no colleration with audio level, and a `11.71 mA` power consuption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
+Power profile readings show no correlation with audio level, and an `11.71 mA` power consumption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
 
 #### Halo
-In the HALO mode, the entire ring is lit. This is done though interlacing the leds lighting up. The deep sleep auto wakup timer is set to wake up every two clock cycles of the low speed 32khz oscilator. On every wake, it changes the led to the 13th following LED, looping arround at 90.
+In the HALO mode, the entire light ring is lit. This is done through interlacing the LEDs lighting up. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed 32khz oscillator. On every wake, it changes the led to the 13th following LED, looping around at 90.
 
 ```c
 setLed((prevLed + 13)%90);
 ```
 
-This allows a cleaner and more consistenct scan over the halo ring. As 13 is the greatest interger factor save itself of 91, all the LEDs will be hit evenly arround the ring. The greater spacing causes the *frames* to interlace with each other, yeilinding a cleaner look.
+This allows for a cleaner and more consistent scan over the entire halo ring. As 13 is the greatest integer factor, save itself of 91, for all of the LEDs to be turned on evenly around the ring. Greater spacing causes *frames* to interlace with each other, resulting in a cleaner visual.
 
 ![PWR-halo]
 
-Power profile readings show a `10.88 mA` power consuption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
+Power profile readings show a `10.88 mA` power consumption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
 
 #### Sparkle
-The sparkle mode is the best for power draw and is implemented in a single line. At ~320hz the procesor wakes from deep sleep and runs the selection of which led to light if any.
+Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At ~320hz, the procesor wakes from deep sleep and runs the selection of which LED to light (if any).
 
 ```c
 rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
 ```
 
-Given a 1/15 chance a random LED will light, othwerwise any previously on LEDs will be turned off. This yeilds a more plaesing pattern than randomly lighting LEDs with sharper bursts of light. Also since the processor is only awake 0.002% of the time, and the LED has the chance of being on 6.6% of the time, the power consumption is minimial. 
+Given a 1/15 chance a random LED will light up, othwerwise any previously on LEDs will be turned off. This results in a more visually pleasing pattern over randomly lighting LEDs which produce sharper bursts of light. Since the processor is only awake 0.002% of the time, and the LED has the chance of being on only 6.6% of the time, the power consumption is quite minimial. 
 
 ![PWR-sparkle]
 
@@ -240,10 +240,10 @@ Pressing and holding the button for `500 ms` will turn off all LEDs and put the 
 
 ![GIF-boot]
 
-Pressing and holding the button will show a boot up animation that lights up in a ring around the board. Holding the button until it makes a full revolution, about a second, will trigger a software reset of the halo back to turning on.
+Pressing and holding the button will show a boot up animation that lights up in a ring around the face. Holding the button until it makes a full revolution, about one second, will trigger a software reset of the halo turning it back on.
 
 ### LED control
-Since the LEDs are configured in a charliplex array only one LED can be on at time, some optimization can allow multiples to light, but at a loss of consinstency in brightness and power draw. There are two low level functions that can turn a indivual led on or off, as well as a helper funciton that remembers the last led and turns it off before turning on the next one.
+Since the LEDs are configured in a charliplex array, only one LED can be on at a time. Some optimization can allow multiple LEDs to light simultaneously, but at a cost of consistency in brightness and power draw. There are two low level functions that can turn a individual LED on or off, as well as a helper function that remembers the last LED and turns it off before turning on the next one.
 
 ```c
 void setLed(uint8_t led);
@@ -261,14 +261,14 @@ if (topElements <= (9 - row)) {
 }
 ```
 
-Then to turn the LEDs off the colum and row are both set to high impedence and to turn it on the colum is set high and the row is set low.
+To turn the LEDs off, the colum and row are both set to high impedence. To turn it on, the column is set high and the row is set low.
 
-The previous LED *must* be turned off before lighting up the next LED or ther is risk of damaging the electornics. It is reccomemened to only use the `setLed` and the `ledLow` function.
+The previous LED *must* be turned off before lighting up the next LED or else there is a risk of damaging the electronics. It is recommended to only use the `setLed` and `ledLow` functions.
 
 ### Compiling
 Compiling is done with the SDCC (small device c compiler) and the included makefile. 
 
-Steps as a example is given below for some systems, but should be easily transfered to the distro of your choice. The requirements are `make` as well as `sdcc`, they should be availible in the path, and with the installation complete running `make` will generate the `halo.ihx` file that is the binary to be flashed.
+Steps, as a example, are given below for some systems but should easily be transferable to the distro of your choosing. The requirements are `make` and `sdcc`. They should both be available in the path. Once installation is completed, running `make` will generate the `halo.ihx` file, which is the binary to be flashed.
 
 ```bash
 make
@@ -286,25 +286,25 @@ sudo pacman -S sdcc
 ```
 
 ### Flashing
-A flashing software is requited along with a programer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones as the form factor of the genuine programer is difficult ot use and newer programers do not suppourt `SWIM`.
+A flashing software is required, along with a programmer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones, because the form factor of the genuine programmer is difficult to use and newer programmers do not support `SWIM`.
 
 #### Windows
-`STVP_CmdLine` is required as the flashing software and comes in the software package [ST Visual Programer](https://www.st.com/en/development-tools/stvp-stm32.html). This needs to be installed and the path `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
+`STVP_CmdLine` is required as the flashing software and comes with the software package [ST Visual Programer](https://www.st.com/en/development-tools/stvp-stm32.html). This needs to be installed and the path `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
 
-Once its installed it can be run with the following flags. Preferebally in WSL but should also be possible in CMD or PS.
+Once it's installed, it can be run with the following flags. Preferably in WSL but should also be possible in CMD or PS.
 
 ```bash
 STVP_CmdLine.exe -Device=STM8L15xG4 -FileProg=halo.ihx -verif -no_loop -no_log
 ```
 
-It is also incorporated into the make file and can be run with the following.
+It is also incorporated into the make file and can be run with the following:
 
 ```bash
 make flash
 ```
 
 #### Linux
-[STM8Flash](https://github.com/vdudouyt/stm8flash) is a open source `SWIM` compatible flashing utililty for linux. The tool is built from source short instrucitons are given below.
+[STM8Flash](https://github.com/vdudouyt/stm8flash) is an open source `SWIM` compatible flashing utililty for linux. The tool is built from source. Short instructions are written below.
 
 ```bash
 git clone https://github.com/vdudouyt/stm8flash.git
@@ -341,13 +341,13 @@ make flash
 | Operating Temperature  | -20 |  50 | °C   |
 | Storgae Temperature    | -40 |  85 | °C   |
 
-They should be fine in a hot car (although the printed plastic case could warp) but if you are outside these ratings take care of yourself, you are either freezing or at risk of a heat stroke. The earrings will be fine.
+The earrings should be fine to leave in a hot car (although the 3D printed plastic case could warp). If you are outside these ratings, take care of yourself, you are either freezing or at risk of heat stroke. The earrings will be fine.
 
 ## Manufacturing
-Although taking on novel uses of materials, the ability to manufacture at scale was still a great focus. Parts were selected with stron supply cahins and alternetives, layout was designed with generous rules to accomodate as many fabs as possible, number of componets and unique componets was minimized. The microphone and battery holder are from single vendors but they hae proven track records and known supply chains, altherentives to be tested are still proposed.
+Although taking on novel uses of materials, the ability to manufacture at scale was still a primary focus. Parts were selected with strong supply chains and alternatives. Layout was designed with generous rules to accomodate for as many fabs as possible and the number of components, while unique components were minimized. The microphone and battery holder are from single vendors but they have proven track records and well-known supply chains. Alternatives to be tested are still proposed.
 
 ### BOM
-The BOM was selected with parts that are common to the Chinese high-volume manufacturing market, have strong supply chains, as well as many alternatives wher possible in case a supplier stops manufacture or supply dips. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" options, like SMD pads. The table of BOM is shown below.
+The BOM was selected with parts that are common to the high-volume Chinese manufacturing market, have strong supply chains, and have many alternatives available in case a supplier stops manufacture or supply dips occur. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" options, like SMD pads. The table of BOM is shown below.
 
 | REF    | QTY | Manufacturer              | MPN              | Description                         |
 | ------ | ---:| ------------------------- | ---------------- | ----------------------------------- |
@@ -363,7 +363,7 @@ The BOM was selected with parts that are common to the Chinese high-volume manuf
 The [csv][BOMcsv] is provided with the sources.
 
 ### PCB
-There is a single PCB, although still common, some of the more precise requirmeents were needed to end up with a oard small enough.
+There is a single PCB. Although still common, some of the more precise requirements were needed to end up with a printed circuit board small enough.
 
 | Paramter           | Value | Unit |
 | ------------------ | -----:| ---- |
@@ -388,7 +388,7 @@ The PCB has four layers
 | ![Layer0] | ![Layer1] | ![Layer2] | ![Layer3] |
 
 ### PCB Assembly
-The whole board can be pick and placed, the table below shows some data the may be needed when getting a quote.
+The whole board can be pick and placed. The table below shows some data that may be needed when requesting a quote.
 
 | Parameter         | Value |
 | ----------------- | -----:|
@@ -414,7 +414,7 @@ The whole board can be pick and placed, the table below shows some data the may 
 | ![frontIso] | ![backIso]  |
 
 #### Potential Alternates
-Some alternetes a have not been tested, will update when I can get stock or have to switch suppliers.
+Some alternates have not been tested. (Will update when I can get stock or have to switch suppliers)
 
 | Stated            | Alternetive      | Tested |
 | ----------------- | ---------------- | ------ |
@@ -424,69 +424,69 @@ Some alternetes a have not been tested, will update when I can get stock or have
 
 ### Physical Assembly
 
-Earwire is attached with jwelery pliers throug the hole. The 1mm hole is made for up to 0.8mm wire, over 20ga. Gold plated french hooks are used, there are commonly availible as jelery findings.
+Th earwire is attached with jewelery pliers through the hole. The 1mm hole is made for up to 0.8mm wire over 20ga. Gold plated french hooks are used. these are commonly available as jewelry findings.
 
 ![IMG-frenchEarwire]
 
 ### Production Scaling
-The baord can be haxagonaly packed into a panel with tiny tabs since its held on all sides. To increse produciton effiecncy only one side can be PnP and the battery holder added afterwards by hand.
+The board can be hexagonally packed into a panel with tiny tabs since it's held on all sides. To increase production efficiency, only one side can be PnP and the battery holder is added afterwards by hand.
 
 [hexpackedPanel]
 
 #### Case
-The moulds can create secondary masters out of rsing and then used to make gang moulds allowing multiple castings in pararell. 
+The moulds can create secondary masters out of rsing and then used to make gang moulds allowing multiple castings in parallel. 
 
 [gangMoulds]
 
-## Programer
+## Programmer
 Programer has a hole in he top for a pin to be able to push the button for testing.
 
 ![programmer]
 
-The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCb acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift and 
+The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCB acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift. 
 
-THe programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that mataches exactly wit
+The programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with
 ![springPins]
 
 ## Artwork
 The design and layout is the main artwork on the 
 
-The accompnying getting started card shown bwlo aslo has artwork, this is completely protected.
+The accompanying getting started card shown below also has artwork. This is completely protected.
 
 | Front        | Back        |
 | ------------ | ----------- |
 | ![cardFront] | ![cardBack] | 
 
 ## Inventory and QC
-Inventory can then be managed with QR coded serialized tags. The serialization also provides better QC as it allows failure analysis and tracking in case of issues traceable to the batch and assembly level.
+Inventory can be managed with QR coded serialized tags. The serialization provides better QC as it allows failure analysis and tracking, in case of issues traceable to the batch and assembly level.
 
 ## Packaging
-We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow internatinal shipping. The envelopes are verifed to be under 3 cm before dispaching. Custom labeled sleves will be used on retail packaging.
+We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under 3 cm before dispatching. Custom labeled sleeves will be used for retail packaging.
 
 ## Shipping
 The labels are printed with CN22 on the harmonized label schedule.
 
-Lithium cells have special requirements for shipping. On air mail small cells, up to four, that are packaged securely like in the case may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
+Lithium cells have special requirements for shipping. With air mail, small cells (up to four) are packaged securely and may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
 
 `Lithium metal batteries in compliance with Section II of PI969`
 
-For interhational shipping the following HS code is used.
+For international shipping, the following HS code is used.
 
 `HALO HS Code - 7117.90.0000	Imitation Jewlery other`
 
 ## Safety
-The edges are fully routed when possible or finsihed aftwerwards. The PCB is made from fiberglass so care must be taken as it can be abrasive on the edges. Clearcoat nail poilish can be applied to round an dsoften the edges without changing how it looks.
+The edges are fully routed when possible or finished afterwards. The PCB is made from fiberglass so care must be taken because it can be abrasive on the edges. Clear coat nail polish can be applied to round and soften the edges without changing how it looks.
 
-The CR2032 cells are quite safe as they have very small ammount of lithium in them, and have a fairly high internal resistance. They do need to be disposed of responibily still. LIR2032 or other eacharbable 2032 cells should not be used as they have a higher voltage outside of the gaurentted paramters and a significantly lower (under 25%) capacity.
+The CR2032 cells are quite safe, as they have only very small traces of lithium, and have a fairly high internal resistance. However, they must still be disposed of responsibly. LIR2032 or other rechargable 2032 cells should not be used because they have a higher voltage outside of the guaranteed parameters and significantly lower capacity (under 25%).
 
-If the battery is placed in backwards it will drain over time as there is no reverse polarity protection. It will heat up but should not damage anything with the internal resistance liminting the discharge.
+If the battery is placed in backwards, it will drain over time because there is no reverse polarity protection. It will heat up but should not damage anything due to high internal resistance limiting the discharge.
 
-The boards are assembled in a lead-free process and all components are RHOS certified.
+The printed circuit boards are assembled in a lead-free process, and all components are RHOS certified.
 
-The low voltage `3.0` as well as the currents used pose very little risk to healthy humans.
+The low voltage `3.0` as well as the currents used pose very little risk.
 
 ## Certifications
-Certifications take time and effort but will make a better product by guaranteeing its safety to users and let them use it in other projects. The table below shows the order we will be trying to obtain certifications.
+Certifications take time and effort but will make a better product by guaranteeing its safety to users and letting them use it in other projects. The table below shows the order in which we will obtain certifications.
 
 | Cetrtifing Authority     | Status                    |
 | -------------------------| ------------------------- |
