@@ -443,50 +443,50 @@ Programer has a hole in he top for a pin to be able to push the button for testi
 
 ![programmer]
 
-The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCb acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift and 
+The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCB acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift. 
 
-THe programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that mataches exactly wit
+The programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with
 ![springPins]
 
 ## Artwork
 The design and layout is the main artwork on the 
 
-The accompnying getting started card shown bwlo aslo has artwork, this is completely protected.
+The accompanying getting started card shown below also has artwork. This is completely protected.
 
 | Front        | Back        |
 | ------------ | ----------- |
 | ![cardFront] | ![cardBack] | 
 
 ## Inventory and QC
-Inventory can then be managed with QR coded serialized tags. The serialization also provides better QC as it allows failure analysis and tracking in case of issues traceable to the batch and assembly level.
+Inventory can be managed with QR coded serialized tags. The serialization provides better QC as it allows failure analysis and tracking, in case of issues traceable to the batch and assembly level.
 
 ## Packaging
-We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow internatinal shipping. The envelopes are verifed to be under 3 cm before dispaching. Custom labeled sleves will be used on retail packaging.
+We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under 3 cm before dispatching. Custom labeled sleeves will be used for retail packaging.
 
 ## Shipping
 The labels are printed with CN22 on the harmonized label schedule.
 
-Lithium cells have special requirements for shipping. On air mail small cells, up to four, that are packaged securely like in the case may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
+Lithium cells have special requirements for shipping. With air mail, small cells (up to four) are packaged securely and may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
 
 `Lithium metal batteries in compliance with Section II of PI969`
 
-For interhational shipping the following HS code is used.
+For international shipping, the following HS code is used.
 
 `HALO HS Code - 7117.90.0000	Imitation Jewlery other`
 
 ## Safety
-The edges are fully routed when possible or finsihed aftwerwards. The PCB is made from fiberglass so care must be taken as it can be abrasive on the edges. Clearcoat nail poilish can be applied to round an dsoften the edges without changing how it looks.
+The edges are fully routed when possible or finished afterwards. The PCB is made from fiberglass so care must be taken because it can be abrasive on the edges. Clear coat nail polish can be applied to round and soften the edges without changing how it looks.
 
-The CR2032 cells are quite safe as they have very small ammount of lithium in them, and have a fairly high internal resistance. They do need to be disposed of responibily still. LIR2032 or other eacharbable 2032 cells should not be used as they have a higher voltage outside of the gaurentted paramters and a significantly lower (under 25%) capacity.
+The CR2032 cells are quite safe, as they have only very small traces of lithium, and have a fairly high internal resistance. However, they must still be disposed of responsibly. LIR2032 or other rechargable 2032 cells should not be used because they have a higher voltage outside of the guaranteed parameters and significantly lower capacity (under 25%).
 
-If the battery is placed in backwards it will drain over time as there is no reverse polarity protection. It will heat up but should not damage anything with the internal resistance liminting the discharge.
+If the battery is placed in backwards, it will drain over time because there is no reverse polarity protection. It will heat up but should not damage anything due to high internal resistance limiting the discharge.
 
-The boards are assembled in a lead-free process and all components are RHOS certified.
+The printed circuit boards are assembled in a lead-free process, and all components are RHOS certified.
 
-The low voltage `3.0` as well as the currents used pose very little risk to healthy humans.
+The low voltage `3.0` as well as the currents used pose very little risk.
 
 ## Certifications
-Certifications take time and effort but will make a better product by guaranteeing its safety to users and let them use it in other projects. The table below shows the order we will be trying to obtain certifications.
+Certifications take time and effort but will make a better product by guaranteeing its safety to users and letting them use it in other projects. The table below shows the order in which we will obtain certifications.
 
 | Cetrtifing Authority     | Status                    |
 | -------------------------| ------------------------- |
