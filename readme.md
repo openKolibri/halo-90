@@ -542,11 +542,10 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 
 <!-- Links -->
 [KiCad]:                      https://kicad.org/
-‎[0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
-[TYP-1]:                      https://trollfactory.de/produkte/silikon-kautschuk/haertegrad-shore/weich-shore-a25/7044/tfc-silikon-kautschuk-typ-1-abformsilikon-weich-1-1-nv-troll-factory-rtv
 [Quakehold]:                  https://www.quakehold.com/collectibles.html
+[TYP-1]:                      https://trollfactory.de/produkte/silikon-kautschuk/haertegrad-shore/weich-shore-a25/7044/tfc-silikon-kautschuk-typ-1-abformsilikon-weich-1-1-nv-troll-factory-rtv
+[0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
 [Sockelgips FL]:              https://www.hinrichs-dental-shop.de/sockelgips-fl-p-1469.html
-
 
 <!-- Internal Links -->
 [PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
