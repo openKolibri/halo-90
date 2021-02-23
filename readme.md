@@ -85,10 +85,10 @@ The electronics are kept minimal for cost reduction and manufacturing simplicity
 
 ![IMG-schematic]
 
-Also availible as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. THe code files is made aviliblile [here][nodeHaloBuilding]
+Also availible as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. The code is made aviliblile [here][nodeHaloBuilding]
 
 #### LEDs
-There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at 4° intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, provide the abilibty to maximize battery usagein
+There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `4°` intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, provide the abilibty to maximize battery usage
 We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty across multiple vendors in China, but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield an equivalent battery life.
 
 ![IMG-BL-HUB37A-AV-TRB]
