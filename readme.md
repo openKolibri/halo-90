@@ -85,21 +85,21 @@ The electronics are kept minimal for cost reduction and manufacturing simplicity
 
 ![IMG-schematic]
 
-Also availible as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. The code is made aviliblile [here][nodeHaloBuilding]
+Also availible as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. The code is made aviliblile [here][nodeHaloBuilding].
 
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `4°` intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, provide the abilibty to maximize battery usage
-We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty across multiple vendors in China, but any 0402 LED with a V<sub>f</sub> below 2.7V, should yield an equivalent battery life.
+We are using [BL-HUB37A-AV-TRB], as it is low cost and has high availabilty across multiple vendors in China, but any `0402` LED with a V<sub>f</sub> below `2.7 V`, should yield an equivalent battery life.
 
 ![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-*STMicroelectonics's* [STM8L151G4] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of 16Mhz is able to easily charliplex the 90 Leds at over 1kHz. The 12b ADC is used to readout the microphone and has plenty of flash (up to 32k) to store a assortment of light patterns or complex processed designs.
+*STMicroelectonics's* [STM8L151G4] act as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of `16 Mhz` is able to easily charliplex the 90 Leds at over `1 kHz`. The `12b ADC` is used to readout the microphone and has plenty of flash (up to `32k`) to store a assortment of light patterns or complex processed designs.
 
 ![IMG-STM8L15xxx]
 
 #### Battery
-*Linx Technologies's* aptly named [BAT-HLD-001] is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a CR2032 lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
+*Linx Technologies's* aptly named [BAT-HLD-001] is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a `CR2032` lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with, as over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
 
 ![IMG-BAT-HLD-001]
 
@@ -113,7 +113,7 @@ Using a built-in amplified MEMS microphone decreases the number of component pla
 #### Button
 *C&K* [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
 
-The button provides the functionality of changing light patterns by pressing and triggering it into a low power sleep mode by holding for 3s. Completely available as an interupt to the microcontroller, so other uses can be implemented. 
+The button provides the functionality of changing light patterns by pressing and triggering it into a low power sleep mode by holding for `500 ms`. Completely available as an interupt to the microcontroller, so other uses can be implemented. 
 
 ![IMG-KXT3]
 
@@ -123,19 +123,25 @@ The button provides the functionality of changing light patterns by pressing and
 ![IMG-LSM6DSM]
 
 #### Passives
-There are three passives (five if the IMU is populated) that can be any tolerance. There are two 1 uF and 0.1 uF decoupling capacitors and one 10k pullup on the reset of the processor. The tow IMU pullups are 10k I2C pullups.
+There are three passives (five if the IMU is populated) that can be any tolerance. There are two `1 uF` and `0.1 uF` decoupling capacitors and one `10k` pullup on the reset of the processor. The tow IMU pullups are `10k` I2C pullups.
 
 #### Alignment Pins
-There are four tooling holes/alignment pins that can be used for addons. They are 1.152 mm (45.35 mil) in diameter and are placed 2.8mm and 5.5mm from the center. The earring is 24mm in diameter, weighs 5.5g and the top eylet extends 2mm extra, yeilding a bounding box of 24mm x 26mm.
+There are four tooling holes/alignment pins that can be used for addons. They are `1.152 mm` (`45.35 mil`) in diameter and are placed `2.8 mm` and `5.5 mm` from the center.
 
 ![alignmentPins]
 
+ The earring is `24 mm` in diameter, weighs `5.207 g` (`2.135 g` without the battery) and the top eylet extends `2 mm` extra, yeilding a bounding box of `24 mm x 26 mm`.
+
+![mass]
+
 #### Connectors
-The only connectors on the board are six ⌀1mm copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it receives balanced forces from the custom programmer (or testing jig).
+The only connectors on the board are six `⌀ 1 mm` copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it receives balanced forces from the custom programmer (or testing jig).
 
 | Labels      | Dimentions       |
 | ----------- | ---------------- |
 | ![pgrmPads] | ![pgrmPlacement] |
+
+The labeled pins have thier descriptions in the table below.
 
 | Pin  | Description                      |
 | ---- | -------------------------------- |
@@ -147,12 +153,12 @@ The only connectors on the board are six ⌀1mm copper circles that are exposed 
 | SWIM | Programing interface             | 
 
 ### Case
-The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows for approximately 24 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close. The cavities inside the case hold all components securely so that they dont rattle. The earrings display beautifully when the case is opened.
+The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows for at least 36 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close. The cavities inside the case hold all components securely so that they do not rattle. The earrings display beautifully when the case is opened.
 
 ![caseRender]
 
 #### FDM Printed
-The first sets of cases are made of 3D printed PLA plastic. The top and bottom have bold contrasting colors that uniquely identify the brand. They are printed with a 20% gyroid infill and at 200um layer height. The 3D models need to be scaled up to 100.2% to account for PLA shrinkage. 
+The first sets of cases are made of 3D printed PLA plastic. The top and bottom have bold contrasting colors that uniquely identify the brand. They are printed with a `20%` gyroid infill and at `200 um` layer height. The 3D models need to be scaled up to `100.2%` to account for PLA shrinkage. 
 
 ![caseFDM]
 
@@ -162,17 +168,17 @@ A pebble or smooth seashell-like finish provides an air of luxury, with the dist
 ![caseBatch]
 
 ##### Mould Master
-Moulding masters were made using the same 3D printed designs, printed at an 80um layer height, and then repeatedly filled, primed, and sanded with P400 to P3000 grit sandpaper on top of a glass plate to keep the straight faces square. This fills all of the air gaps which allows for a very smooth finish. It is then buffed to a shine with nail buffer sponges.
+Moulding masters were made using the same 3D printed designs, printed at an `80 um` layer height, and then repeatedly filled, primed, and sanded with `P400` to `P3000` grit sandpaper on top of a glass plate to keep the straight faces square. This fills all of the air gaps which allows for a very smooth finish. It is then buffed to a shine with nail buffer sponges.
 
 ![caseMaster]
 
 ##### Silicone Mould
-A platinum cure shore A20 silicone rubber (Troll Factory TYP-1) is used to make a mould of the master. This has a accuracy of ~2um so it's able to reproduce a surface finish. Since the back is flat, a open-faced mould is made. The part, as well as the walls, are held in place with [museum wax], and mixing the exact amount of silicone needed (based on a CAD model) means a high yield. After curing, the mould box walls are cut off and the master is demoulded yielding a silicone mould.
+A platinum cure shore `A20` silicone rubber (Troll Factory [TYP-1]) is used to make a mould of the master. This has a accuracy of `~2 um` so it's able to reproduce a surface finish. Since the back is flat, a open-faced mould is made. The part, as well as the walls, are held in place with [Quakehold] Museum wax, and mixing the exact amount of silicone needed (based on a CAD model) means a high yield. After curing, the mould box walls are cut off and the master is demoulded yielding a silicone mould.
 
 ![caseMould]
 
 #### Stone Casting
-The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength type-4 low expansion dental plaster (Ernst Heinrichs). These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying asurfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with P320-P3000 grit sandpaper.
+The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength *Ernst Heinrichs* `Type-4 low expansion dental plaster`. These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying a surfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with `P320-P3000` grit sandpaper.
 
 ![caseCasting]
 
@@ -181,7 +187,7 @@ After 24 hours, the part has reached its final hardness and has dried out comple
 **Testing, process optimization and verification is still in progress.**
 
 #### Magents
-The magents are 6mmx1mm N52 neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in Ni-Cu-Ni, at around 12um. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
+The magents are `6 mm x 1 mm` `N52` neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in `Ni-Cu-Ni`, at around `12 um`. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
 
 ![6x1-magents]
 
@@ -189,12 +195,13 @@ Magnets are installed using a gluing jig. One jig for the top and one for the bo
 
 ![magnetsGlued]
 
-The two jigs are color coded as well. Adhesive is dispensed into the wells and the magnet is dropped, which automatically orients itself with the jig magnet. It can then be removed and set to harden.
+The two jigs are color coded as well. Adhesive is dispensed into the wells and the magnet is dropped, which automatically orients itself with the jig magnet. It can then be removed and set to cure.
 
 ![magnetJig]
 
 ## Firmware
-The firmware is coded at the register level in C. The code is fully interupt based and performs quite efficently. The toolchain is simple and built on open source tools. This makes it harder to code, but allows for significant optimization. 
+The firmware is coded at the register level in C. The code is fully interupt based and performs quite efficently. The toolchain is simple and built on open source tools. This makes it harder to code, but allows for significant optimization.
+ 
 ### Modes
 There are multiple modes available on the halo earring that can be switched through when pressing the button. Each press of the button cycles to the next mode, eventually circling back around.
 
@@ -223,13 +230,13 @@ This allows for a cleaner and more consistent scan over the entire halo ring. As
 Power profile readings show a `10.88 mA` power consumption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
 
 #### Sparkle
-Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At ~320hz, the procesor wakes from deep sleep and runs the selection of which LED to light (if any).
+Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At `~320 hz`, the procesor wakes from deep sleep and runs the selection of which LED to light (if any).
 
 ```c
 rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
 ```
 
-Given a 1/15 chance a random LED will light up, othwerwise any previously on LEDs will be turned off. This results in a more visually pleasing pattern over randomly lighting LEDs which produce sharper bursts of light. Since the processor is only awake 0.002% of the time, and the LED has the chance of being on only 6.6% of the time, the power consumption is quite minimial. 
+Given a 1/15 chance a random LED will light up, othwerwise any previously on LEDs will be turned off. This results in a more visually pleasing pattern over randomly lighting LEDs which produce sharper bursts of light. Since the processor is only awake `0.002%` of the time, and the LED has the chance of being on only `6.6%` of the time, the power consumption is quite minimial. 
 
 ![PWR-sparkle]
 
@@ -339,7 +346,7 @@ make flash
 | ---------------------- | ---:| ---:| ---- |
 | Battery Voltage        | 1.8 | 3.6 | Volt |
 | Operating Temperature  | -20 |  50 | °C   |
-| Storgae Temperature    | -40 |  85 | °C   |
+| Storage Temperature    | -40 |  85 | °C   |
 
 The earrings should be fine to leave in a hot car (although the 3D printed plastic case could warp). If you are outside these ratings, take care of yourself, you are either freezing or at risk of heat stroke. The earrings will be fine.
 
@@ -445,7 +452,7 @@ Programer has a hole in he top for a pin to be able to push the button for testi
 
 The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCB acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift. 
 
-The programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with
+The programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with
 ![springPins]
 
 ## Artwork
@@ -535,6 +542,8 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 <!-- Links -->
 [KiCad]:                      https://kicad.org/
 [‎0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
+[TYP-1]:                      https://trollfactory.de/produkte/silikon-kautschuk/haertegrad-shore/weich-shore-a25/7044/tfc-silikon-kautschuk-typ-1-abformsilikon-weich-1-1-nv-troll-factory-rtv
+[Quakehold]:                  https://www.quakehold.com/collectibles.html
 
 <!-- Internal Links -->
 [PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
@@ -565,6 +574,7 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 [magnetJig]:               ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
 <!-- Connectors and pads -->
 [alignmentPins]:               ./docs/connectors/pinDim.jpg                          "Holes for tooling and jig alginment"
+[mass]:                        ./docs/connectors/mass.jpg                           "Halo and battery on scale for measuring mass"
 [pgrmPads]:                    ./docs/design/hardware/pgrmPads.png                   "Labeling of the programming pads"
 [pgrmPlacement]:               ./docs/design/hardware/pgrmPlacement.png              "Dimentions of the programming pads"
 [springPins]:                  ./docs/components/springPin.jpg                       "Spring pin for programing"    
