@@ -130,7 +130,7 @@ There are four tooling holes/alignment pins that can be used for addons. They ar
 
 ![alignmentPins]
 
- The earring is `24 mm` in diameter, weighs `5.207 g` (`2.135 g` without the battery) and the top eylet extends `2 mm` extra, yeilding a bounding box of `24 mm x 26 mm`.
+ The earring is `24 mm` in diameter, has a mass of `5.207 g` (`2.135 g` without the battery) and the top eylet extends `2 mm` extra, yeilding a bounding box of `24 mm x 26 mm x 6.36 mm`.
 
 ![mass]
 
@@ -438,7 +438,7 @@ Th earwire is attached with jewelery pliers through the hole. The 1mm hole is ma
 ### Production Scaling
 The board can be hexagonally packed into a panel with tiny tabs since it's held on all sides. To increase production efficiency, only one side can be PnP and the battery holder is added afterwards by hand.
 
-[hexpackedPanel]
+![hexPackedPanel]
 
 #### Case
 The moulds can create secondary masters out of rsing and then used to make gang moulds allowing multiple castings in parallel. 
@@ -469,7 +469,7 @@ The accompanying getting started card shown below also has artwork. This is comp
 Inventory can be managed with QR coded serialized tags. The serialization provides better QC as it allows failure analysis and tracking, in case of issues traceable to the batch and assembly level.
 
 ## Packaging
-We are packaging and shippping in 14 cm x 17 cm padded envelopes. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under 3 cm before dispatching. Custom labeled sleeves will be used for retail packaging.
+We are packaging and shippping in `14 cm x 17 cm` padded envelopes with brand stamping. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under 3 cm before dispatching. Custom labeled sleeves will be used for retail packaging.
 
 ## Shipping
 The labels are printed with CN22 on the harmonized label schedule.
@@ -512,33 +512,33 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 | Firmware      | [GNU GPL]    |     3.0 |
 | Documentation | [CC BY-SA]   |     4.0 |
 
-
 ## Attribution
 - Make
 - SDCC
 - KiCad
-- STM8Flash
-- STM8L151G6 Header - Georg Icking-Konert
+- [STM8Flash]
 ### Fonts
-- Nonita
-- IBM PLEX Mono
-- DejaVu 
+- [Nunito]
+- [IBM PLEX Mono]
+- [DejaVu] 
 ### Libraries
+- [STM8 Headers] Copyright (c) - 2020 Georg Icking-Konert
 
 ## Reccomended Reading
 
 ## ToDo
-
+- [ ] Led sometimes remains on after suthdown
+- [ ] Randomly HALO pattren forms high low pattren 
 
 <!-- Images and Links -->
 
 <!-- Files -->
-[BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.pdf
-[BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf
-[KXT3]:                ./pcb/components/KXT3/KXT3.pdf
-[LSM6DSM]:             ./pcb/components/LSM6DSM/LSM6DSM.pdf
-[SPW2430HR5H-B]:       ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf
-[STM8L151G4]:          ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
+[BAT-HLD-001]:                ./pcb/components/BAT-HLD-001/BAT-HLD-001.pdf
+[BL-HUB37A-AV-TRB]:           ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf
+[KXT3]:                       ./pcb/components/KXT3/KXT3.pdf
+[LSM6DSM]:                    ./pcb/components/LSM6DSM/LSM6DSM.pdf
+[SPW2430HR5H-B]:              ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf
+[STM8L151G4]:                 ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
 
 <!-- Links -->
 [KiCad]:                      https://kicad.org/
@@ -548,84 +548,90 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 [Sockelgips FL]:              https://www.hinrichs-dental-shop.de/sockelgips-fl-p-1469.html
 
 <!-- Internal Links -->
-[PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
-[nodeHaloBuilding]:         ./pcb/halo.js
-[BOMcsv]:                   ./pcb/bom.csv
+[PDF-schematic]:              ./docs/design/hardware/schematic.pdf        
+[nodeHaloBuilding]:           ./pcb/halo.js
+[BOMcsv]:                     ./pcb/bom.csv
 <!-- Intro -->
-[wornDynamic]:              ./docs/intro/wornDynamic.gif                             "Worn earring reacting to music Model: Greta"
-[presentedCase]:            ./docs/intro/haloSetDisplay.jpg                          "Pair of earings in holder"
-[render]:                   ./docs/render.jpg                                        "Render of earrings showing propertions"
+[wornDynamic]:                ./docs/intro/wornDynamic.gif                             "Worn earring reacting to music Model: Greta"
+[presentedCase]:              ./docs/intro/haloSetDisplay.jpg                          "Pair of earings in holder"
+[render]:                     ./docs/render.jpg                                        "Render of earrings showing propertions"
 <!-- Design -->
-[PAT-audio]:                ./docs/patterns/audio.gif                                "Demonstrating animation of audio pattern"
-[PAT-halo]:                 ./docs/patterns/halo.gif                                 "Demonstrating animation of halo pattern"
-[PAT-sparkle]:              ./docs/patterns/sparkle.gif                              "Demonstrating animation of sparkle pattern"
+[PAT-audio]:                  ./docs/patterns/audio.gif                                "Demonstrating animation of audio pattern"
+[PAT-halo]:                   ./docs/patterns/halo.gif                                 "Demonstrating animation of halo pattern"
+[PAT-sparkle]:                ./docs/patterns/sparkle.gif                              "Demonstrating animation of sparkle pattern"
 <!-- Hardware -->
-[IMG-schematic]:            ./docs/design/hardware/schematic.png                     "Image of schematic"
+[IMG-schematic]:              ./docs/design/hardware/schematic.png                     "Image of schematic"
 
 <!-- Components -->
-[IMG-BAT-HLD-001]:         ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg              "CR2032 Battery Holder"
-[IMG-BL-HUB37A-AV-TRB]:    ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.jpg    "0402 Red LED"
-[IMG-KXT3]:                ./pcb/components/KXT3/KXT3.jpg                            "Miniature low profile button"
-[IMG-LSM6DSM]:             ./pcb/components/LSM6DSM/LSM6DSM.jpg                      "6 axis IMU"
-[IMG-SPW2430HR5H-B]:       ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.jpg          "MEMS Microphone"
-[IMG-STM8L15xxx]:          ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                "Low power microcontroller"
-[IMG-frenchEarwire]:       ./pcb/components/frenchEarwire/frenchEarwire.jpg          "Gold plated french earwire"
+[IMG-BAT-HLD-001]:            ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg              "CR2032 Battery Holder"
+[IMG-BL-HUB37A-AV-TRB]:       ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.jpg    "0402 Red LED"
+[IMG-KXT3]:                   ./pcb/components/KXT3/KXT3.jpg                            "Miniature low profile button"
+[IMG-LSM6DSM]:                ./pcb/components/LSM6DSM/LSM6DSM.jpg                      "6 axis IMU"
+[IMG-SPW2430HR5H-B]:          ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.jpg          "MEMS Microphone"
+[IMG-STM8L15xxx]:             ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                "Low power microcontroller"
+[IMG-frenchEarwire]:          ./pcb/components/frenchEarwire/frenchEarwire.jpg          "Gold plated french earwire"
 <!-- Magenets -->
-[6x1-magents]:             ./docs/components/magnets.jpg                             "6mm x 1mm N53 disc mangents"
-[magnetsGlued]:            ./docs/assembly/jigsGlue.jpg                              "Mangents glued using the jig"
-[magnetJig]:               ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
+[6x1-magents]:                ./docs/components/magnets.jpg                             "6mm x 1mm N53 disc mangents"
+[magnetsGlued]:               ./docs/assembly/jigsGlue.jpg                              "Mangents glued using the jig"
+[magnetJig]:                  ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
 <!-- Connectors and pads -->
-[alignmentPins]:               ./docs/connectors/pinDim.jpg                          "Holes for tooling and jig alginment"
-[mass]:                        ./docs/connectors/mass.jpg                           "Halo and battery on scale for measuring mass"
-[pgrmPads]:                    ./docs/design/hardware/pgrmPads.png                   "Labeling of the programming pads"
-[pgrmPlacement]:               ./docs/design/hardware/pgrmPlacement.png              "Dimentions of the programming pads"
-[springPins]:                  ./docs/components/springPin.jpg                       "Spring pin for programing"    
+[alignmentPins]:              ./docs/connectors/pinDim.jpg                          "Holes for tooling and jig alginment"
+[mass]:                       ./docs/connectors/mass.jpg                           "Halo and battery on scale for measuring mass"
+[pgrmPads]:                   ./docs/design/hardware/pgrmPads.png                   "Labeling of the programming pads"
+[pgrmPlacement]:              ./docs/design/hardware/pgrmPlacement.png              "Dimentions of the programming pads"
+[springPins]:                 ./docs/components/springPin.jpg                       "Spring pin for programing"    
 <!-- Case -->
-[caseBatch]:                   ./docs/case/batch.jpg
-[caseRender]:                  ./docs/case/caseRender.jpg
-[caseCasting]:                 ./docs/case/casting.jpg
-[caseFDM]:                     ./docs/case/fdmPrinted.jpg
-[caseMaster]:                  ./docs/case/master.jpg
-[caseMould]:                   ./docs/case/mould.jpg
+[caseBatch]:                  ./docs/case/batch.jpg
+[caseRender]:                 ./docs/case/caseRender.jpg
+[caseCasting]:                ./docs/case/casting.jpg
+[caseFDM]:                    ./docs/case/fdmPrinted.jpg
+[caseMaster]:                 ./docs/case/master.jpg
+[caseMould]:                  ./docs/case/mould.jpg
 
 <!-- Firmware -->
-[PWR-audio]:                   ./docs/firmware/powerProfile/audioPowerProfile.png
-[PWR-halo]:                    ./docs/firmware/powerProfile/haloPowerProfile.png
-[PWR-sparkle]:                 ./docs/firmware/powerProfile/sparklePowerProfile.png
-[GIF-audio]:                   ./docs/firmware/powerProfile/audio.gif
-[GIF-halo]:                    ./docs/firmware/powerProfile/halo.gif
-[GIF-sparkle]:                 ./docs/firmware/powerProfile/sparkle.gif
-[GIF-boot]:                    ./docs/firmware/boot.gif
+[PWR-audio]:                  ./docs/firmware/powerProfile/audioPowerProfile.png
+[PWR-halo]:                   ./docs/firmware/powerProfile/haloPowerProfile.png
+[PWR-sparkle]:                ./docs/firmware/powerProfile/sparklePowerProfile.png
+[GIF-audio]:                  ./docs/firmware/powerProfile/audio.gif
+[GIF-halo]:                   ./docs/firmware/powerProfile/halo.gif
+[GIF-sparkle]:                ./docs/firmware/powerProfile/sparkle.gif
+[GIF-boot]:                   ./docs/firmware/boot.gif
 
 <!-- PCB Layers -->
-[Layer0]:   ./docs/layers/L0.png          "Front layer"
-[Layer1]:   ./docs/layers/L1.png          "Inner 1 layer"
-[Layer2]:   ./docs/layers/L2.png          "Inner 2 layer"
-[Layer3]:   ./docs/layers/L3.png          "Back layer"
+[Layer0]:                     ./docs/layers/L0.png          "Front layer"
+[Layer1]:                     ./docs/layers/L1.png          "Inner 1 layer"
+[Layer2]:                     ./docs/layers/L2.png          "Inner 2 layer"
+[Layer3]:                     ./docs/layers/L3.png          "Back layer"
 <!-- PCB Assembly -->
-[assembly]:         ./docs/pcbAssembly/assemblyDraw.png                               "Drawing showing led and chip orentations"
-[backDetail]:       ./docs/pcbAssembly/back-detail.jpg                                "Detail view of back assembled"
-[backIso]:          ./docs/pcbAssembly/back-iso.jpg                                   "Isometric view of assembled back"
-[frontDetail]:      ./docs/pcbAssembly/front-detail.jpg                               "Detail view of assembled front"
-[front]:            ./docs/pcbAssembly/front-full.jpg                                 "Front view of assembled board"
-[frontIso]:         ./docs/pcbAssembly/front-iso.jpg                                  "Isometric view of front assembled"
+[assembly]:                   ./docs/pcbAssembly/assemblyDraw.png                               "Drawing showing led and chip orentations"
+[backDetail]:                 ./docs/pcbAssembly/back-detail.jpg                                "Detail view of back assembled"
+[backIso]:                    ./docs/pcbAssembly/back-iso.jpg                                   "Isometric view of assembled back"
+[frontDetail]:                ./docs/pcbAssembly/front-detail.jpg                               "Detail view of assembled front"
+[front]:                      ./docs/pcbAssembly/front-full.jpg                                 "Front view of assembled board"
+[frontIso]:                   ./docs/pcbAssembly/front-iso.jpg                                  "Isometric view of front assembled"
+[hexPackedPanel]:             ./docs/pcbAssembly/hexPackedPanel.png                             "Panel with 35 boards"
 
 <!-- Programmer -->
-[programmer]:            ./docs/programmer.jpg
+[programmer]:                 ./docs/programmer.jpg
 
 <!-- Artwork -->
-[cardFront]:      ./docs/artwork/cardFront.png
-[cardBack]:       ./docs/artwork/cardBack.png
+[cardFront]:                  ./docs/artwork/cardFront.png
+[cardBack]:                   ./docs/artwork/cardBack.png
 
 
 <!-- Certifications -->
-[DE000087]:               https://certification.oshwa.org/de000087.html
+[DE000087]:                   https://certification.oshwa.org/de000087.html
 
 <!-- Licence -->
-[CERN-OHL-S]:             ./pcb/LICENSE
-[GNU GPL]:                ./firmware/LICENSE
-[CC BY-SA]:               ./docs/LICENSE
+[CERN-OHL-S]:                 ./pcb/LICENSE
+[GNU GPL]:                    ./firmware/LICENSE
+[CC BY-SA]:                   ./docs/LICENSE
 
 <!-- Attribution -->
-[DejaVu]:                 https://dejavu-fonts.github.io/
-[IBM Plex Mono]:          https://www.ibm.com/plex/
+[STM8Flash]:                  https://github.com/vdudouyt/stm8flash
+[STM8 Headers]:               https://github.com/gicking/STM8_headers
+
+<!-- Fonts -->
+[DejaVu]:                     https://dejavu-fonts.github.io/
+[IBM Plex Mono]:              https://www.ibm.com/plex/
+[Nunito]:                     https://github.com/vernnobile/NunitoFont
