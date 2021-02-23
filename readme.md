@@ -178,7 +178,7 @@ A platinum cure shore `A20` silicone rubber (Troll Factory [TYP-1]) is used to m
 ![caseMould]
 
 #### Stone Casting
-The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength *Ernst Hinrichs* [Sockelgips FL] `Type-4 low expansion dental plaster`. These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying a surfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with `P320-P3000` grit sandpaper.
+The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength *Ernst Hinrichs* [Sockelgips FL][SockelgipsFL] `Type-4 low expansion dental plaster`. These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying a surfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with `P320-P3000` grit sandpaper.
 
 ![caseCasting]
 
@@ -545,7 +545,7 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 ‎[0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
 [TYP-1]:                      https://trollfactory.de/produkte/silikon-kautschuk/haertegrad-shore/weich-shore-a25/7044/tfc-silikon-kautschuk-typ-1-abformsilikon-weich-1-1-nv-troll-factory-rtv
 [Quakehold]:                  https://www.quakehold.com/collectibles.html
-[Sockelgips FL]:             https://www.hinrichs-dental-shop.de/sockelgips-fl-p-1469.html
+[Sockelgips-FL]:              https://www.hinrichs-dental-shop.de/sockelgips-fl-p-1469.html
 
 
 <!-- Internal Links -->
