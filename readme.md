@@ -108,7 +108,7 @@ The microphone selection was rather difficult due to a lack of specificaitons pr
 
 ![IMG-SPW2430HR5H-B]
 
-Using a built in amplified MEMS microphones decreses the number of componet placmenets and simplifies layout and verificiton at the expense of not having instumentation grade knowlege of your audio response.
+Using a built-in amplified MEMS microphone decreases the number of component placements and simplifies layout and verificiton, at the expense of not having instrumentation knowlege of your audio response.
 
 #### Button
 *C&K* [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
@@ -152,84 +152,84 @@ The case is designed in CAD and made to house two earrings (with or without batt
 ![caseRender]
 
 #### FDM Printed
-THe first sets are made of 3D printed PLA plastic. The top and bottom have contrasting unique colours that identify the brand. They are printed with a 20% gyroid infill and at 200u layer height. The modles need to be scaled up to 100.2% to account for PLA shrinkage. 
+The first sets of cases are made of 3D printed PLA plastic. The top and bottom have bold contrasting colors that uniquely identify the brand. They are printed with a 20% gyroid infill and at 200um layer height. The 3D models need to be scaled up to 100.2% to account for PLA shrinkage. 
 
 ![caseFDM]
 
 #### Cast
-A pebble or smooth seashell like finsih provides a feeling of luxury and the distincive material and stlye solifies the brand. 
+A pebble or smooth seashell-like finish provides an air of luxury, with the distinctive material and style, which emboldens the brand. 
 
 ![caseBatch]
 
 ##### Mould Master
-Moulding masters were made out of the same 3D printed designs, printed at a 80u layer height, and then repeatedly filled primed and sanded from P400 to P3000 grit sandpaper on top of a glass plate to keep the straight faces square, this fills all the gaps and allows a very smooth finish. This is then buffed to a shine with nail buffer sponges.
+Moulding masters were made using the same 3D printed designs, printed at an 80um layer height, and then repeatedly filled, primed, and sanded with P400 to P3000 grit sandpaper on top of a glass plate to keep the straight faces square. This fills all of the air gaps which allows for a very smooth finish. It is then buffed to a shine with nail buffer sponges.
 
 ![caseMaster]
 
 ##### Silicone Mould
-A platinum cure shore A20 silicone rubber (Troll Factory TYP-1) is used to made a mould of the master. This has a accuracy of ~2u so is able to reproduce the surface finish. As the back is flat, a open faced mould is made. The part as well as walls are held in place with [meuseum wax] and mixing the exact ammount of silicone needed based on a CAD model means a high yield. After curing the mould box walls are cut off and the master is demoulded yeilding a silicone mould.
+A platinum cure shore A20 silicone rubber (Troll Factory TYP-1) is used to make a mould of the master. This has a accuracy of ~2um so it's able to reproduce a surface finish. Since the back is flat, a open-faced mould is made. The part, as well as the walls, are held in place with [museum wax], and mixing the exact amount of silicone needed (based on a CAD model) means a high yield. After curing, the mould box walls are cut off and the master is demoulded yielding a silicone mould.
 
 ![caseMould]
 
 #### Stone Casting
-The mould can now be case with many materials including other islicones, polyuretane rubbers and resins, and in our case, plaster. We are using high compressive strength Type-4 low expasninon dental plaster (Ernst Heinrichs). These plasters have a tryxothophic agent that allowsthem to flow better, meaning they mix up thinner and can reproduce finer detail. Applying asurfactant to the mould and mixing with distilled water and using a vibrating table yields low bubble castings. The back is roughly leveled off and let to cure. The part is then demoulded and the back is finsihed by hand with P320-P3000 grit sandpaper in several steps.
+The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength type-4 low expansion dental plaster (Ernst Heinrichs). These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying asurfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with P320-P3000 grit sandpaper.
 
 ![caseCasting]
 
-After 24 hours the part has reached its final hardness and has dried out completely. It can then be processed further with magents and dye. 
+After 24 hours, the part has reached its final hardness and has dried out completely. It can then be processed further with magents and dye. 
 
 **Testing, process optimization and verification is still in progress.**
 
 #### Magents
-The magents are 6mmx1mm N52 neodynium magents that are glued in usngin UHU Max repair Extreme. They are coated in Ni-Cu-Ni at around 12 microsn. The magents are a very close fit for alignment and are glued in to secure them and have a fixed orentation among all the parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well bonding two alreaddy hard to glue to materials together. Ceramics and nickel plating.
+The magents are 6mmx1mm N52 neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in Ni-Cu-Ni, at around 12um. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
 
 ![6x1-magents]
 
-The magents are installed using a gluing jig. ONe for the top and one for the bottom. They have manets that are installed as well as a matching chamfer so the part cant be placed backwards or the incorrect part cannot be placed. 
+Magnets are installed using a gluing jig. One jig for the top and one for the bottom. They have magnets that are installed, as well as a matching chamfer which prevents the wrong part from being placed or placing the part backwards by accident. 
 
 ![magnetsGlued]
 
-The two jigs are colour coded as well. Adhesive is dispensed into the wells and the magent is dropped in autmatically orentating itself with the jig magnet. It can then be removed and set to harden.
+The two jigs are color coded as well. Adhesive is dispensed into the wells and the magnet is dropped, which automatically orients itself with the jig magnet. It can then be removed and set to harden.
 
 ![magnetJig]
 
 ## Firmware
-The firmware is coded at the register level in C. The code is fully interupt based yeilding great efficency.The toolchain is bulit on open source tools and is minimalist. That does make it harder to code, but allows for significant optimizations. 
+The firmware is coded at the register level in C. The code is fully interupt based and performs quite efficently. The toolchain is simple and built on open source tools. This makes it harder to code, but allows for significant optimization. 
 ### Modes
-There are multiple modes availible on the halo earring that can be switched through by pressing the button. Each press of the button cycles to the next mode, circling back arround.
+There are multiple modes available on the halo earring that can be switched through when pressing the button. Each press of the button cycles to the next mode, eventually circling back around.
 
 | Audio         | Halo        | Sparkle        |
 | ------------- | ----------- | -------------- |
 | ![GIF-audio]  | ![GIF-halo] | ![GIF-sparkle] |
 
 #### Dynamic
-The boot mode is the audio based dynamic mode. Every ADC cycle it reads the analog value and projects the audio waveform amplitude based arround amoving point on the ring with wrap arround.
+Boot mode is the audio based dynamic mode. During every ADC cycle it reads the analog value and projects the audio waveform amplitude, based around a moving point on the ring with wrap around.
 
 ![PWR-audio]
 
-Power profile readings show no colleration with audio level, and a `11.71 mA` power consuption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
+Power profile readings show no correlation with audio level, and an `11.71 mA` power consumption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
 
 #### Halo
-In the HALO mode, the entire ring is lit. This is done though interlacing the leds lighting up. The deep sleep auto wakup timer is set to wake up every two clock cycles of the low speed 32khz oscilator. On every wake, it changes the led to the 13th following LED, looping arround at 90.
+In the HALO mode, the entire light ring is lit. This is done through interlacing the LEDs lighting up. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed 32khz oscillator. On every wake, it changes the led to the 13th following LED, looping around at 90.
 
 ```c
 setLed((prevLed + 13)%90);
 ```
 
-This allows a cleaner and more consistenct scan over the halo ring. As 13 is the greatest interger factor save itself of 91, all the LEDs will be hit evenly arround the ring. The greater spacing causes the *frames* to interlace with each other, yeilinding a cleaner look.
+This allows for a cleaner and more consistent scan over the entire halo ring. As 13 is the greatest integer factor, save itself of 91, for all of the LEDs to be turned on evenly around the ring. Greater spacing causes *frames* to interlace with each other, resulting in a cleaner visual.
 
 ![PWR-halo]
 
-Power profile readings show a `10.88 mA` power consuption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
+Power profile readings show a `10.88 mA` power consumption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
 
 #### Sparkle
-The sparkle mode is the best for power draw and is implemented in a single line. At ~320hz the procesor wakes from deep sleep and runs the selection of which led to light if any.
+Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At ~320hz, the procesor wakes from deep sleep and runs the selection of which LED to light (if any).
 
 ```c
 rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
 ```
 
-Given a 1/15 chance a random LED will light, othwerwise any previously on LEDs will be turned off. This yeilds a more plaesing pattern than randomly lighting LEDs with sharper bursts of light. Also since the processor is only awake 0.002% of the time, and the LED has the chance of being on 6.6% of the time, the power consumption is minimial. 
+Given a 1/15 chance a random LED will light up, othwerwise any previously on LEDs will be turned off. This results in a more visually pleasing pattern over randomly lighting LEDs which produce sharper bursts of light. Since the processor is only awake 0.002% of the time, and the LED has the chance of being on only 6.6% of the time, the power consumption is quite minimial. 
 
 ![PWR-sparkle]
 
