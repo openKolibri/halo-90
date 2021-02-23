@@ -240,10 +240,10 @@ Pressing and holding the button for `500 ms` will turn off all LEDs and put the 
 
 ![GIF-boot]
 
-Pressing and holding the button will show a boot up animation that lights up in a ring around the board. Holding the button until it makes a full revolution, about a second, will trigger a software reset of the halo back to turning on.
+Pressing and holding the button will show a boot up animation that lights up in a ring around the face. Holding the button until it makes a full revolution, about one second, will trigger a software reset of the halo turning it back on.
 
 ### LED control
-Since the LEDs are configured in a charliplex array only one LED can be on at time, some optimization can allow multiples to light, but at a loss of consinstency in brightness and power draw. There are two low level functions that can turn a indivual led on or off, as well as a helper funciton that remembers the last led and turns it off before turning on the next one.
+Since the LEDs are configured in a charliplex array, only one LED can be on at a time. Some optimization can allow multiple LEDs to light simultaneously, but at a cost of consistency in brightness and power draw. There are two low level functions that can turn a individual LED on or off, as well as a helper function that remembers the last LED and turns it off before turning on the next one.
 
 ```c
 void setLed(uint8_t led);
@@ -261,14 +261,14 @@ if (topElements <= (9 - row)) {
 }
 ```
 
-Then to turn the LEDs off the colum and row are both set to high impedence and to turn it on the colum is set high and the row is set low.
+To turn the LEDs off, the colum and row are both set to high impedence. To turn it on, the column is set high and the row is set low.
 
-The previous LED *must* be turned off before lighting up the next LED or ther is risk of damaging the electornics. It is reccomemened to only use the `setLed` and the `ledLow` function.
+The previous LED *must* be turned off before lighting up the next LED or else there is a risk of damaging the electronics. It is recommended to only use the `setLed` and `ledLow` functions.
 
 ### Compiling
 Compiling is done with the SDCC (small device c compiler) and the included makefile. 
 
-Steps as a example is given below for some systems, but should be easily transfered to the distro of your choice. The requirements are `make` as well as `sdcc`, they should be availible in the path, and with the installation complete running `make` will generate the `halo.ihx` file that is the binary to be flashed.
+Steps, as a example, are given below for some systems but should easily be transferable to the distro of your choosing. The requirements are `make` and `sdcc`. They should both be available in the path. Once installation is completed, running `make` will generate the `halo.ihx` file, which is the binary to be flashed.
 
 ```bash
 make
@@ -286,25 +286,25 @@ sudo pacman -S sdcc
 ```
 
 ### Flashing
-A flashing software is requited along with a programer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones as the form factor of the genuine programer is difficult ot use and newer programers do not suppourt `SWIM`.
+A flashing software is required, along with a programmer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones, because the form factor of the genuine programmer is difficult to use and newer programmers do not support `SWIM`.
 
 #### Windows
-`STVP_CmdLine` is required as the flashing software and comes in the software package [ST Visual Programer](https://www.st.com/en/development-tools/stvp-stm32.html). This needs to be installed and the path `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
+`STVP_CmdLine` is required as the flashing software and comes with the software package [ST Visual Programer](https://www.st.com/en/development-tools/stvp-stm32.html). This needs to be installed and the path `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
 
-Once its installed it can be run with the following flags. Preferebally in WSL but should also be possible in CMD or PS.
+Once it's installed, it can be run with the following flags. Preferably in WSL but should also be possible in CMD or PS.
 
 ```bash
 STVP_CmdLine.exe -Device=STM8L15xG4 -FileProg=halo.ihx -verif -no_loop -no_log
 ```
 
-It is also incorporated into the make file and can be run with the following.
+It is also incorporated into the make file and can be run with the following:
 
 ```bash
 make flash
 ```
 
 #### Linux
-[STM8Flash](https://github.com/vdudouyt/stm8flash) is a open source `SWIM` compatible flashing utililty for linux. The tool is built from source short instrucitons are given below.
+[STM8Flash](https://github.com/vdudouyt/stm8flash) is an open source `SWIM` compatible flashing utililty for linux. The tool is built from source. Short instructions are written below.
 
 ```bash
 git clone https://github.com/vdudouyt/stm8flash.git
@@ -341,13 +341,13 @@ make flash
 | Operating Temperature  | -20 |  50 | °C   |
 | Storgae Temperature    | -40 |  85 | °C   |
 
-They should be fine in a hot car (although the printed plastic case could warp) but if you are outside these ratings take care of yourself, you are either freezing or at risk of a heat stroke. The earrings will be fine.
+The earrings should be fine to leave in a hot car (although the 3D printed plastic case could warp). If you are outside these ratings, take care of yourself, you are either freezing or at risk of heat stroke. The earrings will be fine.
 
 ## Manufacturing
-Although taking on novel uses of materials, the ability to manufacture at scale was still a great focus. Parts were selected with stron supply cahins and alternetives, layout was designed with generous rules to accomodate as many fabs as possible, number of componets and unique componets was minimized. The microphone and battery holder are from single vendors but they hae proven track records and known supply chains, altherentives to be tested are still proposed.
+Although taking on novel uses of materials, the ability to manufacture at scale was still a primary focus. Parts were selected with strong supply chains and alternatives. Layout was designed with generous rules to accomodate for as many fabs as possible and the number of components, while unique components were minimized. The microphone and battery holder are from single vendors but they have proven track records and well-known supply chains. Alternatives to be tested are still proposed.
 
 ### BOM
-The BOM was selected with parts that are common to the Chinese high-volume manufacturing market, have strong supply chains, as well as many alternatives wher possible in case a supplier stops manufacture or supply dips. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" options, like SMD pads. The table of BOM is shown below.
+The BOM was selected with parts that are common to the high-volume Chinese manufacturing market, have strong supply chains, and have many alternatives available in case a supplier stops manufacture or supply dips occur. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" options, like SMD pads. The table of BOM is shown below.
 
 | REF    | QTY | Manufacturer              | MPN              | Description                         |
 | ------ | ---:| ------------------------- | ---------------- | ----------------------------------- |
@@ -363,7 +363,7 @@ The BOM was selected with parts that are common to the Chinese high-volume manuf
 The [csv][BOMcsv] is provided with the sources.
 
 ### PCB
-There is a single PCB, although still common, some of the more precise requirmeents were needed to end up with a oard small enough.
+There is a single PCB. Although still common, some of the more precise requirements were needed to end up with a printed circuit board small enough.
 
 | Paramter           | Value | Unit |
 | ------------------ | -----:| ---- |
@@ -388,7 +388,7 @@ The PCB has four layers
 | ![Layer0] | ![Layer1] | ![Layer2] | ![Layer3] |
 
 ### PCB Assembly
-The whole board can be pick and placed, the table below shows some data the may be needed when getting a quote.
+The whole board can be pick and placed. The table below shows some data that may be needed when requesting a quote.
 
 | Parameter         | Value |
 | ----------------- | -----:|
@@ -414,7 +414,7 @@ The whole board can be pick and placed, the table below shows some data the may 
 | ![frontIso] | ![backIso]  |
 
 #### Potential Alternates
-Some alternetes a have not been tested, will update when I can get stock or have to switch suppliers.
+Some alternates have not been tested. (Will update when I can get stock or have to switch suppliers)
 
 | Stated            | Alternetive      | Tested |
 | ----------------- | ---------------- | ------ |
@@ -424,21 +424,21 @@ Some alternetes a have not been tested, will update when I can get stock or have
 
 ### Physical Assembly
 
-Earwire is attached with jwelery pliers throug the hole. The 1mm hole is made for up to 0.8mm wire, over 20ga. Gold plated french hooks are used, there are commonly availible as jelery findings.
+Th earwire is attached with jewelery pliers through the hole. The 1mm hole is made for up to 0.8mm wire over 20ga. Gold plated french hooks are used. these are commonly available as jewelry findings.
 
 ![IMG-frenchEarwire]
 
 ### Production Scaling
-The baord can be haxagonaly packed into a panel with tiny tabs since its held on all sides. To increse produciton effiecncy only one side can be PnP and the battery holder added afterwards by hand.
+The board can be hexagonally packed into a panel with tiny tabs since it's held on all sides. To increase production efficiency, only one side can be PnP and the battery holder is added afterwards by hand.
 
 [hexpackedPanel]
 
 #### Case
-The moulds can create secondary masters out of rsing and then used to make gang moulds allowing multiple castings in pararell. 
+The moulds can create secondary masters out of rsing and then used to make gang moulds allowing multiple castings in parallel. 
 
 [gangMoulds]
 
-## Programer
+## Programmer
 Programer has a hole in he top for a pin to be able to push the button for testing.
 
 ![programmer]
