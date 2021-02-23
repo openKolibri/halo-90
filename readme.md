@@ -65,7 +65,6 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
 * [Attribution](#attribution)
   + [Fonts](#fonts)
   + [Libraries](#libraries)
-* [Reccomended Reading](#reccomended-reading)
 * [ToDo](#todo)
 
 ## Design
@@ -523,8 +522,6 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 - [DejaVu] 
 ### Libraries
 - [STM8 Headers] Copyright (c) - 2020 Georg Icking-Konert
-
-## Reccomended Reading
 
 ## ToDo
 - [ ] Led sometimes remains on after suthdown
