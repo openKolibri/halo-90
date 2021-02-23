@@ -85,7 +85,7 @@ The electronics are kept minimal for cost reduction and manufacturing simplicity
 
 ![IMG-schematic]
 
-Also availible as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. The code is made aviliblile [here][nodeHaloBuilding].
+Also availible as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. The code is made availible [here][nodeHaloBuilding].
 
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `4°` intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, provide the abilibty to maximize battery usage
@@ -178,7 +178,7 @@ A platinum cure shore `A20` silicone rubber (Troll Factory [TYP-1]) is used to m
 ![caseMould]
 
 #### Stone Casting
-The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength *Ernst Heinrichs* `Type-4 low expansion dental plaster`. These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying a surfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with `P320-P3000` grit sandpaper.
+The mould can be cast with various materials, including other silicones, polyuretane, rubbers, and resins. In our case, we used plaster. We are using high compressive strength *Ernst Hinrichs* [Sockelgips FL] `Type-4 low expansion dental plaster`. These plasters have a thixotropic agent that allows them to flow better, which means that they mix thinner and reproduce in finer detail. Applying a surfactant to the mould, mixing with distilled water, and using a vibrating table yields castings with fewer bubbles. The back is roughly leveled off and set to cure. The part is demoulded and the back is hand finished with `P320-P3000` grit sandpaper.
 
 ![caseCasting]
 
@@ -452,7 +452,8 @@ Programer has a hole in he top for a pin to be able to push the button for testi
 
 The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCB acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift. 
 
-The programmer uses *MillMax* ‎[0965-0-15-20-80-14-11-0]‎‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with
+The programmer uses *MillMax* ‎‎‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with
+
 ![springPins]
 
 ## Artwork
@@ -541,9 +542,11 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 
 <!-- Links -->
 [KiCad]:                      https://kicad.org/
-[‎0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
+‎[0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
 [TYP-1]:                      https://trollfactory.de/produkte/silikon-kautschuk/haertegrad-shore/weich-shore-a25/7044/tfc-silikon-kautschuk-typ-1-abformsilikon-weich-1-1-nv-troll-factory-rtv
 [Quakehold]:                  https://www.quakehold.com/collectibles.html
+[Sockelgips FL] :             https://www.hinrichs-dental-shop.de/sockelgips-fl-p-1469.html
+
 
 <!-- Internal Links -->
 [PDF-schematic]:            ./docs/design/hardware/schematic.pdf        
