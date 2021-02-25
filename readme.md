@@ -1,16 +1,15 @@
 ![wornDynamic]
 
 # HALO-90
-A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. Ninety lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes with a modern touch. This is Halo-90.
+A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. Ninety lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes with a modern touch. This is HALO-90.
 
 ![presentedCase]
 
-The *HALO* product series, in which these earrings (Halo-90) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. `90` refers to the ninety individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
+The *HALO* product series, in which these earrings ([HALO-90]) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. `90` refers to the ninety individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
 
 This is the technical manual for anyone wanting to modify, hack, remix, or program their own light patterns onto the earrings. The manual goes into fine detail about construction, assembly, and firmware which should encompass all basic knowledge.
 
 ## Table of Contents
-
 * [Design](#design)
   + [Hardware](#hardware)
     - [LEDs](#leds)
@@ -32,8 +31,8 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
 * [Firmware](#firmware)
   + [Modes](#modes)
     - [Dynamic](#dynamic)
-    - [Sparkle](#sparkle)
     - [Halo](#halo)
+    - [Sparkle](#sparkle)
     - [Power Managment](#power-managment)
   + [LED control](#led-control)
   + [Compiling](#compiling)
@@ -52,9 +51,8 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
     - [Potential Alternates](#potential-alternates)
   + [Physical Assembly](#physical-assembly)
   + [Production Scaling](#production-scaling)
-    - [Electronics](#electronics)
     - [Case](#case-1)
-* [Programer](#programer)
+* [Programmer](#programmer)
 * [Artwork](#artwork)
 * [Inventory and QC](#inventory-and-qc)
 * [Packaging](#packaging)
@@ -84,7 +82,7 @@ The electronics are kept minimal for cost reduction and manufacturing simplicity
 
 ![IMG-schematic]
 
-Also available as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node. The code is available [here][nodeHaloBuilding].
+The schematic is also available as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node and then finished up by hand in KiCad. The code is available [here][nodeHaloBuilding].
 
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `4°` intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, permits maximizing battery usage
@@ -93,7 +91,7 @@ We are using [BL-HUB37A-AV-TRB], because it is low cost and has high availabilty
 ![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-*STMicroelectonics's* [STM8L151G4] acts as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of `16 Mhz` is able to easily charliplex the 90 Leds at over `1 kHz`. The `12b ADC` is used to readout the microphone and has plenty of flash (up to `32k`) to store an assortment of light patterns or complex processed designs.
+*STMicroelectonics's* [STM8L151G4] acts as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of `16 MHz` is able to easily charliplex the 90 Leds at over `1 kHz`. The `12b ADC` is used to readout the microphone and has plenty of flash (up to `32k`) to store an assortment of light patterns or complex processed designs.
 
 ![IMG-STM8L15xxx]
 
@@ -185,7 +183,7 @@ The mould can be cast with various materials, including other silicones, polyure
 
 ![caseCasting]
 
-After 24 hours, the part has reached its final hardness and has dried out completely. It can then be processed further with magents and dye. 
+After 24 hours, the part has cured to its final hardness and has dried out completely. It can then be processed further with magents and dye. 
 
 **Testing, process optimization and verification is still in progress.**
 
@@ -220,7 +218,7 @@ Boot mode is the audio based dynamic mode. During every ADC cycle it reads the a
 Power profile readings show no correlation with audio level, and an `11.71 mA` power consumption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
 
 #### Halo
-In the HALO mode, the entire light ring is lit. This is done through interlacing the LEDs lighting up. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed 32kHz oscillator. On every wake, it changes the led to the 13th following LED, looping around at 90.
+In the HALO mode, the entire light ring is lit. This is done through interlacing the LEDs lighting up. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed `32 kHz` oscillator. On every wake, it changes the led to the 13th following LED, looping around at 90.
 
 ```c
 setLed((prevLed + 13)%90);
@@ -233,7 +231,7 @@ This allows for a cleaner and more consistent scan over the entire halo ring sin
 Power profile readings show a `10.88 mA` power consumption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
 
 #### Sparkle
-Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At `~320 hz`, the procesor wakes from deep sleep and runs the selection of which LED to light (if any).
+Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At `~320 Hz`, the procesor wakes from deep sleep and runs the selection of which LED to light (if any).
 
 ```c
 rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
@@ -276,7 +274,7 @@ To turn the LEDs off, the column and row are both set to high impedence. To turn
 The previous LED *must* be turned off before lighting up the next LED or else there is a risk of damaging the electronics. It is recommended to only use the `setLed` and `ledLow` functions.
 
 ### Compiling
-Compiling is done with the SDCC (small device c compiler) and the included makefile. 
+Compiling is done with the [SDCC] (small device C compiler) and the included makefile. 
 
 Steps, as an example, are given below for some systems but should easily be transferable to the distro of your choosing. The requirements are `make` and `sdcc`. They should both be available in the path. Once installation is completed, running `make` will generate the `halo.ihx` file, which is the binary to be flashed.
 
@@ -299,7 +297,7 @@ sudo pacman -S sdcc
 A flashing software is required, along with a programmer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones, because the form factor of the genuine programmer is difficult to use and newer programmers do not support `SWIM`.
 
 #### Windows
-`STVP_CmdLine` is required as the flashing software and comes with the software package [ST Visual Programer](https://www.st.com/en/development-tools/stvp-stm32.html). This needs to be installed and `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
+`STVP_CmdLine` is required as the flashing software and comes with the software package [ST Visual Programer]. This needs to be installed and `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
 
 Once it's installed, it can be run with the following flags. Preferably in WSL but should also be possible in CMD or PS.
 
@@ -314,7 +312,7 @@ make flash
 ```
 
 #### Linux
-[STM8Flash](https://github.com/vdudouyt/stm8flash) is an open source `SWIM` compatible flashing utililty for linux. The tool is built from source. Short instructions are written below.
+[STM8 Flash] is an open source `SWIM` compatible flashing utililty for linux. The tool is built from source. Short instructions are written below.
 
 ```bash
 git clone https://github.com/vdudouyt/stm8flash.git
@@ -362,7 +360,7 @@ The BOM was selected with parts that are common to the high-volume Chinese manuf
 | REF    | QTY | Manufacturer              | MPN              | Description                         |
 | ------ | ---:| ------------------------- | ---------------- | ----------------------------------- |
 | D1-D90 |  90 | Brightled                 | BL-HUB37A-AV-TRB | LED: RED 627-637nm 50mcd@20mA 0402  |
-| U1     |   1 | STMicroelectronics        | STM8L151G4U6     | MCU: 8b 16Mhz 16k Flash UQFN-28-4x4 |
+| U1     |   1 | STMicroelectronics        | STM8L151G4U6     | MCU: 8b 16MHz 16k Flash UQFN-28-4x4 |
 | MK1    |   1 | Knowles Electronics       | SPW2430HR5H-B    | MIC: Omni Si-Sonic 3.1x2.5x1.0mm    |
 | BT1    |   1 | Linx Technologies         | BAT-HLD-001      | BAT: CR2032 Cell Holder             |
 | S1     |   1 | C&K                       | KXT311LHS        | SW: Low Profile 3x2x0.6mm 100gf     |
@@ -391,7 +389,7 @@ There is a single PCB. Although still common, some of the more precise requireme
 | E-Test             | Yes   | ul   |
 | Surface Finish     | ENIG  | ul   |
 
-The PCB has four layers 
+The PCB has four layers.
 
 | Front     | Inner 1   | Inner 2   | Back      |
 | --------- | --------- | --------- | --------- |
@@ -409,6 +407,8 @@ The whole board can be pick and placed. The table below shows some data that mig
 | Front Components  |    96 |
 | Back Components   |     1 |
 
+The smallest componts are `0402` LEDs, and all parts can survive normal lead-free reflow profiles. The microphone is open port MEMS so do not wash or clean or expose to ultrasonic vibrations (datasheet has further requirements).
+
 #### Assembly Detail Pictures
 
 | Assembly    | Front       |
@@ -424,7 +424,7 @@ The whole board can be pick and placed. The table below shows some data that mig
 | ![frontIso] | ![backIso]  |
 
 #### Potential Alternates
-Some alternates have not been tested. (Will update when I can get stock or have to switch suppliers)
+Some alternates have not been tested, but match specifications.
 
 | Stated            | Alternetive      | Tested |
 | ----------------- | ---------------- | ------ |
@@ -432,9 +432,11 @@ Some alternates have not been tested. (Will update when I can get stock or have 
 | BAT-HLD-001       | MY-2032-08       | No     |
 | STM8L151G4U6      | STM8L151G6U*     | Yes    |
 
+*To be updated when I can get stock or have to switch suppliers*
+
 ### Physical Assembly
 
-Th earwire is attached with jewelery pliers through the hole. The 1mm hole is made for up to 0.8mm wire over 20ga. Gold plated french hooks are used. these are commonly available as jewelry findings.
+Th earwire is attached with jewelery pliers through the hole. The 1mm hole is made for up to `0.8 mm` wire over `20 ga`. Gold plated french hooks are used. these are commonly available as jewelry findings.
 
 ![IMG-frenchEarwire]
 
@@ -455,46 +457,42 @@ The programmer has a hole at the top to allow a pin to push the button for testi
 
 The 3D printed base holds the board in place while the PCB is held to it with 3mm heat set inserts. The PCB acts as a compliant mechanism providing down pressure while still allowing it to be flexible enough to lift. 
 
-The programmer uses *MillMax* ‎‎‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with (ToDo)
+The programmer uses *Mill-Max* ‎‎‎[0965-0-15-20-80-14-11-0]‎ spring pins on a PCB that matches exactly with the six pads on the face of the board. 
 
 ![springPins]
 
-## Artwork
-The design and layout is the main artwork on the  (ToDo)
+The to part is lifted up a asembled board is slipped in, the spring force from the PCB pushes back down on to the pads and can then be left for programing and debugging.
 
-The accompanying getting started card shown below also has artwork. This is completely protected.
+## Artwork
+The design and layout is the main artwork on the board and the layers and traces are not protected. Any addtional writng or images such as the Kolibri bird, copyright and designer notices, certifications are a trademark.
 
 | Front        | Back        |
 | ------------ | ----------- |
 | ![cardFront] | ![cardBack] | 
 
+The accompanying getting started card also has artwork, this is a trademark and is protected by copyright.
+
 ## Inventory and QC
 Inventory can be managed with QR coded serialized tags. The serialization provides better quality control because it allows failure analysis and tracking, in case of issues traceable to the batch and assembly level.
 
 ## Packaging
-We are packaging and shippping in `14 cm x 17 cm` padded envelopes with brand stamping. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under 3 cm before dispatching. Custom labeled sleeves will be used for retail packaging.
+We are packaging and shippping in `14 cm x 17 cm` padded envelopes with brand stamping. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under `3 cm` before dispatching. Custom labeled sleeves will be used for retail packaging.
 
 ## Shipping
 The labels are printed with CN22 on the harmonized label schedule.
 
-Lithium cells have special requirements for shipping. With air mail, small cells (up to four) are packaged securely and may be sent with the product. A note is required on the packaging, but no warning label is mandatory.
+Lithium cells have special requirements for shipping. With air mail, small cells (up to four) are packaged securely and may be sent with the product. A note (`Lithium metal batteries in compliance with Section II of PI969`) is required on the packaging, but no warning label is mandatory.
 
-`Lithium metal batteries in compliance with Section II of PI969`
-
-For international shipping, the following HS code is used.
-
-`HALO HS Code - 7117.90.0000	Imitation Jewlery other`
+For international shipping, the HS code `7117.90.0000	Imitation Jewlery other` is used.
 
 ## Safety
 The edges are fully routed when possible or finished afterwards. The PCB is made from fiberglass so care must be taken because it can be abrasive on the edges. Clear coat nail polish can be applied to round and soften the edges without changing how it looks.
 
-The CR2032 cells are quite safe, as they have only very small traces of lithium, and have a fairly high internal resistance. However, they must still be disposed of responsibly. LIR2032 or other rechargable 2032 cells should not be used because they have a higher voltage outside of the guaranteed parameters and significantly lower capacity (under 25%).
+The `CR2032` cells are quite safe, as they have only very small traces of lithium, and have a fairly high internal resistance. However, they must still be disposed of responsibly. `LIR2032` or other rechargable 2032 cells should *not* be used because they have a higher voltage outside of the guaranteed parameters and significantly lower capacity (under 25%).
 
-If the battery is placed in backwards, it will drain over time because there is no reverse polarity protection. It will heat up but should not damage anything, due to high internal resistance limiting the discharge.
+If the battery is placed in backwards, it will drain over time because there is no reverse polarity protection. It will heat up but should not damage anything, due to high internal resistance limiting the discharge. The low voltage, `3.0 V`, as well as the currents used pose very little risk.
 
-The printed circuit boards are assembled in a lead-free process, and all components are RHOS certified.
-
-The low voltage `3.0` as well as the currents used pose very little risk.
+The printed circuit boards are assembled in a lead-free process, and all components are `ROHS` certified.
 
 ## Certifications
 Certifications take time and effort but will make a better product by guaranteeing its safety to users and letting them use it in other projects. The table below shows the order in which we will obtain certifications.
@@ -507,7 +505,7 @@ Certifications take time and effort but will make a better product by guaranteei
 | WEEE                     | No  (yearly fee)          |
 
 ## Liecence
-The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Everything is released under permissive copyleft licenses, and copies of all licenses are included.
+The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Everything is released under permissive copyleft licenses.
 
 | Sector        | License      | Verison |
 | ------------- | ------------ | -------:|
@@ -515,9 +513,11 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 | Firmware      | [GNU GPL]    |     3.0 |
 | Documentation | [CC BY-SA]   |     4.0 |
 
+Copies of all licenses are required with the distribution of files. All files are available in easy-to-modify types for remixing. Please purchase original products from [Kolibri] to support further products, design, and research.
+
 ## Attribution
 - Make
-- SDCC
+- [SDCC]
 - KiCad
 - [STM8Flash]
 ### Fonts
@@ -531,8 +531,7 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 - [ ] Led sometimes remains on after suthdown
 - [ ] Randomly HALO pattren forms high low pattren 
 
-<!-- Images and Links -->
-
+<!--                       Refrences                                      -->
 <!-- Files -->
 [BAT-HLD-001]:                ./pcb/components/BAT-HLD-001/BAT-HLD-001.pdf
 [BL-HUB37A-AV-TRB]:           ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf
@@ -540,28 +539,29 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 [LSM6DSM]:                    ./pcb/components/LSM6DSM/LSM6DSM.pdf
 [SPW2430HR5H-B]:              ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf
 [STM8L151G4]:                 ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
-
 <!-- Links -->
+[HALO-90]:                    https://openkolibri.com/hlo/90
 [KiCad]:                      https://kicad.org/
+[ST Visual Programer]:        https://www.st.com/en/development-tools/stvp-stm32.html
 [Quakehold]:                  https://www.quakehold.com/collectibles.html
 [TYP-1]:                      https://trollfactory.de/produkte/silikon-kautschuk/haertegrad-shore/weich-shore-a25/7044/tfc-silikon-kautschuk-typ-1-abformsilikon-weich-1-1-nv-troll-factory-rtv
 [0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
 [Sockelgips FL]:              https://www.hinrichs-dental-shop.de/sockelgips-fl-p-1469.html
-
+[Kolibri]:                    https://openkolibri.com/
 <!-- Internal Links -->
 [PDF-schematic]:              ./docs/design/hardware/schematic.pdf        
 [nodeHaloBuilding]:           ./pcb/halo.js
 [BOMcsv]:                     ./pcb/bom.csv
 <!-- Intro -->
-[wornDynamic]:                ./docs/intro/wornDynamic.gif                             "Worn earring reacting to music Model: Greta"
-[presentedCase]:              ./docs/intro/haloSetDisplay.jpg                          "Pair of earings in holder"
-[render]:                     ./docs/render.jpg                                        "Render of earrings showing propertions"
+[wornDynamic]:                ./docs/intro/wornDynamic.gif                              "Worn earring reacting to music Model: Greta"
+[presentedCase]:              ./docs/intro/haloSetDisplay.jpg                           "Pair of earings in holder"
+[render]:                     ./docs/render.jpg                                         "Render of earrings showing propertions"
 <!-- Design -->
-[PAT-audio]:                  ./docs/patterns/audio.gif                                "Demonstrating animation of audio pattern"
-[PAT-halo]:                   ./docs/patterns/halo.gif                                 "Demonstrating animation of halo pattern"
-[PAT-sparkle]:                ./docs/patterns/sparkle.gif                              "Demonstrating animation of sparkle pattern"
+[PAT-audio]:                  ./docs/patterns/audio.gif                                 "Worn animation of audio pattern"
+[PAT-halo]:                   ./docs/patterns/halo.gif                                  "Worn animation of halo pattern"
+[PAT-sparkle]:                ./docs/patterns/sparkle.gif                               "Worn animation of sparkle pattern"
 <!-- Hardware -->
-[IMG-schematic]:              ./docs/design/hardware/schematic.png                     "Image of schematic"
+[IMG-schematic]:              ./docs/design/hardware/schematic.png                      "Image of schematic"
 
 <!-- Components -->
 [IMG-BAT-HLD-001]:            ./pcb/components/BAT-HLD-001/BAT-HLD-001.jpg              "CR2032 Battery Holder"
@@ -576,63 +576,55 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 [magnetsGlued]:               ./docs/assembly/jigsGlue.jpg                              "Mangents glued using the jig"
 [magnetJig]:                  ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
 <!-- Connectors and pads -->
-[alignmentPins]:              ./docs/connectors/pinDim.jpg                          "Holes for tooling and jig alginment"
-[mass]:                       ./docs/connectors/mass.jpg                           "Halo and battery on scale for measuring mass"
-[pgrmPads]:                   ./docs/design/hardware/pgrmPads.png                   "Labeling of the programming pads"
-[pgrmPlacement]:              ./docs/design/hardware/pgrmPlacement.png              "Dimentions of the programming pads"
-[springPins]:                 ./docs/components/springPin.jpg                       "Spring pin for programing"    
+[alignmentPins]:              ./docs/connectors/pinDim.jpg                              "Holes for tooling and jig alginment"
+[mass]:                       ./docs/connectors/mass.jpg                                "Halo and battery on scale for measuring mass"
+[pgrmPads]:                   ./docs/design/hardware/pgrmPads.png                       "Labeling of the programming pads"
+[pgrmPlacement]:              ./docs/design/hardware/pgrmPlacement.png                  "Dimentions of the programming pads"
+[springPins]:                 ./docs/components/springPin.jpg                           "Spring pin for programing"    
 <!-- Case -->
-[caseBatch]:                  ./docs/case/batch.jpg
-[caseRender]:                 ./docs/case/caseRender.jpg
-[cases]:                      ./docs/case/cases.jpg
-[caseCasting]:                ./docs/case/casting.jpg
-[caseFDM]:                    ./docs/case/fdmPrinted.jpg
-[caseMaster]:                 ./docs/case/master.jpg
-[caseMould]:                  ./docs/case/mould.jpg
-
+[caseBatch]:                  ./docs/case/batch.jpg                                     "Batch of cast cases"
+[caseRender]:                 ./docs/case/caseRender.jpg                                "Render of case looking at coloring options"
+[cases]:                      ./docs/case/cases.jpg                                     "View of diffrent colour and dye trials"
+[caseCasting]:                ./docs/case/casting.jpg                                   "Closeup of cast case"
+[caseFDM]:                    ./docs/case/fdmPrinted.jpg                                "View of multiple FDM printed cases"
+[caseMaster]:                 ./docs/case/master.jpg                                    "Master showing PLA, and primer, anded to a finsih"
+[caseMould]:                  ./docs/case/mould.jpg                                     "Mould ready for pouring"
 <!-- Firmware -->
-[PWR-audio]:                  ./docs/firmware/powerProfile/audioPowerProfile.png
-[PWR-halo]:                   ./docs/firmware/powerProfile/haloPowerProfile.png
-[PWR-sparkle]:                ./docs/firmware/powerProfile/sparklePowerProfile.png
-[GIF-audio]:                  ./docs/firmware/powerProfile/audio.gif
-[GIF-halo]:                   ./docs/firmware/powerProfile/halo.gif
-[GIF-sparkle]:                ./docs/firmware/powerProfile/sparkle.gif
-[GIF-boot]:                   ./docs/firmware/boot.gif
-
+[PWR-audio]:                  ./docs/firmware/powerProfile/audioPowerProfile.png        "Current vs time capture in audio mode"
+[PWR-halo]:                   ./docs/firmware/powerProfile/haloPowerProfile.png         "Current vs time capture in halo mode"
+[PWR-sparkle]:                ./docs/firmware/powerProfile/sparklePowerProfile.png      "Current vs time capture in sparkle mode"
+[GIF-audio]:                  ./docs/firmware/powerProfile/audio.gif                    "Animation showing audio mode"
+[GIF-halo]:                   ./docs/firmware/powerProfile/halo.gif                     "Animation showing halo mode"
+[GIF-sparkle]:                ./docs/firmware/powerProfile/sparkle.gif                  "Animation showing sparkle mode"
+[GIF-boot]:                   ./docs/firmware/boot.gif                                  "Animation showing booting mode"
 <!-- PCB Layers -->
-[Layer0]:                     ./docs/layers/L0.png          "Front layer"
-[Layer1]:                     ./docs/layers/L1.png          "Inner 1 layer"
-[Layer2]:                     ./docs/layers/L2.png          "Inner 2 layer"
-[Layer3]:                     ./docs/layers/L3.png          "Back layer"
+[Layer0]:                     ./docs/layers/L0.png                                      "Front layer"
+[Layer1]:                     ./docs/layers/L1.png                                      "Inner 1 layer"
+[Layer2]:                     ./docs/layers/L2.png                                      "Inner 2 layer"
+[Layer3]:                     ./docs/layers/L3.png                                      "Back layer"
 <!-- PCB Assembly -->
-[assembly]:                   ./docs/pcbAssembly/assemblyDraw.png                               "Drawing showing led and chip orentations"
-[backDetail]:                 ./docs/pcbAssembly/back-detail.jpg                                "Detail view of back assembled"
-[backIso]:                    ./docs/pcbAssembly/back-iso.jpg                                   "Isometric view of assembled back"
-[frontDetail]:                ./docs/pcbAssembly/front-detail.jpg                               "Detail view of assembled front"
-[front]:                      ./docs/pcbAssembly/front-full.jpg                                 "Front view of assembled board"
-[frontIso]:                   ./docs/pcbAssembly/front-iso.jpg                                  "Isometric view of front assembled"
-[hexPackedPanel]:             ./docs/pcbAssembly/hexPackedPanel.png                             "Panel with 35 boards"
-
+[assembly]:                   ./docs/pcbAssembly/assemblyDraw.png                       "Drawing showing led and chip orentations"
+[backDetail]:                 ./docs/pcbAssembly/back-detail.jpg                        "Detail view of back assembled"
+[backIso]:                    ./docs/pcbAssembly/back-iso.jpg                           "Isometric view of assembled back"
+[frontDetail]:                ./docs/pcbAssembly/front-detail.jpg                       "Detail view of assembled front"
+[front]:                      ./docs/pcbAssembly/front-full.jpg                         "Front view of assembled board"
+[frontIso]:                   ./docs/pcbAssembly/front-iso.jpg                          "Isometric view of front assembled"
+[hexPackedPanel]:             ./docs/pcbAssembly/hexPackedPanel.png                     "Panel with 35 boards"
 <!-- Programmer -->
-[programmer]:                 ./docs/programmer.jpg
-
+[programmer]:                 ./docs/programmer.jpg                                     "View of programmer and it's componets"
 <!-- Artwork -->
-[cardFront]:                  ./docs/artwork/cardFront.png
-[cardBack]:                   ./docs/artwork/cardBack.png
-
-
+[cardFront]:                  ./docs/artwork/cardFront.png                              "Getting started card front"
+[cardBack]:                   ./docs/artwork/cardBack.png                               "Getting started card back"
 <!-- Certifications -->
 [DE000087]:                   https://certification.oshwa.org/de000087.html
-
 <!-- Licence -->
 [CERN-OHL-S]:                 ./pcb/LICENSE
 [GNU GPL]:                    ./firmware/LICENSE
 [CC BY-SA]:                   ./docs/LICENSE
-
 <!-- Attribution -->
 [STM8Flash]:                  https://github.com/vdudouyt/stm8flash
 [STM8 Headers]:               https://github.com/gicking/STM8_headers
-
+[SDCC]:                       http://sdcc.sourceforge.net/
 <!-- Fonts -->
 [DejaVu]:                     https://dejavu-fonts.github.io/
 [IBM Plex Mono]:              https://www.ibm.com/plex/

@@ -1,7 +1,9 @@
-﻿Comment,Designator,Footprint,LCSC,MPN,Manufacturer
-0402 LED,D1-90,402,C165980,BL-HUB37A-AV-TRB,Brightled
-uC,U1,UQFN-4x4,C95239,STM8L151G4U6TR,STMicroelectronics
-xl,U2,LGA-14,C126672,LSM6DSLTR,STMicroelectronics
-10k 0402,R1-3,402,C25744,0402WGF1002TCE,Uniroyal
-0u1 0402,C1,402,C1525,CL05B104KO5NNNC,Samsung Electro-Mechanics
-1u 0402,C2,402,C52923,CL05A105KA5NQNC,Samsung Electro-Mechanics
+﻿REF,QTY,Manufacturer,MPN,Description
+D1-D90,90,Brightled,BL-HUB37A-AV-TRB,LED: RED 627-637nm 50mcd@20mA 0402
+U1,1,STMicroelectronics,STM8L151G4U6,MCU: 8b 16Mhz 16k Flash UQFN-28-4x4
+MK1,1,Knowles Electronics,SPW2430HR5H-B,MIC: Omni Si-Sonic 3.1x2.5x1.0mm
+BT1,1,Linx Technologies,BAT-HLD-001,BAT: CR2032 Cell Holder
+S1,1,C&K,KXT311LHS,SW: Low Profile 3x2x0.6mm 100gf
+R3,1,Uniroyal,0402WGF1002TCE,RES: 10k 5% 1/16W 0402
+C1,1,Samsung Electro-Mechanics,CL05B104KO5NNNC,CAP: MLCC 100nF 16V 0402
+C2,1,Samsung Electro-Mechanics,CL05A105KA5NQNC,CAP: MLCC 1uF 25V 0402
