@@ -152,7 +152,11 @@ The labeled pins have thier descriptions in the table below.
 | SWIM | Programing interface             | 
 
 ### Case
-The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. This allows for at least 36 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close. The cavities inside the case hold all components securely so that they do not rattle. The earrings display beautifully when the case is opened.
+The case holds the earrings and two cells in its cavities. This allows for at least 36 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. The cavities inside the case hold all components securely so that they do not rattle. The earrings display beautifully when the case is opened.
+
+![cases]
+
+The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close.
 
 ![caseRender]
 
@@ -580,6 +584,7 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 <!-- Case -->
 [caseBatch]:                  ./docs/case/batch.jpg
 [caseRender]:                 ./docs/case/caseRender.jpg
+[cases]:                      ./docs/case/cases.jpg
 [caseCasting]:                ./docs/case/casting.jpg
 [caseFDM]:                    ./docs/case/fdmPrinted.jpg
 [caseMaster]:                 ./docs/case/master.jpg
