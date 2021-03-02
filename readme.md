@@ -1,7 +1,7 @@
 ![wornDynamic]
 
 # HALO-90
-A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. Ninety lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes with a modern touch. This is HALO-90.
+A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. Ninety lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes and a modern touch. This is HALO-90.
 
 ![presentedCase]
 
