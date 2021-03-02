@@ -27,7 +27,7 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
       * [Mould Master](#mould-master)
       * [Silicone Mould](#silicone-mould)
     - [Stone Casting](#stone-casting)
-    - [Magents](#magents)
+    - [Magnets](#magnets)
 * [Firmware](#firmware)
   + [Modes](#modes)
     - [Dynamic](#dynamic)
@@ -42,7 +42,7 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
     - [Windows](#windows)
     - [Linux](#linux)
 * [Absolute Maximum Ratings](#absolute-maximum-ratings)
-* [Gaurenteed Ratings](#gaurenteed-ratings)
+* [Guaranteed Ratings](#guaranteed-ratings)
 * [Manufacturing](#manufacturing)
   + [BOM](#bom)
   + [PCB](#pcb)
@@ -59,7 +59,7 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
 * [Shipping](#shipping)
 * [Safety](#safety)
 * [Certifications](#certifications)
-* [Liecence](#liecence)
+* [Licence](#licence)
 * [Attribution](#attribution)
   + [Fonts](#fonts)
   + [Libraries](#libraries)
@@ -120,7 +120,7 @@ The button provides the functionality of changing light patterns by pressing and
 ![IMG-LSM6DSM]
 
 #### Passives
-There are three passives (five if the IMU is populated) that can be of any tolerance. There are two `1 uF` and `0.1 uF` decoupling capacitors and one `10k` pullup on the reset of the processor. The tow IMU pullups are `10k` I2C pullups.
+There are three passives (five if the IMU is populated) that can be of any tolerance. There are two `1 uF` and `0.1 uF` decoupling capacitors and one `10k` pullup on the reset of the processor. The two IMU pullups are `10k` I2C pullups.
 
 #### Alignment Pins
 There are four tooling holes/alignment pins that can be used for addons. They are `1.152 mm` (`45.35 mil`) in diameter and are placed `2.8 mm` and `5.5 mm` from the center.
@@ -183,14 +183,14 @@ The mould can be cast with various materials, including other silicones, polyure
 
 ![caseCasting]
 
-After 24 hours, the part has cured to its final hardness and has dried out completely. It can then be processed further with magents and dye. 
+After 24 hours, the part has cured to its final hardness and has dried out completely. It can then be processed further with magnets and dye. 
 
 **Testing, process optimization and verification is still in progress.**
 
-#### Magents
-The magents are `6 mm x 1 mm` `N52` neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in `Ni-Cu-Ni`, at around `12 um`. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
+#### Magnets
+The magnets are `6 mm x 1 mm` `N52` neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in `Ni-Cu-Ni`, at around `12 um`. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
 
-![6x1-magents]
+![6x1-magnets]
 
 Magnets are installed using a gluing jig. One jig for the top and one for the bottom. They have magnets that are installed, as well as a matching chamfer which prevents the wrong part from being placed or placing the part backwards by accident. 
 
@@ -341,7 +341,7 @@ make flash
 | Temperature       |  -40 |  85 | °C   |
 | Power Draw        |  15u | 25m | Amp  |
 
-## Gaurenteed Ratings
+## Guaranteed Ratings
 
 | Parameter              | Min | Max | Unit |
 | ---------------------- | ---:| ---:| ---- |
@@ -461,10 +461,10 @@ The programmer uses *Mill-Max* ‎‎‎[0965-0-15-20-80-14-11-0]‎ spring pins
 
 ![springPins]
 
-The to part is lifted up a asembled board is slipped in, the spring force from the PCB pushes back down on to the pads and can then be left for programing and debugging.
+The top part is lifted up and the assembled board is slipped in. The spring force from the PCB pushes back down on to the pads and can then be left for programing and debugging.
 
 ## Artwork
-The design and layout is the main artwork on the board and the layers and traces are not protected. Any addtional writng or images such as the Kolibri bird, copyright and designer notices, certifications are a trademark.
+The design and layout is the main artwork on the board and the layers and traces are not protected. Any additional writing or images such as the Kolibri bird, copyright and designer notices, certifications are a trademark.
 
 | Front        | Back        |
 | ------------ | ----------- |
@@ -504,7 +504,7 @@ Certifications take time and effort but will make a better product by guaranteei
 | FCC                      | No  (Self Certification)  |
 | WEEE                     | No  (yearly fee)          |
 
-## Liecence
+## Licence
 The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Everything is released under permissive copyleft licenses.
 
 | Sector        | License      | Verison |
@@ -529,7 +529,7 @@ Copies of all licenses are required with the distribution of files. All files ar
 
 ## ToDo
 - [ ] Led sometimes remains on after suthdown
-- [ ] Randomly HALO pattren forms high low pattren 
+- [ ] Randomly HALO pattern forms high low pattern 
 
 <!--                       Refrences                                      -->
 <!-- Files -->
@@ -572,9 +572,9 @@ Copies of all licenses are required with the distribution of files. All files ar
 [IMG-STM8L15xxx]:             ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                "Low power microcontroller"
 [IMG-frenchEarwire]:          ./pcb/components/frenchEarwire/frenchEarwire.jpg          "Gold plated french earwire"
 <!-- Magenets -->
-[6x1-magents]:                ./docs/components/magnets.jpg                             "6mm x 1mm N53 disc mangents"
+[6x1-magnets]:                ./docs/components/magnets.jpg                             "6mm x 1mm N53 disc mangents"
 [magnetsGlued]:               ./docs/assembly/jigsGlue.jpg                              "Mangents glued using the jig"
-[magnetJig]:                  ./docs/assembly/jigs.jpg                                  "Jigs used to glue magents into place in the correct orentation"
+[magnetJig]:                  ./docs/assembly/jigs.jpg                                  "Jigs used to glue magnets into place in the correct orentation"
 <!-- Connectors and pads -->
 [alignmentPins]:              ./docs/connectors/pinDim.jpg                              "Holes for tooling and jig alginment"
 [mass]:                       ./docs/connectors/mass.jpg                                "Halo and battery on scale for measuring mass"
