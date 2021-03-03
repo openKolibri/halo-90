@@ -499,7 +499,7 @@ Certifications take time and effort but will make a better product by guaranteei
 
 | Cetrtifing Authority     | Status                    |
 | -------------------------| ------------------------- |
-| OSHW                     | Pending [DEXXXXXX]        |
+| OSHW                     | [DE000103]                |
 | CE                       | No  (Self Certification)  |
 | FCC                      | No  (Self Certification)  |
 | WEEE                     | No  (yearly fee)          |
@@ -616,7 +616,7 @@ Copies of all licenses are required with the distribution of files. All files ar
 [cardFront]:                  ./docs/artwork/cardFront.png                              "Getting started card front"
 [cardBack]:                   ./docs/artwork/cardBack.png                               "Getting started card back"
 <!-- Certifications -->
-[DE000087]:                   https://certification.oshwa.org/de000087.html
+[DE000103]:                   https://certification.oshwa.org/de000103.html
 <!-- Licence -->
 [CERN-OHL-S]:                 ./pcb/LICENSE
 [GNU GPL]:                    ./firmware/LICENSE
