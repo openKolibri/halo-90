@@ -150,7 +150,7 @@ The labeled pins have their descriptions in the table below.
 | SWIM | Programing interface             | 
 
 ### Case
-The case holds the earrings and two cells in its cavities. This allows for the storing and organizing at least 36 hours of available runtime. The earring case consists of two pieces held together with magnets. The cavities inside the case hold all components securely so that they do not rattle. The earrings are displayed beautifully when the case is opened.
+The case holds the earrings and two cells in its cavities. This allows for the storing and organizing of at least 36 hours of available runtime. The earring case consists of two pieces held together with magnets. The cavities inside the case hold all components securely so that they do not rattle. The earrings are displayed beautifully when the case is opened.
 
 ![cases]
 
@@ -185,11 +185,6 @@ The mould can be cast with various materials, including other silicones, polyure
 
 After 24 hours, the part has cured to its final hardness and has dried out completely. It can then be processed further with magnets and dye. 
 
-#### Production Scaling Cases
-The master moulds can create secondary masters out of resin which could then be used to make gang moulds, allowing for multiple castings in parallel. 
-
-![gangMoulds]
-
 #### Magnets
 The magnets are `6 mm x 1 mm` `N52` neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in `Ni-Cu-Ni`, at around `12 um`. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
 
@@ -214,14 +209,14 @@ There are multiple modes available on the halo earring that can be switched thro
 | ![GIF-audio]  | ![GIF-halo] | ![GIF-sparkle] |
 
 #### Dynamic
-The mode selected on startup is the audio based dynamic mode. During every ADC cycle it reads the analog value and projects the audio waveform amplitude, based around a moving point on the ring with wrap around.
+The mode selected on startup is the audio-based dynamic mode. During every ADC cycle it reads the analog value and projects the audio waveform amplitude, based around a moving point on the ring with wrap around.
 
 ![PWR-audio]
 
 Power profile readings show no correlation with audio level, and an `11.71 mA` power consumption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
 
 #### Halo
-In the HALO mode, the entire light ring is lit. This is done through interlacing the illumination of each LED. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed `32 kHz` oscillator. On every wake, it changes the illuminate the 13th following LED, wrapping around at 90.
+In the HALO mode, the entire light ring is lit. This is done through interlacing the illumination of each LED. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed `32 kHz` oscillator. On every wake, it changes to illuminate the 13th following LED, wrapping around at 90.
 
 ```c
 setLed((prevLed + 13)%90);
@@ -279,7 +274,7 @@ The previous LED *must* be turned off before lighting up the next LED or else th
 ### Compiling
 Compiling is done with the [SDCC] ("Small Device C Compiler") and the included makefile.
 
-As an example, the following steps are given below for some systems but should easily be transferable to the distro of your choosing. The requirements are `make` and `sdcc`. They should both be available in the path. Once installation is completed, running `make` will generate the `halo.ihx` file, which is the binary to be flashed.
+As an example, the following steps are given for some systems but should easily be transferable to the distro of your choosing. The requirements are `make` and `sdcc`. They should both be available in the path. Once installation is completed, running `make` will generate the `halo.ihx` file, which is the binary to be flashed.
 
 ```bash
 make
@@ -358,7 +353,7 @@ The earrings should be fine to leave in a hot car (although the 3D printed plast
 Although taking on novel uses of materials, the ability to manufacture at scale was always a primary focus. Parts were selected with strong supply chains and alternatives. Layout was designed with generous rules to accomodate for as many fabs as possible and the number of unique components was minimized. The microphone and battery holder are from single vendors but they have proven track records and well-known supply chains. Alternatives to be tested are still proposed.
 
 ### BOM
-The BOM was selected with parts that are common to the high-volume Chinese manufacturing market, have strong supply chains, and have many alternatives available in case a supplier stops manufacture or supply dips occur. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" pins, like SMD pads. The table of BOM is shown below.
+The BOM was selected with parts that are common to the high-volume Chinese manufacturing market, have strong supply chains, and have many alternatives available in case a supplier stops manufacture or supply dips occur. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" pins, like the programming SMD pads. The table of BOM is shown below.
 
 | REF    | QTY | Manufacturer              | MPN              | Description                         |
 | ------ | ---:| ------------------------- | ---------------- | ----------------------------------- |
@@ -448,6 +443,11 @@ The board can be hexagonally packed into a panel with tiny tabs since it's held 
 
 ![hexPackedPanel]
 
+#### Production Scaling Cases
+The master moulds can create secondary masters out of resin which could then be used to make gang moulds, allowing for multiple castings in parallel. 
+
+![gangMoulds]
+
 ## Programmer
 The programmer has a hole at the top to allow a pin to push the button for testing.
 
@@ -472,7 +472,7 @@ The below "Getting Started" card also has artwork which is considered protected 
 
 
 ## Inventory and QC
-Inventory can be managed with QR coded serialized tags. This serialization provides better quality control because it allows failure analysis and tracking in case of issues traceable down to the batch and assembly.
+Inventory can be managed with QR coded serialized tags. This serialization provides better quality control because it allows failure analysis and tracking in cases of issues traceable to batch and assembly.
 
 ## Packaging
 We are packaging and shippping in `14 cm x 17 cm` padded envelopes with branded stampings. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under `3 cm` before dispatching. Custom labeled sleeves will be used for retail packaging.
@@ -504,7 +504,7 @@ Certifications take time and effort but will make a better product by guaranteei
 | WEEE                     | No  (yearly fee)          |
 
 ## Licence
-The product was designed by Sawaiz Syed for Kolibri. Kolibri owns all protected IP. Everything that not otherwise stated as being protected IP (e.g. firmware, PCB design, documentation) is released under permissive copyleft licenses.
+The product was designed by Sawaiz Syed for Kolibri. Kolibri owns all protected IP. Everything that is not otherwise stated as being protected IP (e.g. firmware, PCB design, documentation) is released under permissive copyleft licenses.
 
 | Sector        | License      | Verison |
 | ------------- | ------------ | -------:|
