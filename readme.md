@@ -150,11 +150,11 @@ The labeled pins have their descriptions in the table below.
 | SWIM | Programing interface             | 
 
 ### Case
-The case holds the earrings and two cells in its cavities. This allows for at least 36 hours of runtime available and organized. The earring case consists of two pieces held together with magnets. The cavities inside the case hold all components securely so that they do not rattle. The earrings display beautifully when the case is opened.
+The case holds the earrings and two cells in its cavities. This allows for the storing and organizing of at least 36 hours of available runtime. The earring case consists of two pieces held together with magnets. The cavities inside the case hold all components securely so that they do not rattle. The earrings are displayed beautifully when the case is opened.
 
 ![cases]
 
-The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. This provides a very satisfying tactile click when they align and close.
+The case is designed in CAD and made to house two earrings (with or without batteries inserted) as well as two additional batteries. All of the edges are filleted and the closed case is comfortable when held. One corner is chamfered which makes it easier to align both pieces together in the correct orientation, and the magnets are oriented to resist trying to close it whenever the directionality does not match. It also provides a very satisfying tactile click when they align and close.
 
 ![caseRender]
 
@@ -164,12 +164,12 @@ The first sets of cases are made of 3D printed plastic PLA. The top and bottom h
 ![caseFDM]
 
 #### Cast
-A pebble or smooth seashell-like finish provides an air of luxury, with the distinctive material and style, which emboldens the brand. 
+For a more bold and distinctive style with a pebble or smooth seashell-like finish, casted cases provides an air of luxury using distinctive materials.
 
 ![caseBatch]
 
 ##### Mould Master
-Moulding masters were made using the same 3D printed designs, printed at an `80 um` layer height, and then repeatedly filled, primed, and sanded with `P400` to `P3000` grit sandpaper on top of a glass plate to keep the straight faces square. This fills all of the air gaps which allows for a very smooth finish. It is then buffed to a shine with nail buffer sponges.
+Moulding masters were made using the same 3D printed designs, printed at an `80 um` layer height, and then repeatedly filled, primed, and sanded with `P400` to `P3000` grit sandpaper on top of a glass plate to keep the straight faces square. This fills all of the air gaps and allows for a very smooth finish. It is then buffed to a shine with nail buffer sponges.
 
 ![caseMaster]
 
@@ -185,14 +185,12 @@ The mould can be cast with various materials, including other silicones, polyure
 
 After 24 hours, the part has cured to its final hardness and has dried out completely. It can then be processed further with magnets and dye. 
 
-**Testing, process optimization and verification is still in progress.**
-
 #### Magnets
 The magnets are `6 mm x 1 mm` `N52` neodynium magnets that are glued in with UHU Max Repair Extreme adhesive. They are coated in `Ni-Cu-Ni`, at around `12 um`. The magnets are a very tight fit in their countersinks and are glued in to fit securely. They have a fixed orientation between both parts made, so swapping tops or bottoms with other sets is possible. There are few adhesives that work well when bonding two materials together that are already difficult to glue.
 
 ![6x1-magnets]
 
-Magnets are installed using a gluing jig. One jig for the top and one for the bottom. They have magnets that are installed, as well as a matching chamfer which prevents the wrong part from being placed or placing the part backwards by accident. 
+Magnets are installed using a gluing jig. One jig for the top and one for the bottom. Both jigs have magnets installed to correct for orientation when gluing. The jigs also have a matching chamfer which prevents the wrong part from being placed or placing the part backwards by accident.
 
 ![magnetsGlued]
 
@@ -211,14 +209,14 @@ There are multiple modes available on the halo earring that can be switched thro
 | ![GIF-audio]  | ![GIF-halo] | ![GIF-sparkle] |
 
 #### Dynamic
-Boot mode is the audio based dynamic mode. During every ADC cycle it reads the analog value and projects the audio waveform amplitude, based around a moving point on the ring with wrap around.
+The mode selected on startup is the audio-based dynamic mode. During every ADC cycle it reads the analog value and projects the audio waveform amplitude, based around a moving point on the ring with wrap around.
 
 ![PWR-audio]
 
 Power profile readings show no correlation with audio level, and an `11.71 mA` power consumption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
 
 #### Halo
-In the HALO mode, the entire light ring is lit. This is done through interlacing the LEDs lighting up. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed `32 kHz` oscillator. On every wake, it changes the led to the 13th following LED, looping around at 90.
+In the HALO mode, the entire light ring is lit. This is done through interlacing the illumination of each LED. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed `32 kHz` oscillator. On every wake, it changes to illuminate the 13th following LED, wrapping around at 90.
 
 ```c
 setLed((prevLed + 13)%90);
@@ -248,7 +246,7 @@ Pressing and holding the button for `500 ms` will turn off all LEDs and put the 
 
 ![GIF-boot]
 
-Pressing and holding the button will show a boot-up animation that lights up in a ring around the face. Holding the button until it makes a full revolution, about one second, will trigger a software reset of the halo turning it back on.
+Pressing and holding the button will show a boot-up animation that lights up in a ring around the face. Holding the button until it makes a full revolution, about one second, will trigger a software reset of the halo, turning it back on.
 
 ### LED control
 Since the LEDs are configured in a charlieplex array, only one LED can be on at a time. Some optimization can allow multiple LEDs to light simultaneously, but at a cost of consistency in brightness and power draw. There are two low-level functions that can turn a individual LED on or off, as well as a helper function that remembers the last LED and turns it off before turning on the next one.
@@ -259,7 +257,7 @@ void ledHigh(uint8_t led);
 void ledLow(uint8_t led);
 ```
 
-The function to get the column and row from the LED number is duplicated below.
+The function to get the column and row from the LED number is shown below:
 ```c
 uint8_t col = led / 9;
 uint8_t topElements = 9 - col;
@@ -274,9 +272,9 @@ To turn the LEDs off, the column and row are both set to high impedence. To turn
 The previous LED *must* be turned off before lighting up the next LED or else there is a risk of damaging the electronics. It is recommended to only use the `setLed` and `ledLow` functions.
 
 ### Compiling
-Compiling is done with the [SDCC] (small device C compiler) and the included makefile. 
+Compiling is done with the [SDCC] ("Small Device C Compiler") and the included makefile.
 
-Steps, as an example, are given below for some systems but should easily be transferable to the distro of your choosing. The requirements are `make` and `sdcc`. They should both be available in the path. Once installation is completed, running `make` will generate the `halo.ihx` file, which is the binary to be flashed.
+As an example, the following steps are given for some systems but should easily be transferable to the distro of your choosing. The requirements are `make` and `sdcc`. They should both be available in the path. Once installation is completed, running `make` will generate the `halo.ihx` file, which is the binary to be flashed.
 
 ```bash
 make
@@ -294,7 +292,7 @@ sudo pacman -S sdcc
 ```
 
 ### Flashing
-A flashing software is required, along with a programmer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones, because the form factor of the genuine programmer is difficult to use and newer programmers do not support `SWIM`.
+Some form of flashing software is required, along with a programmer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones, because the form factor of the genuine programmer is difficult to use and newer programmers do not support `SWIM`.
 
 #### Windows
 `STVP_CmdLine` is required as the flashing software and comes with the software package [ST Visual Programer]. This needs to be installed and `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
@@ -352,10 +350,10 @@ make flash
 The earrings should be fine to leave in a hot car (although the 3D printed plastic case could warp). If you are outside of these ratings, take care of yourself, you are either freezing or at risk of heat stroke. The earrings will be fine.
 
 ## Manufacturing
-Although taking on novel uses of materials, the ability to manufacture at scale was always a primary focus. Parts were selected with strong supply chains and alternatives. Layout was designed with generous rules to accomodate for as many fabs as possible and the number of components, while unique components were minimized. The microphone and battery holder are from single vendors but they have proven track records and well-known supply chains. Alternatives to be tested are still proposed.
+Although taking on novel uses of materials, the ability to manufacture at scale was always a primary focus. Parts were selected with strong supply chains and alternatives. Layout was designed with generous rules to accomodate for as many fabs as possible and the number of unique components was minimized. The microphone and battery holder are from single vendors but they have proven track records and well-known supply chains. Alternatives to be tested are still proposed.
 
 ### BOM
-The BOM was selected with parts that are common to the high-volume Chinese manufacturing market, have strong supply chains, and have many alternatives available in case a supplier stops manufacture or supply dips occur. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" options, like SMD pads. The table of BOM is shown below.
+The BOM was selected with parts that are common to the high-volume Chinese manufacturing market, have strong supply chains, and have many alternatives available in case a supplier stops manufacture or supply dips occur. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" pins, like the programming SMD pads. The table of BOM is shown below.
 
 | REF    | QTY | Manufacturer              | MPN              | Description                         |
 | ------ | ---:| ------------------------- | ---------------- | ----------------------------------- |
@@ -407,7 +405,7 @@ The whole board can be pick and placed. The table below shows some data that mig
 | Front Components  |    96 |
 | Back Components   |     1 |
 
-The smallest componts are `0402` LEDs, and all parts can survive normal lead-free reflow profiles. The microphone is open port MEMS so do not wash or clean or expose to ultrasonic vibrations (datasheet has further requirements).
+The smallest componts are `0402` LEDs, and all parts can survive normal lead-free reflow profiles. The microphone is open port MEMS so do not wash, clean, or expose it to ultrasonic vibrations (datasheet has further requirements).
 
 #### Assembly Detail Pictures
 
@@ -424,7 +422,7 @@ The smallest componts are `0402` LEDs, and all parts can survive normal lead-fre
 | ![frontIso] | ![backIso]  |
 
 #### Potential Alternates
-Some alternates have not been tested, but match specifications.
+Some alternates have not been tested, but their specifications match.
 
 | Stated            | Alternetive      | Tested |
 | ----------------- | ---------------- | ------ |
@@ -436,19 +434,19 @@ Some alternates have not been tested, but match specifications.
 
 ### Physical Assembly
 
-Th earwire is attached with jewelery pliers through the hole. The 1mm hole is made for up to `0.8 mm` wire over `20 ga`. Gold plated french hooks are used. these are commonly available as jewelry findings.
+The earwire is attached with jewelery pliers through the hole. The 1mm hole is made for up to `0.8 mm` wire over `20 ga`. Gold plated french hooks are used. these are commonly available as jewelry findings.
 
 ![IMG-frenchEarwire]
 
-### Production Scaling
+### Production Scaling Boards
 The board can be hexagonally packed into a panel with tiny tabs since it's held on all sides. To increase production efficiency, only one side can be PnP and the battery holder is added afterwards by hand.
 
 ![hexPackedPanel]
 
-#### Case
-The moulds can create secondary masters out of rsing and then be used to make gang moulds, allowing for multiple castings in parallel. 
+#### Production Scaling Cases
+The master moulds can create secondary masters out of resin which could then be used to make gang moulds, allowing for multiple castings in parallel. 
 
-[gangMoulds]
+![gangMoulds]
 
 ## Programmer
 The programmer has a hole at the top to allow a pin to push the button for testing.
@@ -464,19 +462,20 @@ The programmer uses *Mill-Max* ‎‎‎[0965-0-15-20-80-14-11-0]‎ spring pins
 The top part is lifted up and the assembled board is slipped in. The spring force from the PCB pushes back down on to the pads and can then be left for programing and debugging.
 
 ## Artwork
-The design and layout is the main artwork on the board and the layers and traces are not protected. Any additional writing or images such as the Kolibri bird, copyright and designer notices, certifications are a trademark.
+The design and layout, the main artwork on the board and the PCB layers and traces, are *NOT* protected Intellectual Property ("IP"), see LICENSE files for appropriate details.
+Any additional writing or images such as the Kolibri bird, copyright and designer notices, and certifications *ARE* considered protected IP and notice is given that they are protected by all applicable IP laws.
+The below "Getting Started" card also has artwork which is considered protected IP and is copyrighted with all rights reserved.
 
 | Front        | Back        |
 | ------------ | ----------- |
 | ![cardFront] | ![cardBack] | 
 
-The accompanying getting started card also has artwork, this is a trademark and is protected by copyright.
 
 ## Inventory and QC
-Inventory can be managed with QR coded serialized tags. The serialization provides better quality control because it allows failure analysis and tracking, in case of issues traceable to the batch and assembly level.
+Inventory can be managed with QR coded serialized tags. This serialization provides better quality control because it allows failure analysis and tracking in cases of issues traceable to batch and assembly.
 
 ## Packaging
-We are packaging and shippping in `14 cm x 17 cm` padded envelopes with brand stamping. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under `3 cm` before dispatching. Custom labeled sleeves will be used for retail packaging.
+We are packaging and shippping in `14 cm x 17 cm` padded envelopes with branded stampings. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under `3 cm` before dispatching. Custom labeled sleeves will be used for retail packaging.
 
 ## Shipping
 The labels are printed with CN22 on the harmonized label schedule.
@@ -486,7 +485,7 @@ Lithium cells have special requirements for shipping. With air mail, small cells
 For international shipping, the HS code `7117.90.0000	Imitation Jewlery other` is used.
 
 ## Safety
-The edges are fully routed when possible or finished afterwards. The PCB is made from fiberglass so care must be taken because it can be abrasive on the edges. Clear coat nail polish can be applied to round and soften the edges without changing how it looks.
+The edges are fully routed when possible or finished afterwards. The PCB is made from fiberglass so care must be taken because it can have abrasive edges. Clear coat nail polish can be applied to round and soften the edges without changing how it looks.
 
 The `CR2032` cells are quite safe, as they have only very small traces of lithium, and have a fairly high internal resistance. However, they must still be disposed of responsibly. `LIR2032` or other rechargable 2032 cells should *not* be used because they have a higher voltage outside of the guaranteed parameters and significantly lower capacity (under 25%).
 
@@ -505,7 +504,7 @@ Certifications take time and effort but will make a better product by guaranteei
 | WEEE                     | No  (yearly fee)          |
 
 ## Licence
-The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Everything is released under permissive copyleft licenses.
+The product was designed by Sawaiz Syed for Kolibri. Kolibri owns all protected IP. Everything that is not otherwise stated as being protected IP (e.g. firmware, PCB design, documentation) is released under permissive copyleft licenses.
 
 | Sector        | License      | Verison |
 | ------------- | ------------ | -------:|
@@ -513,7 +512,12 @@ The product was designed by Sawaiz Syed for Kolibri who owns the copyright. Ever
 | Firmware      | [GNU GPL]    |     3.0 |
 | Documentation | [CC BY-SA]   |     4.0 |
 
-Copies of all licenses are required with the distribution of files. All files are available in easy-to-modify types for remixing. Please purchase original products from [Kolibri] to support further products, design, and research.
+Files of all licenses are required with the distribution of files. All files are available in easy-to-modify formats for remixing. 
+
+---
+#### Please purchase original products from [Kolibri] to support further products, design, and research :)
+
+---
 
 ## Attribution
 - Make
