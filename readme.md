@@ -66,7 +66,7 @@ This is the technical manual for anyone wanting to modify, hack, remix, or progr
 * [ToDo](#todo)
 
 ## Design
-Design was always a core objective from the very beginning. It *has* to look good. Even more importantly, it must also be functional, as it is a piece of jewelery people are going to wear. If it looks too complex or it's too difficult to use, no one will want to wear it. Comfort was also major goal, as heavy earrings are painful to wear for extended amounts of time, no matter how stunning they are. It's simply not worth the pain.
+Design was always a core objective from the very beginning. It *has* to look good. Even more importantly, it must also be functional, as it is a piece of jewelry people are going to wear. If it looks too complex or it's too difficult to use, no one will want to wear it. Comfort was also major goal, as heavy earrings are painful to wear for extended amounts of time, no matter how stunning they are. It's simply not worth the pain.
 
 ![render]
 
@@ -78,15 +78,15 @@ The design had to allow for a variety of LED patterns with a range from subtle t
 
 
 ### Hardware
-The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pullup resistors. They are not mounted, because there is no firmware support for that and it yields a lower cost variant. The design is done in [KiCad] 5.99 (nightly) and will be ported and set in the stable version. All components and libaries are embedded in the project. 
+The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pull-up resistors. They are not mounted, because there is no firmware support for that and it yields a lower cost variant. The design is done in [KiCad] 5.99 (nightly) and will be ported and set in the stable version. All components and libraries are embedded in the project. 
 
 ![IMG-schematic]
 
-The schematic is also available as a [pdf][PDF-schematic]. The layout is done partially programatically using text manipulation and template stamping using javascript and node and then finished up by hand in KiCad. The code is available [here][nodeHaloBuilding].
+The schematic is also available as a [pdf][PDF-schematic]. The layout is done partially programmatically using text manipulation and template stamping using JavaScript and node and then finished up by hand in KiCad. The code is available [here][nodeHaloBuilding].
 
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `4°` intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, permits maximizing battery usage
-We are using [BL-HUB37A-AV-TRB], because it is low cost and has high availabilty across multiple vendors in China, but any `0402` LED with a V<sub>f</sub> below `2.7 V`, should yield an equivalent battery life.
+We are using [BL-HUB37A-AV-TRB], because it is low cost and has high availability across multiple vendors in China, but any `0402` LED with a V<sub>f</sub> below `2.7 V`, should yield an equivalent battery life.
 
 ![IMG-BL-HUB37A-AV-TRB]
 
@@ -101,40 +101,40 @@ We are using [BL-HUB37A-AV-TRB], because it is low cost and has high availabilty
 ![IMG-BAT-HLD-001]
 
 #### Microphone
-The microphone selection was rather difficult due to a lack of specificaitons available with amplified MEMS microphones. *Knowles* [SPW2430HR5H-B] was selected, as it seemed reasonable and could be tested with Adafruit's breakout board fairly easily.
+The microphone selection was rather difficult due to a lack of specifications available with amplified MEMS microphones. *Knowles* [SPW2430HR5H-B] was selected, as it seemed reasonable and could be tested with Adafruits breakout board fairly easily.
 
 ![IMG-SPW2430HR5H-B]
 
-Using a built-in amplified MEMS microphone decreases the number of component placements and simplifies layout and verificiton, at the expense of not having instrumentation knowledge of your audio response.
+Using a built-in amplified MEMS microphone decreases the number of component placements and simplifies layout and verification, at the expense of not having instrumentation knowledge of your audio response.
 
 #### Button
 *C&K* [KXT3] series provides ultra low profile miniature tactile switches and we chose `KXT311LHS`, with a low actuation force of `100g`. It can be easily pressed with the edge of your nail, or a bit less comfortably with the back.
 
-The button provides the functionality of changing light patterns by pressing and triggering it into a low power sleep mode by holding for `500 ms`. Completely available as an interupt to the microcontroller, so other uses can be implemented. 
+The button provides the functionality of changing light patterns by pressing and triggering it into a low power sleep mode by holding for `500 ms`. Completely available as an interrupt to the microcontroller, so other uses can be implemented. 
 
 ![IMG-KXT3]
 
 #### IMU
-[LSM6DSM] is a 6DOF IMU with a three-axis accelerometer and three-axis gyroscope by *STMicroelectronics*. It communicates over I2C and is connected to the hardware I2C peripheral in the microcontroller. It allows a fast data stream at very low power. It also has additional low power modes and the ability to wake the main microcontroller over interupt with the routed interupt pin. 
+[LSM6DSM] is a 6DOF IMU with a three-axis accelerometer and three-axis gyroscope by *STMicroelectronics*. It communicates over I2C and is connected to the hardware I2C peripheral in the microcontroller. It allows a fast data stream at very low power. It also has additional low power modes and the ability to wake the main microcontroller over interrupt with the routed interrupt pin. 
 
 ![IMG-LSM6DSM]
 
 #### Passives
-There are three passives (five if the IMU is populated) that can be of any tolerance. There are two `1 uF` and `0.1 uF` decoupling capacitors and one `10k` pullup on the reset of the processor. The two IMU pullups are `10k` I2C pullups.
+There are three passives (five if the IMU is populated) that can be of any tolerance. There are two `1 uF` and `0.1 uF` decoupling capacitors and one `10k` pull-up on the reset of the processor. The two IMU pull-ups are `10k` I2C pull-ups.
 
 #### Alignment Pins
-There are four tooling holes/alignment pins that can be used for addons. They are `1.152 mm` (`45.35 mil`) in diameter and are placed `2.8 mm` and `5.5 mm` from the center.
+There are four tooling holes/alignment pins that can be used for add-ons. They are `1.152 mm` (`45.35 mil`) in diameter and are placed `2.8 mm` and `5.5 mm` from the center.
 
 ![alignmentPins]
 
- The earring is `24 mm` in diameter, has a mass of `5.207 g` (`2.135 g` without the battery) and the top eylet extends `2 mm` extra, yeilding a bounding box of `24 mm x 26 mm x 6.36 mm`.
+ The earring is `24 mm` in diameter, has a mass of `5.207 g` (`2.135 g` without the battery) and the top eyelet extends `2 mm` extra, yielding a bounding box of `24 mm x 26 mm x 6.36 mm`.
 
 ![mass]
 
 #### Connectors
 The only connectors on the board are six `⌀ 1 mm` copper circles that are exposed as contacts for spring pins. They are placed evenly across the board so it receives balanced forces from the custom programmer (or testing jig).
 
-| Labels      | Dimentions       |
+| Labels      | Dimensions       |
 | ----------- | ---------------- |
 | ![pgrmPads] | ![pgrmPlacement] |
 
@@ -143,11 +143,11 @@ The labeled pins have their descriptions in the table below.
 | Pin  | Description                      |
 | ---- | -------------------------------- |
 | 3V0  | Connected to Batt+ and power net |
-| GND  | Connectedto ground net           |
+| GND  | Connected to ground net          |
 | TX   | GPIO PB2 for serial out          | 
 | RX   | GPIO PB4 for serial in           | 
-| RST  | Active low, 10k pullup           | 
-| SWIM | Programing interface             | 
+| RST  | Active low, 10k pull-up          | 
+| SWIM | Programming interface            | 
 
 ### Case
 The case holds the earrings and two cells in its cavities. This allows for the storing and organizing of at least 36 hours of available runtime. The earring case consists of two pieces held together with magnets. The cavities inside the case hold all components securely so that they do not rattle. The earrings are displayed beautifully when the case is opened.
@@ -199,7 +199,7 @@ The two jigs are color-coded as well. Adhesive is dispensed into the wells and t
 ![magnetJig]
 
 ## Firmware
-The firmware is coded at the register level in C. The code is fully interupt-based and performs quite efficently. The toolchain is simple and built on open source tools. This makes it harder to code, but allows for significant optimization.
+The firmware is coded at the register level in C. The code is fully interrupt-based and performs quite efficiently. The toolchain is simple and built on open source tools. This makes it harder to code, but allows for significant optimization.
  
 ### Modes
 There are multiple modes available on the halo earring that can be switched through when pressing the button. Each press of the button cycles to the next mode, eventually circling back around.
@@ -229,20 +229,20 @@ This allows for a cleaner and more consistent scan over the entire halo ring sin
 Power profile readings show a `10.88 mA` power consumption with `60 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~20.2 hours.
 
 #### Sparkle
-Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At `~320 Hz`, the procesor wakes from deep sleep and runs the selection of which LED to light (if any).
+Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At `~320 Hz`, the processor wakes from deep sleep and runs the selection of which LED to light (if any).
 
 ```c
 rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
 ```
 
-Given a 1/15 chance, a random LED will light up. Othwerwise, any previously lit LEDs will be turned off. This results in a more visually pleasing pattern over just randomly lighting LEDs, which produce sharper bursts of light. Since the processor is only awake `0.002%` of the time, and the LED has a chance of being on only `6.6%` of the time, the power consumption is quite minimial. 
+Given a 1/15 chance, a random LED will light up. Otherwise, any previously lit LEDs will be turned off. This results in a more visually pleasing pattern over just randomly lighting LEDs, which produce sharper bursts of light. Since the processor is only awake `0.002%` of the time, and the LED has a chance of being on only `6.6%` of the time, the power consumption is quite minimal. 
 
 ![PWR-sparkle]
 
 Power profile readings show a `2.01 mA` power consumption with `327 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~109.5 hours, (over 4.5 days).
 
 #### Power Managment
-Pressing and holding the button for `500 ms` will turn off all LEDs and put the cpu into deep sleep mode. In this mode the current draw is around `15 uA` and the only wake interupt is the button press.
+Pressing and holding the button for `500 ms` will turn off all LEDs and put the cpu into deep sleep mode. In this mode the current draw is around `15 uA` and the only wake interrupt is the button press.
 
 ![GIF-boot]
 
@@ -267,7 +267,7 @@ if (topElements <= (9 - row)) {
 }
 ```
 
-To turn the LEDs off, the column and row are both set to high impedence. To turn it on, the column is set high and the row is set low.
+To turn the LEDs off, the column and row are both set to high impedance. To turn it on, the column is set high and the row is set low.
 
 The previous LED *must* be turned off before lighting up the next LED or else there is a risk of damaging the electronics. It is recommended to only use the `setLed` and `ledLow` functions.
 
@@ -295,7 +295,7 @@ sudo pacman -S sdcc
 Some form of flashing software is required, along with a programmer that can program over the `SWIM` protocol. We are using third party `STLink-V2` clones, because the form factor of the genuine programmer is difficult to use and newer programmers do not support `SWIM`.
 
 #### Windows
-`STVP_CmdLine` is required as the flashing software and comes with the software package [ST Visual Programer]. This needs to be installed and `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
+`STVP_CmdLine` is required as the flashing software and comes with the software package [ST Visual Programmer]. This needs to be installed and `c/Program Files (x86)/STMicroelectronics/st_toolset/stvp/STVP_CmdLine.exe` needs to be added into the path.
 
 Once it's installed, it can be run with the following flags. Preferably in WSL but should also be possible in CMD or PS.
 
@@ -310,7 +310,7 @@ make flash
 ```
 
 #### Linux
-[STM8 Flash] is an open source `SWIM` compatible flashing utililty for linux. The tool is built from source. Short instructions are written below.
+[STM8 Flash] is an open source `SWIM` compatible flashing utility for linux. The tool is built from source. Short instructions are written below.
 
 ```bash
 git clone https://github.com/vdudouyt/stm8flash.git
@@ -350,7 +350,7 @@ make flash
 The earrings should be fine to leave in a hot car (although the 3D printed plastic case could warp). If you are outside of these ratings, take care of yourself, you are either freezing or at risk of heat stroke. The earrings will be fine.
 
 ## Manufacturing
-Although taking on novel uses of materials, the ability to manufacture at scale was always a primary focus. Parts were selected with strong supply chains and alternatives. Layout was designed with generous rules to accomodate for as many fabs as possible and the number of unique components was minimized. The microphone and battery holder are from single vendors but they have proven track records and well-known supply chains. Alternatives to be tested are still proposed.
+Although taking on novel uses of materials, the ability to manufacture at scale was always a primary focus. Parts were selected with strong supply chains and alternatives. Layout was designed with generous rules to accommodate for as many fabs as possible and the number of unique components was minimized. The microphone and battery holder are from single vendors but they have proven track records and well-known supply chains. Alternatives to be tested are still proposed.
 
 ### BOM
 The BOM was selected with parts that are common to the high-volume Chinese manufacturing market, have strong supply chains, and have many alternatives available in case a supplier stops manufacture or supply dips occur. The number of unique parts was kept to a minimum and the maximum amount of features can be implemented with "free" pins, like the programming SMD pads. The table of BOM is shown below.
@@ -371,7 +371,7 @@ The [csv][BOMcsv] is provided with the sources.
 ### PCB
 There is a single PCB. Although still common, some of the more precise requirements were needed to end up with a printed circuit board small enough.
 
-| Paramter           | Value | Unit |
+| Parameter          | Value | Unit |
 | ------------------ | -----:| ---- |
 | Height             |    26 | mm   |
 | Width              |    24 | mm   |
@@ -398,14 +398,14 @@ The whole board can be pick and placed. The table below shows some data that mig
 
 | Parameter         | Value |
 | ----------------- | -----:|
-| Uniqe Parts       |     8 |
+| Unique Parts      |     8 |
 | SMD Parts         |     8 |
 | Placements        |    97 |
 | Solder Joints     |   222 |
 | Front Components  |    96 |
 | Back Components   |     1 |
 
-The smallest componts are `0402` LEDs, and all parts can survive normal lead-free reflow profiles. The microphone is open port MEMS so do not wash, clean, or expose it to ultrasonic vibrations (datasheet has further requirements).
+The smallest components are `0402` LEDs, and all parts can survive normal lead-free re flow profiles. The microphone is open port MEMS so do not wash, clean, or expose it to ultrasonic vibrations (datasheet has further requirements).
 
 #### Assembly Detail Pictures
 
@@ -424,7 +424,7 @@ The smallest componts are `0402` LEDs, and all parts can survive normal lead-fre
 #### Potential Alternates
 Some alternates have not been tested, but their specifications match.
 
-| Stated            | Alternetive      | Tested |
+| Stated            | Alternative      | Tested |
 | ----------------- | ---------------- | ------ |
 | SPW2430HR5H-B     | ZILLTEK ZTS6016  | No     |
 | BAT-HLD-001       | MY-2032-08       | No     |
@@ -434,7 +434,7 @@ Some alternates have not been tested, but their specifications match.
 
 ### Physical Assembly
 
-The earwire is attached with jewelery pliers through the hole. The 1mm hole is made for up to `0.8 mm` wire over `20 ga`. Gold plated french hooks are used. these are commonly available as jewelry findings.
+The earwire is attached with jewelry pliers through the hole. The 1mm hole is made for up to `0.8 mm` wire over `20 ga`. Gold plated french hooks are used. these are commonly available as jewelry findings.
 
 ![IMG-frenchEarwire]
 
@@ -459,7 +459,7 @@ The programmer uses *Mill-Max* ‎‎‎[0965-0-15-20-80-14-11-0]‎ spring pins
 
 ![springPins]
 
-The top part is lifted up and the assembled board is slipped in. The spring force from the PCB pushes back down on to the pads and can then be left for programing and debugging.
+The top part is lifted up and the assembled board is slipped in. The spring force from the PCB pushes back down on to the pads and can then be left for programming and debugging.
 
 ## Artwork
 The design and layout, the main artwork on the board and the PCB layers and traces, are *NOT* protected Intellectual Property ("IP"), see LICENSE files for appropriate details.
@@ -475,7 +475,7 @@ The below "Getting Started" card also has artwork which is considered protected 
 Inventory can be managed with QR coded serialized tags. This serialization provides better quality control because it allows failure analysis and tracking in cases of issues traceable to batch and assembly.
 
 ## Packaging
-We are packaging and shippping in `14 cm x 17 cm` padded envelopes with branded stampings. These fit under the Warenpost requirements and allow international shipping. The envelopes are verifed to be under `3 cm` before dispatching. Custom labeled sleeves will be used for retail packaging.
+We are packaging and shipping in `14 cm x 17 cm` padded envelopes with branded stampings. These fit under the Warenpost requirements and allow international shipping. The envelopes are verified to be under `3 cm` before dispatching. Custom labeled sleeves will be used for retail packaging.
 
 ## Shipping
 The labels are printed with CN22 on the harmonized label schedule.
@@ -487,7 +487,7 @@ For international shipping, the HS code `7117.90.0000	Imitation Jewlery other` i
 ## Safety
 The edges are fully routed when possible or finished afterwards. The PCB is made from fiberglass so care must be taken because it can have abrasive edges. Clear coat nail polish can be applied to round and soften the edges without changing how it looks.
 
-The `CR2032` cells are quite safe, as they have only very small traces of lithium, and have a fairly high internal resistance. However, they must still be disposed of responsibly. `LIR2032` or other rechargable 2032 cells should *not* be used because they have a higher voltage outside of the guaranteed parameters and significantly lower capacity (under 25%).
+The `CR2032` cells are quite safe, as they have only very small traces of lithium, and have a fairly high internal resistance. However, they must still be disposed of responsibly. `LIR2032` or other rechargeable 2032 cells should *not* be used because they have a higher voltage outside of the guaranteed parameters and significantly lower capacity (under 25%).
 
 If the battery is placed in backwards, it will drain over time because there is no reverse polarity protection. It will heat up but should not damage anything, due to high internal resistance limiting the discharge. The low voltage, `3.0 V`, as well as the currents used pose very little risk.
 
@@ -496,7 +496,7 @@ The printed circuit boards are assembled in a lead-free process, and all compone
 ## Certifications
 Certifications take time and effort but will make a better product by guaranteeing its safety to users and letting them use it in other projects. The table below shows the order in which we will obtain certifications.
 
-| Cetrtifing Authority     | Status                    |
+| Certifying Authority     | Status                    |
 | -------------------------| ------------------------- |
 | OSHW                     | [DE000103]                |
 | CE                       | No  (Self Certification)  |
@@ -506,7 +506,7 @@ Certifications take time and effort but will make a better product by guaranteei
 ## Licence
 The product was designed by Sawaiz Syed for Kolibri. Kolibri owns all protected IP. Everything that is not otherwise stated as being protected IP (e.g. firmware, PCB design, documentation) is released under permissive copyleft licenses.
 
-| Sector        | License      | Verison |
+| Sector        | License      | Version |
 | ------------- | ------------ | -------:|
 | Hardware      | [CERN-OHL-S] |     2.0 |
 | Firmware      | [GNU GPL]    |     3.0 |
@@ -532,10 +532,10 @@ Files of all licenses are required with the distribution of files. All files are
 - [STM8 Headers] Copyright (c) - 2020 Georg Icking-Konert
 
 ## ToDo
-- [ ] Led sometimes remains on after suthdown
+- [ ] Led sometimes remains on after shutdown
 - [ ] Randomly HALO pattern forms high low pattern 
 
-<!--                       Refrences                                      -->
+<!--                       References                                      -->
 <!-- Files -->
 [BAT-HLD-001]:                ./pcb/components/BAT-HLD-001/BAT-HLD-001.pdf
 [BL-HUB37A-AV-TRB]:           ./pcb/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf
@@ -546,7 +546,7 @@ Files of all licenses are required with the distribution of files. All files are
 <!-- Links -->
 [HALO-90]:                    https://openkolibri.com/hlo/90
 [KiCad]:                      https://kicad.org/
-[ST Visual Programer]:        https://www.st.com/en/development-tools/stvp-stm32.html
+[ST Visual Programmer]:       https://www.st.com/en/development-tools/stvp-stm32.html
 [Quakehold]:                  https://www.quakehold.com/collectibles.html
 [TYP-1]:                      https://trollfactory.de/produkte/silikon-kautschuk/haertegrad-shore/weich-shore-a25/7044/tfc-silikon-kautschuk-typ-1-abformsilikon-weich-1-1-nv-troll-factory-rtv
 [0965-0-15-20-80-14-11-0]:    https://www.mill-max.com/products/pin/0965
@@ -575,7 +575,7 @@ Files of all licenses are required with the distribution of files. All files are
 [IMG-SPW2430HR5H-B]:          ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.jpg          "MEMS Microphone"
 [IMG-STM8L15xxx]:             ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                "Low power microcontroller"
 [IMG-frenchEarwire]:          ./pcb/components/frenchEarwire/frenchEarwire.jpg          "Gold plated french earwire"
-<!-- Magenets -->
+<!-- Magnets -->
 [6x1-magnets]:                ./docs/components/magnets.jpg                             "6mm x 1mm N53 disc mangents"
 [magnetsGlued]:               ./docs/assembly/jigsGlue.jpg                              "Mangents glued using the jig"
 [magnetJig]:                  ./docs/assembly/jigs.jpg                                  "Jigs used to glue magnets into place in the correct orentation"
