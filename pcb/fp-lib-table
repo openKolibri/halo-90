@@ -1,4 +1,5 @@
 (fp_lib_table
+  (version 7)
   (lib (name "BAT-HLD-001")(type "KiCad")(uri "${KIPRJMOD}/components/BAT-HLD-001/BAT-HLD-001.pretty")(options "")(descr ""))
   (lib (name "frenchEarwire")(type "KiCad")(uri "${KIPRJMOD}/components/frenchEarwire/frenchEarwire.pretty")(options "")(descr ""))
   (lib (name "BL-HUB37A-AV-TRB")(type "KiCad")(uri "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pretty")(options "")(descr ""))
@@ -6,6 +7,7 @@
   (lib (name "passives")(type "KiCad")(uri "${KIPRJMOD}/components/passives/passives.pretty")(options "")(descr ""))
   (lib (name "STM8L15xxx")(type "KiCad")(uri "${KIPRJMOD}/components/STM8L15xxx/STM8L15xxx.pretty")(options "")(descr ""))
   (lib (name "LSM6DSM")(type "KiCad")(uri "${KIPRJMOD}/components/LSM6DSM/LSM6DSM.pretty")(options "")(descr ""))
-  (lib (name "SPW2430HR5H-B")(type "KiCad")(uri "${KIPRJMOD}/components/SPW2430HR5H-B/SPW2430HR5H-B.pretty")(options "")(descr ""))
-  (lib (name "KXT3")(type "KiCad")(uri "${KIPRJMOD}/components/KXT3/KXT3.pretty")(options "")(descr ""))
+  (lib (name "TS-1088-AR02016L")(type "KiCad")(uri "${KIPRJMOD}/components/TS-1088-AR02016/TS-1088-AR02016L.pretty")(options "")(descr ""))
+  (lib (name "ZTS6216")(type "KiCad")(uri "${KIPRJMOD}/components/ZTS6216/ZTS6216.pretty")(options "")(descr ""))
+  (lib (name "SMTSO1610MTJ")(type "KiCad")(uri "${KIPRJMOD}/components/SMTSO1610MTJ/SMTSO1610MTJ.pretty")(options "")(descr ""))
 )

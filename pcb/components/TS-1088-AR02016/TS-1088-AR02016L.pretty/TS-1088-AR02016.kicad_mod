@@ -1,0 +1,125 @@
+(footprint "TS-1088-AR02016"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "1a978aa0-c615-4aaa-807f-8842ef87b0d0")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "YSX321SL"
+		(at 0 7.7 0)
+		(unlocked yes)
+		(layer "Eco2.User")
+		(hide yes)
+		(uuid "682db991-da27-4d51-bb57-c2f0ca75cb03")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0540225b-02d0-47df-86d6-0a6da4e619c5")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "2e5ad1bd-3c02-43a7-bd92-b432e9e01144")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_rect
+		(start -1.95 -1.5)
+		(end 1.95 1.5)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "1a30117c-01e9-42ed-93b0-28867fa4aa41")
+	)
+	(fp_rect
+		(start -2.8 -1.5)
+		(end 2.8 1.5)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "2d3fc391-00cf-42d8-9f34-a672a15a554e")
+	)
+	(fp_rect
+		(start -1.95 -1.5)
+		(end 1.95 1.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "2f80cd01-64d0-491d-914d-acdad3357bdb")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "c2bb9c62-07c6-4f83-a1aa-3506f05b90c5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -2.225 0)
+		(size 1.05 2)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "c60802fc-93f8-4a44-bc9a-74d87c9cb9aa")
+	)
+	(pad "2" smd rect
+		(at 2.225 0)
+		(size 1.05 2)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "67827858-dc4a-4ca6-8b22-ab92bdf50959")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/components/TS-1088-AR02016/TS-1088-AR02016.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 -0)
+		)
+	)
+)
