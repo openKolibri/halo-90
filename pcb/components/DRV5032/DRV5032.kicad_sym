@@ -2,19 +2,18 @@
 	(version 20241209)
 	(generator "kicad_symbol_editor")
 	(generator_version "9.0")
-	(symbol "ZTS6216"
+	(symbol "DRV5032"
 		(pin_numbers
 			(hide yes)
 		)
 		(pin_names
 			(offset 1.016)
-			(hide yes)
 		)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(property "Reference" "MK"
-			(at -3.81 1.27 0)
+		(property "Reference" "U"
+			(at 6.35 10.16 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22,8 +21,8 @@
 				(justify right)
 			)
 		)
-		(property "Value" "ZTS6216"
-			(at -3.81 -1.27 0)
+		(property "Value" "DRV5032"
+			(at 6.35 7.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -31,8 +30,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "ZTS6216:ZTS6216"
-			(at 0 -14.605 0)
+		(property "Footprint" "DRV5032:DRV5032"
+			(at 0 -11.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -40,8 +39,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/ZTS6216/ZTS6216.pdf"
-			(at 0 -17.145 0)
+		(property "Datasheet" "${KIPRJMOD}/components/DRV5032/DRV5032.pdf"
+			(at 0 -13.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -58,18 +57,18 @@
 				(hide yes)
 			)
 		)
-		(symbol "ZTS6216_0_0"
+		(symbol "DRV5032_0_0"
 			(pin power_in line
-				(at 0 5.08 270)
+				(at -8.89 3.81 0)
 				(length 2.54)
-				(name "VDD"
+				(name "VCC"
 					(effects
 						(font
 							(size 1.27 1.27)
 						)
 					)
 				)
-				(number "4"
+				(number "1"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -78,26 +77,7 @@
 				)
 			)
 			(pin power_in line
-				(at 0 -5.08 90)
-				(length 2.54)
-				(hide yes)
-				(name "GND"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "2"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin power_in line
-				(at 0 -5.08 90)
+				(at -8.89 -3.81 0)
 				(length 2.54)
 				(name "GND"
 					(effects
@@ -114,47 +94,37 @@
 					)
 				)
 			)
-			(pin output line
-				(at 5.08 0 180)
-				(length 2.54)
-				(name "Output"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "1"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
 		)
-		(symbol "ZTS6216_0_1"
-			(polyline
-				(pts
-					(xy -2.54 2.54) (xy -2.54 -2.54)
-				)
+		(symbol "DRV5032_0_1"
+			(rectangle
+				(start -6.35 6.35)
+				(end 6.35 -6.35)
 				(stroke
-					(width 0.254)
+					(width 0)
 					(type default)
 				)
 				(fill
 					(type none)
 				)
 			)
-			(circle
-				(center 0 0)
-				(radius 2.54)
-				(stroke
-					(width 0.254)
-					(type default)
+		)
+		(symbol "DRV5032_1_0"
+			(pin output line
+				(at 8.89 0 180)
+				(length 2.54)
+				(name "OUT"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
 				)
-				(fill
-					(type background)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
 				)
 			)
 		)

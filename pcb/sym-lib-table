@@ -1,6 +1,6 @@
 (sym_lib_table
   (version 7)
-  (lib (name "BAT-HLD-001")(type "Legacy")(uri "${KIPRJMOD}/components/BAT-HLD-001/BAT-HLD-001.lib")(options "")(descr ""))
+  (lib (name "BAT-HLD-001")(type "KiCad")(uri "${KIPRJMOD}/components/BAT-HLD-001/BAT-HLD-001.kicad_sym")(options "")(descr ""))
   (lib (name "BL-HUB37A-AV-TRB")(type "KiCad")(uri "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.kicad_sym")(options "")(descr ""))
   (lib (name "tooling")(type "KiCad")(uri "${KIPRJMOD}/components/tooling/tooling.kicad_sym")(options "")(descr ""))
   (lib (name "nets")(type "KiCad")(uri "${KIPRJMOD}/components/nets/nets.kicad_sym")(options "")(descr ""))
@@ -10,4 +10,6 @@
   (lib (name "ZTS6216")(type "KiCad")(uri "${KIPRJMOD}/components/ZTS6216/ZTS6216.kicad_sym")(options "")(descr ""))
   (lib (name "SMTSO1610MTJ")(type "KiCad")(uri "${KIPRJMOD}/components/SMTSO1610MTJ/SMTSO1610MTJ.kicad_sym")(options "")(descr ""))
   (lib (name "DRV5032")(type "KiCad")(uri "${KIPRJMOD}/components/DRV5032/DRV5032.kicad_sym")(options "")(descr ""))
+  (lib (name "TC2030-IDC-NL")(type "KiCad")(uri "${KIPRJMOD}/components/TC2030-IDC-NL/TC2030-IDC-NL.kicad_sym")(options "")(descr ""))
+  (lib (name "TS-1088-AR02016")(type "KiCad")(uri "${KIPRJMOD}/components/TS-1088-AR02016/TS-1088-AR02016.kicad_sym")(options "")(descr ""))
 )

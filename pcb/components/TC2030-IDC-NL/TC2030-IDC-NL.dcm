@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TC2030-IDC-NL
+D TagConnect Atmel 6-pin ISP connector
+K TagConnect AVR ISP Connector
+F  ~
+$ENDCMP
+#
+#End Doc Library

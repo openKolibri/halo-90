@@ -1,4 +1,4 @@
-54826997369595
+54830449444137
 BAT-HLD-001
 BAT-HLD-001
 Linx CR 2025/2032 Surface mount coin cell holder
@@ -27,6 +27,13 @@ D-0402
 0
 2
 2
+DRV5032
+DRV5032
+
+
+0
+3
+3
 LSM6DSM
 LGA-14_3x2.5mm_6-6
 LGA, 14 Pin (http://www.st.com/resource/en/datasheet/lsm6ds3.pdf), generated with kicad-footprint-generator ipc_lga_layoutBorder_generator.py
@@ -55,13 +62,13 @@ UFQFPN32
 0
 33
 33
-TS-1088-AR02016L
-TS-1088-AR02016
-
-
+TC2030-IDC-NL
+Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical
+Tag-Connect programming header; http://www.tag-connect.com/Materials/TC2030-IDC-NL.pdf
+tag connect programming header pogo pins
 0
-2
-2
+6
+6
 ZTS6216
 ZTS6216
 
@@ -69,13 +76,6 @@ ZTS6216
 0
 4
 4
-frenchEarwire
-frenchEarwire
-
-
-0
-1
-1
 passives
 C-0402
 
