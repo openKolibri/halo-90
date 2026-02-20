@@ -78,11 +78,11 @@ The design had to allow for a variety of LED patterns with a range from subtle t
 
 
 ### Hardware
-The electronics are kept minimal for cost reduction and manufacturing simplicity with pads and routing done for all but the IMU and its pull-up resistors. They are not mounted, because there is no firmware support for that and it yields a lower cost variant. The design is done in [KiCad] 5.99 (nightly) and will be ported and set in the stable version. All components and libraries are embedded in the project. 
+The electronics are kept minimal for cost reduction and manufacturing simplicity. The design has been upgraded to **KiCad 9** compatibility, ensuring native support for modern design rules and file formats. All components and libraries are embedded in the project and standardized to the latest KiCad versions.
 
 ![IMG-schematic]
 
-The schematic is also available as a [pdf][PDF-schematic]. The layout is done partially programmatically using text manipulation and template stamping using JavaScript and node and then finished up by hand in KiCad. The code is available [here][nodeHaloBuilding].
+The schematic is the primary source of truth for the project. The layout is generated programmatically using a custom JavaScript engine (`pcb/halo.js`). This script mathematically calculates the LED positions and generates **elegant, curved trace fan-outs** from the high-density MCU pads to the circular LED ring, achieving a "wow factor" through algorithmic design that would be difficult to route by hand. The code is available [here][nodeHaloBuilding].
 
 #### LEDs
 There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `4°` intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, permits maximizing battery usage

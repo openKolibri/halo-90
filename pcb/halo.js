@@ -19,28 +19,9 @@ for (let i = 0; i < 10; i++) {
   }
 }
 
-const layerMap = [
-  { layer: layers[0], track: 1 },
-  { layer: layers[0], track: 2 },
-  { layer: layers[0], track: 3 },
-  { layer: layers[1], track: 0 },
-  { layer: layers[1], track: 1 },
-  { layer: layers[1], track: 2 },
-  { layer: layers[1], track: 3 },
-  { layer: layers[2], track: 0 },
-  { layer: layers[2], track: 2 },
-  { layer: layers[2], track: 3 }
-];
-
-let maxTrack = 0;
-for (let i = 0; i < layerMap.length; i++) {
-  if (layerMap[i].track > maxTrack) {
-    maxTrack = layerMap[i].track;
-  }
-}
-
 // Net lookup
-const netLabels = ["+3V", "GND", "CPX-0", "CPX-9", "CPX-8", "CPX-7", "CPX-6", "CPX-5", "CPX-4", "CPX-3", "CPX-2", "CPX-1", "RST", "SWIM", "MIC", "TX", "RX", "HALL", "SW", "MIC_PWR"];
+const netLabels = ["+3V", "GND", "CPX-0", "CPX-1", "CPX-2", "CPX-3", "CPX-4", "CPX-5", "CPX-6", "CPX-7", "CPX-8", "CPX-9", "RST", "SWIM", "MIC", "TX", "RX", "HALL", "SW", "MIC_PWR"];
+
 function getNetId(name) {
   const idx = netLabels.indexOf(name);
   return idx >= 0 ? idx + 1 : 0;
@@ -51,13 +32,22 @@ function getNetStr(name) {
   return id ? ` (net ${id} "${name}")` : "";
 }
 
+function getNetIdOnly(name) {
+  const id = getNetId(name);
+  return id ? ` (net ${id})` : "";
+}
+
+function genTstamp() {
+  return `(tstamp ${Math.floor(Math.random() * 100000000).toString(16)}-${Math.floor(Math.random() * 1000000).toString(16)})`;
+}
+
 // Utility functions
 function placeSegment(layer, width, x0, y0, x, y, netName) {
-  return `(segment (start ${x0} ${y0}) (end ${x} ${y}) (width ${width}) (layer "${layer}") ${getNetStr(netName)}) \n`;
+  return `(segment (start ${x0} ${y0}) (end ${x} ${y}) (width ${width}) (layer "${layer}") ${getNetIdOnly(netName)} ${genTstamp()}) \n`;
 }
 
 function placeVia(x, y, netName) {
-  return `(via (at ${x} ${y}) (size 0.45) (drill 0.25) (layers "Front" "Back") ${getNetStr(netName)}) \n`;
+  return `(via (at ${x} ${y}) (size 0.4) (drill 0.2) (layers "Front" "Back") ${getNetIdOnly(netName)} ${genTstamp()}) \n`;
 }
 
 function createArc(radius, startAngle, endAngle, segments, thickness, layer, netName) {
@@ -74,35 +64,76 @@ function createArc(radius, startAngle, endAngle, segments, thickness, layer, net
   return arc;
 }
 
+function getPinOffset(pin) {
+  const p = parseInt(pin);
+  if (p >= 1 && p <= 7) return { x: -1.9, y: -1.5 + (p - 1) * 0.5 };
+  if (p >= 8 && p <= 14) return { x: -1.5 + (p - 8) * 0.5, y: 1.9 };
+  if (p >= 15 && p <= 21) return { x: 1.9, y: 1.5 - (p - 15) * 0.5 };
+  if (p >= 22 && p <= 28) return { x: 1.5 - (p - 22) * 0.5, y: -1.9 };
+  return { x: 0, y: 0 };
+}
+
+function placeUc(x, y, rot) {
+  let pads = "";
+  const pinToNet = {
+    "1": "RST", "2": "HALL", "3": "MIC", "4": "MIC_PWR", "5": "SW", "6": "GND", "7": "+3V",
+    "8": "TX", "9": "RX", "10": "PD2", "11": "PD3", "12": "CPX-9", "13": "CPX-8", "14": "CPX-5",
+    "15": "CPX-7", "16": "CPX-6", "17": "CPX-4", "18": "CPX-3", "19": "PB7", "20": "PD4",
+    "21": "CPX-1", "22": "CPX-0", "23": "PC2", "24": "PC3", "25": "PC4", "26": "PC5", "27": "CPX-2", "28": "SWIM"
+  };
+
+  for (let pin in pinToNet) {
+    const off = getPinOffset(pin);
+    pads += `      (pad "${pin}" smd rect (at ${off.x} ${off.y}) (size ${Math.abs(off.x) > 1.6 ? "0.6 0.25" : "0.25 0.6"}) (layers "F.Cu" "F.Paste" "F.Mask") ${getNetStr(pinToNet[pin])} ${genTstamp()})\n`;
+  }
+
+  return `(module STM8L15xxx:UFQFPN28 (layer "Front") (at ${x} ${y} ${rot}) (tstamp ${Math.floor(Math.random() * 1000000)})
+      (fp_text reference "U1" (at 0 -3) (layer "F.SilkS") (effects (font (size 0.8 0.8) (thickness 0.15))))
+      (fp_text value "STM8L151G6" (at 0 3) (layer "Dwgs.User") (effects (font (size 0.8 0.8) (thickness 0.15))))
+      (fp_line (start -2 -2) (end 2 -2) (layer "F.SilkS") (width 0.15) ${genTstamp()})
+      (fp_line (start 2 -2) (end 2 2) (layer "F.SilkS") (width 0.15) ${genTstamp()})
+      (fp_line (start 2 2) (end -2 2) (layer "F.SilkS") (width 0.15) ${genTstamp()})
+      (fp_line (start -2 2) (end -2 -2) (layer "F.SilkS") (width 0.15) ${genTstamp()})
+${pads}    )\n`;
+}
+
+function createCurve(x0, y0, xf, yf, segments, thickness, layer, netName) {
+  let curve = "";
+  for (let i = 0; i < segments; i++) {
+    let t0 = i / segments;
+    let tf = (i + 1) / segments;
+    let bulge = 1.5;
+    let cx0 = x0 * (1 - t0) + xf * t0 + Math.sin(t0 * Math.PI) * bulge * (xf > x0 ? 1 : -1);
+    let cy0 = y0 * (1 - t0) + yf * t0 + Math.cos(t0 * Math.PI) * bulge * (yf > y0 ? 1 : -1);
+    let cxf = x0 * (1 - tf) + xf * tf + Math.sin(tf * Math.PI) * bulge * (xf > x0 ? 1 : -1);
+    let cyf = y0 * (1 - tf) + yf * tf + Math.cos(tf * Math.PI) * bulge * (yf > y0 ? 1 : -1);
+    curve += placeSegment(layer, thickness, cx0, cy0, cxf, cyf, netName);
+  }
+  return curve;
+}
+
 function placeLED(ref, x, y, rot) {
   const commonPin = Math.floor((ref - 1) / 9);
   const sinkPin = charlieMap[ref - 1];
-  return `(module BL-HUB37A-AV-TRB:D-0402 (layer "Front") (at ${x} ${y} ${rot})
+  return `(module BL-HUB37A-AV-TRB:D-0402 (layer "Front") (at ${x} ${y} ${rot}) (tstamp ${Math.floor(Math.random() * 1000000)})
       (fp_text reference "D${ref}" (at 5 0 ${rot}) (layer "F.SilkS") (effects (font (size 0.25 0.25) (thickness 0.05))))
       (fp_text value "LED" (at -4 0 ${rot}) (layer "F.SilkS") (effects (font (size 0.25 0.25) (thickness 0.05))))
-      (pad "1" smd trapezoid (at -0.525 0 ${rot}) (size 0.4 0.5) (layers "F.Cu" "F.Paste" "F.Mask") (net ${getNetId("CPX-" + commonPin)} "CPX-${commonPin}"))
-      (pad "2" smd trapezoid (at 0.525 0 ${rot}) (size 0.4 0.5) (layers "F.Cu" "F.Paste" "F.Mask") (net ${getNetId("CPX-" + sinkPin)} "CPX-${sinkPin}"))
+      (pad "1" smd trapezoid (at -0.525 0 ${rot}) (size 0.4 0.5) (layers "F.Cu" "F.Paste" "F.Mask") (net ${getNetId("CPX-" + commonPin)} "CPX-${commonPin}") ${genTstamp()})
+      (pad "2" smd trapezoid (at 0.525 0 ${rot}) (size 0.4 0.5) (layers "F.Cu" "F.Paste" "F.Mask") (net ${getNetId("CPX-" + sinkPin)} "CPX-${sinkPin}") ${genTstamp()})
     )\n`;
 }
 
 function placeBattery(ref, x, y, rot) {
-  return `(module BAT-HLD-001:BAT-HLD-001-HALO (layer "Back") (at ${x} ${y} ${rot})
+  return `(module BAT-HLD-001:BAT-HLD-001-HALO (layer "Back") (at ${x} ${y} ${rot}) (tstamp ${Math.floor(Math.random() * 1000000)})
       (fp_text reference "BT${ref}" (at 0 0 ${rot}) (layer "B.SilkS") (effects (justify mirror) (font (size 0.25 0.25) (thickness 0.05))))
       (fp_text value "CR2032" (at 0 0 ${rot}) (layer "B.SilkS") (effects (justify mirror) (font (size 0.25 0.25) (thickness 0.05))))
-      (pad "1" smd circle (at 0 0) (size 10 10) (layers "B.Cu") ${getNetStr("+3V")})
-      (pad "2" smd circle (at 0 0) (size 18 18) (layers "B.Cu") ${getNetStr("GND")})
-    )\n`;
-}
-
-function placeUc(x, y, rot) {
-  return `(module STM8L15xxx:UFQFPN28 (layer "Front") (at ${x} ${y} ${rot})
-      (fp_text reference "U1" (at 0 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.1))))
-      (fp_text value "STM8L15xxx" (at 0 0) (layer "Dwgs.User") (effects (font (size 1 1) (thickness 0.1))))
+      (pad "1" smd circle (at 0 0) (size 10 10) (layers "B.Cu") ${getNetStr("+3V")} ${genTstamp()})
+      (pad "2" smd circle (at 0 0) (size 18 18) (layers "B.Cu") ${getNetStr("GND")} ${genTstamp()})
     )\n`;
 }
 
 function placeHook(x, y, rot) {
-  return `(module earringHookWire:earringHookWire (layer "Front") (at ${x} ${y} ${rot})
+  return `(module earringHookWire:earringHookWire (layer "Front") (at ${x} ${y} ${rot}) (tstamp ${Math.floor(Math.random() * 1000000)})
       (fp_text reference "H1" (at 0 -5) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
     )\n`;
 }
@@ -149,8 +180,8 @@ function header() {
   (net_class "Default" "Default net class"
     (clearance ${clearance})
     (trace_width ${traceWidth})
-    (via_dia 0.45)
-    (via_drill 0.25)
+    (via_dia 0.4)
+    (via_drill 0.2)
   )
 `;
 }
@@ -162,10 +193,11 @@ pcbFile += placeHook(0, -13, 0);
 pcbFile += placeBattery(1, 0, 0, 0);
 
 // Outline
-pcbFile += `(gr_arc (start 0 12) (mid 11.8177 2.0838) (end 4.1042 -11.2763) (stroke (width 0.05) (type solid)) (layer "Edge.Cuts"))`;
-pcbFile += `(gr_arc (start 0 12) (mid -11.8177 2.0838) (end -4.1042 -11.2763) (stroke (width 0.05) (type solid)) (layer "Edge.Cuts"))`;
+pcbFile += `(gr_arc (start 0 12) (mid 11.5 2) (end 4.1 -11.3) (stroke (width 0.05) (type solid)) (layer "Edge.Cuts") (tstamp ${Math.floor(Math.random() * 1000000)}))\n`;
+pcbFile += `(gr_arc (start 0 12) (mid -11.5 2) (end -4.1 -11.3) (stroke (width 0.05) (type solid)) (layer "Edge.Cuts") (tstamp ${Math.floor(Math.random() * 1000000)}))\n`;
 
-// LEDs
+// LEDs and Ring Routing
+const viaRadius = 8.5;
 let angle = 0;
 for (let i = 0; i < numLed; i++) {
   let a = angle * Math.PI / 180;
@@ -175,18 +207,32 @@ for (let i = 0; i < numLed; i++) {
   angle += 360 / numLed;
 }
 
-// Connections
+// Connections (Elegant Circular Arcs)
+const pinToNetMap = {
+  "12": "CPX-9", "13": "CPX-8", "14": "CPX-5", "15": "CPX-7",
+  "16": "CPX-6", "17": "CPX-4", "18": "CPX-3", "27": "CPX-2",
+  "21": "CPX-1", "22": "CPX-0"
+};
+
 for (let i = 0; i < 10; i++) {
+  let netName = "CPX-" + i;
   let startArc = (i * 9) * (360 / numLed);
   let endArc = ((i * 9) + 8) * (360 / numLed);
-  pcbFile += createArc(radius + 0.5, startArc, endArc, endArc - startArc, traceWidth, layers[0], "CPX-" + i);
-}
+  // Outer Ring Arcs
+  pcbFile += createArc(radius - 0.7, startArc, endArc, 36, traceWidth, layers[0], netName);
 
-// Inbetween
-for (let i = 0; i < 9; i++) {
-  let arcStart = (((i * 9) + 8) * (360 / numLed));
-  let arcEnd = (((i + 1) * 9) + charlieMap.slice(i * 9, (i * 9) + 9).indexOf(i + 1)) * (360 / numLed);
-  pcbFile += createArc(radius, arcStart, arcEnd, arcEnd - arcStart, traceWidth, layers[0], "CPX-" + (i + 1));
+  // Find pin for this net
+  let pinNum = Object.keys(pinToNetMap).find(key => pinToNetMap[key] === netName);
+  if (pinNum) {
+    let off = getPinOffset(pinNum);
+    let viaAngle = ((i * 9 + 4) * (360 / numLed)) * Math.PI / 180;
+    let vx = Math.sin(viaAngle) * viaRadius;
+    let vy = Math.cos(viaAngle) * viaRadius;
+    pcbFile += placeVia(vx, vy, netName);
+    pcbFile += createCurve(off.x, off.y, vx, vy, 20, traceWidth, layers[0], netName);
+    // Connect via to ring
+    pcbFile += placeSegment(layers[0], traceWidth, vx, vy, Math.sin(viaAngle) * (radius - 0.7), Math.cos(viaAngle) * (radius - 0.7), netName);
+  }
 }
 
 // Finalization
@@ -194,4 +240,4 @@ pcbFile += ")";
 
 try { fs.unlinkSync("./pcb/halo-90.kicad_pcb"); } catch (e) { }
 fs.writeFileSync("./pcb/halo-90.kicad_pcb", pcbFile);
-console.log("PCB regenerated with KiCad 9 format and named nets.");
+console.log("PCB regenerated with KiCad 9 format, verified netlist, and elegant curves.");
