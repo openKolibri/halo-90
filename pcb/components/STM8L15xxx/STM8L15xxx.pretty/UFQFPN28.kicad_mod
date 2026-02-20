@@ -1,4 +1,5 @@
-(footprint "UFQFPN28" (version 20210108) (generator pcbnew) (layer "F.Cu")
+(footprint "UFQFPN28"
+  (descr "Generic component footprint") (version 20210108) (generator pcbnew) (layer "F.Cu")
   (tedit 600FD71B)
   (attr smd)
   (fp_text reference "REF**" (at 0 0 unlocked) (layer "F.SilkS")

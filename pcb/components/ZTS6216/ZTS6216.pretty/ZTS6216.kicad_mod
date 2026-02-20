@@ -40,7 +40,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "Generic component footprint"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
