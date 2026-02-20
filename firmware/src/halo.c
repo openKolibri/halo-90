@@ -1,4 +1,4 @@
-// halo.c halo control and procesing
+// halo.c - Halo control and processing logic
 // Copyright (C) 2021 Kolibri - Sawaiz Syed
 
 // This program is free software: you can redistribute it and/or modify
@@ -96,7 +96,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   return;
 }
 
-// ADC end of conversion interupt
+// ADC end of conversion interrupt
 ISR_HANDLER(ADC1_EOC_ISR, _ADC1_EOC_VECTOR_){
   // Raw waveform
   sfr_ADC1.CR1.ADON = 0;        // Turn off ADC
@@ -131,18 +131,18 @@ ISR_HANDLER(BUTTON_ISR, _EXTI6_VECTOR_){
         case 1:
           disableTim2();         // Turn off timer
           disableADC();          // Turn off ADC
-          sfr_CPU.CFG_GCR.AL = 1;// Interupt only based, IRET to HALT
+          sfr_CPU.CFG_GCR.AL = 1;// Interrupt only based, IRET to HALT
           enableAutoWakeup(2);
         break;
         case 2:
           disableADC();          // Turn off ADC
           disableTim2();         // Turn off timer
-          sfr_CPU.CFG_GCR.AL = 1;// Interupt only based, IRET to HALT
+          sfr_CPU.CFG_GCR.AL = 1;// Interrupt only based, IRET to HALT
           enableAutoWakeup(100);
         break;
       }
     } else {
-      // I hate this so much, it is so inefficent
+      // I hate this so much, it is so inefficient
       // Should be implemented as the same TIM4 timeout
       // At least it lets me debounce better
       // And a boot animation
@@ -157,7 +157,7 @@ ISR_HANDLER(BUTTON_ISR, _EXTI6_VECTOR_){
       ledLow(prevLed);
     }
   }
-  sfr_ITC_EXTI.SR1.P6F = 1; // Clear button interupt flag
+  sfr_ITC_EXTI.SR1.P6F = 1; // Clear button interrupt flag
   return;
 }
 
@@ -167,7 +167,7 @@ ISR_HANDLER(TIM4_UPD_ISR, _TIM4_UIF_VECTOR_) {
   // If button is still down
   if(!(SW_PORT[1]->IDR.byte & SW_PIN[1])){
     if(!sleep){ 
-      sfr_CPU.CFG_GCR.AL = 1;// Interupt only based, IRET to HALT
+      sfr_CPU.CFG_GCR.AL = 1;// Interrupt only based, IRET to HALT
       disableTim2();         // Turn off timer
       disableADC();          // Turn off ADC
       disableTim4();
@@ -224,7 +224,7 @@ uint16_t readMic() {
 void initTim2(uint16_t timeout){
   sfr_CLK.PCKENR1.PCKEN10 = 1;                   // activate tim2 clock gate
   sfr_TIM2.CR1.CEN = 0;                          // disable timer
-  sfr_ITC_SPR.SPR5.VECT19SPR = 0b01;             // Interupt Priority to Level 1 (lower)
+  sfr_ITC_SPR.SPR5.VECT19SPR = 0b01;             // Interrupt Priority to Level 1 (lower)
   sfr_TIM2.CR1.ARPE = 1;                         // auto-reload value buffered
   sfr_TIM2.CNTRH.byte = 0x00;                    // MSB clear counter
   sfr_TIM2.CNTRL.byte = 0x00;                    // LSB clear counter
@@ -257,7 +257,7 @@ void initAutoWakeup(){
   sfr_RTC.WPR.KEY = 0xCA;                         // Disable RTC write protection
   sfr_RTC.WPR.KEY = 0x53;                         // Disable RTC write protection
   sfr_RTC.CR2.WUTE = 0;                           // Disable the wakeup timer
-  while(!sfr_RTC.ISR1.WUTWF){}                    // Poll unil bit is written
+  while(!sfr_RTC.ISR1.WUTWF){}                    // Poll until bit is written
   sfr_RTC.WUTRH.byte = 0;                         // MSB 16b auto countdown
   sfr_RTC.WUTRL.byte = 1;                         // LSB 16b auto countdown
   sfr_RTC.CR1.WUCKSEL = 3;                        // RTCCLK/2 as wakeup clock
@@ -267,14 +267,14 @@ void initAutoWakeup(){
 
 void enableAutoWakeup(uint16_t timeout){
   sfr_CLK.PCKENR2.PCKEN22 = 1;                    // Enable RTC Clock gating
-  sfr_ITC_SPR.SPR2.VECT4SPR = 0b00;               // Interupt Priority to Level 2 (mid)
+  sfr_ITC_SPR.SPR2.VECT4SPR = 0b00;               // Interrupt Priority to Level 2 (mid)
   sfr_RTC.WPR.KEY = 0xCA;                         // Disable RTC write protection
   sfr_RTC.WPR.KEY = 0x53;                         // Disable RTC write protection
   sfr_RTC.CR2.WUTE = 0;                           // Disable the wakeup timer
-  while(!sfr_RTC.ISR1.WUTWF){}                    // Poll unil bit is written
+  while(!sfr_RTC.ISR1.WUTWF){}                    // Poll until bit is written
   sfr_RTC.WUTRH.byte = (uint8_t)(timeout >> 8);   // MSB 16b auto countdown
   sfr_RTC.WUTRL.byte = (uint8_t)(timeout);        // LSB 16b auto countdown
-  sfr_RTC.CR2.WUTIE = 1;                          // Enable wakeup timer interupt
+  sfr_RTC.CR2.WUTIE = 1;                          // Enable wakeup timer interrupt
   sfr_RTC.CR2.WUTE = 1;                           // Enable the wakeup timer
 }
 
@@ -282,18 +282,18 @@ void disableAutoWakeup(){
   sfr_RTC.WPR.KEY = 0xCA;           // Disable RTC write protection
   sfr_RTC.WPR.KEY = 0x53;           // Disable RTC write protection
   sfr_RTC.CR2.WUTE = 0;             // Disable the wakeup timer
-  while(!sfr_RTC.ISR1.WUTWF){}      // Poll unil bit is written
-  sfr_RTC.CR2.WUTIE = 0;            // Enable wakeup timer interupt
+  while(!sfr_RTC.ISR1.WUTWF){}      // Poll until bit is written
+  sfr_RTC.CR2.WUTIE = 0;            // Enable wakeup timer interrupt
   sfr_CLK.PCKENR2.PCKEN22 = 0;      // Disable RTC Clock gating
 }
 
 void initTim4(uint8_t timeout){
   sfr_CLK.PCKENR1.PCKEN12 = 1;       // activate tim4 clock gate
-  sfr_ITC_SPR.SPR7.VECT25SPR = 0b11; // Interupt Priority to Level 3 (max)
+  sfr_ITC_SPR.SPR7.VECT25SPR = 0b11; // Interrupt Priority to Level 3 (max)
   sfr_TIM4.CR1.CEN = 0;              // disable timer
   sfr_TIM4.CNTR.byte = 0x00;         // clear counter
   sfr_TIM4.CR1.ARPE = 1;             // auto-reload value buffered
-  sfr_TIM4.CR1.URS = 1;              // Overflow only interupt 
+  sfr_TIM4.CR1.URS = 1;              // Overflow only interrupt 
   sfr_TIM4.EGR.byte = 0x00;          // clear pending events
   sfr_TIM4.PSCR.PSC = 15;            // set clock to 16Mhz/2^15 = 488.3Hz -> 2.048ms period
   sfr_TIM4.ARR.byte = timeout;       // set autoreload value for 499.7ms (244*2.048ms)
@@ -326,7 +326,7 @@ void initADC(){
 }
 
 void enableADC(){
-  sfr_ADC1.CR1.EOCIE = 1;       // Enable EOC Interupt
+  sfr_ADC1.CR1.EOCIE = 1;       // Enable EOC Interrupt
   // First ADC Conversion
   sfr_ADC1.CR1.ADON = 1;        // Enable ADC
   sfr_ADC1.SQR2.CHSEL_S22 = 1;  // ADC to D0, ADC1_IN22
@@ -335,7 +335,7 @@ void enableADC(){
 }
 
 void disableADC(){
-  sfr_ADC1.CR1.EOCIE = 0;       // Disable EOC Interupt
+  sfr_ADC1.CR1.EOCIE = 0;       // Disable EOC Interrupt
   sfr_ADC1.CR1.ADON = 0;        // Disable ADC
   // sfr_CLK.PCKENR2.PCKEN20 = 0;  // Disable ADC Clock
 }
@@ -346,10 +346,10 @@ void initButton(){
   SW_PORT[0]->CR1.byte |= SW_PIN[0];  // CR1 = 1 Push Pull
   SW_PORT[0]->ODR.byte &= ~SW_PIN[0]; // ODR = 0 Low
 
-  // Pullup with interupt
+  // Pullup with interrupt
   SW_PORT[1]->DDR.byte &= ~SW_PIN[1]; // DDR = 0 Input
   SW_PORT[1]->CR1.byte |= SW_PIN[1];  // CR1 = 1 Pullup
-  SW_PORT[1]->CR2.byte |= SW_PIN[1];  // CR2 = 1 Interupt
+  SW_PORT[1]->CR2.byte |= SW_PIN[1];  // CR2 = 1 Interrupt
   sfr_ITC_EXTI.CR2.P6IS = 2;          // Falling edge only
 }
 
@@ -361,16 +361,20 @@ void setLed(uint8_t led){
   prevLed = led;
 }
 
-// Enable a specific LED
+// Enable a specific LED using Charlieplexing algorithm
 void ledHigh(uint8_t led) {
+  // Translate 0-89 LED index into 10-pin logical rows/cols
   uint8_t col = led / 9;
   uint8_t topElements = 9 - col;
   uint8_t row = 9 - (led % 9);
+  
+  // Skip the pin equal to the column to avoid driving and sinking on the same pin
   if (topElements <= (9 - row)) {
     row--;
   }
 
-  // Set column HIGH
+  // Set column HIGH (drive out)
+
   CPX_PORT[col]->DDR.byte |= CPX_PIN[col];
   CPX_PORT[col]->CR1.byte |= CPX_PIN[col];
   CPX_PORT[col]->ODR.byte |= CPX_PIN[col];
@@ -380,7 +384,7 @@ void ledHigh(uint8_t led) {
   CPX_PORT[row]->ODR.byte &= ~CPX_PIN[row];
 }
 
-// Disable a specific LED
+// Disable a specific LED (set pins back to high impedance)
 void ledLow(uint8_t led) {
   uint8_t col = led / 9;
   uint8_t topElements = 9 - col;
@@ -389,7 +393,8 @@ void ledLow(uint8_t led) {
     row--;
   }
 
-  // Set row to HI-Z
+  // Set row to HI-Z (high impedance input mode)
+
   CPX_PORT[row]->ODR.byte |= CPX_PIN[row];
   CPX_PORT[row]->DDR.byte &= ~CPX_PIN[row];
   CPX_PORT[row]->CR1.byte &= ~CPX_PIN[row];
