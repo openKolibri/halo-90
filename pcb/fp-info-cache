@@ -1,4 +1,4 @@
-54830449444137
+56690309625134
 BAT-HLD-001
 BAT-HLD-001
 Linx CR 2025/2032 Surface mount coin cell holder
@@ -50,7 +50,7 @@ SMTSO1610MTJ
 1
 STM8L15xxx
 UFQFPN28
-
+Generic component footprint
 
 0
 28
@@ -69,6 +69,13 @@ tag connect programming header pogo pins
 0
 6
 6
+TS-1088-AR02016L
+TS-1088-AR02016
+
+
+0
+2
+2
 ZTS6216
 ZTS6216
 

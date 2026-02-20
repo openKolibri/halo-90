@@ -1,4 +1,4 @@
-(kicad_symbol_lib (version 20200126) (host kicad_symbol_editor "(5.99.0-2195-g476558ece)")
+(kicad_symbol_lib (version 20241209) (host kicad_symbol_editor "(5.99.0-2195-g476558ece)")
   (symbol "tooling:Fiducial" (pin_names (offset 0.508))
     (property "Reference" "FD" (id 0) (at 3.81 0 0)
       (effects (font (size 1.27 1.27)))

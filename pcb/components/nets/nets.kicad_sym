@@ -1,4 +1,4 @@
-(kicad_symbol_lib (version 20200908) (generator kicad_symbol_editor)
+(kicad_symbol_lib (version 20241209) (generator kicad_symbol_editor)
   (symbol "nets:+1V2" (power) (pin_names (offset 0)) (in_bom yes) (on_board yes)
     (property "Reference" "#PWR" (id 0) (at 0 -3.81 0)
       (effects (font (size 1.27 1.27)) hide)

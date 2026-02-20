@@ -1,4 +1,4 @@
-(kicad_symbol_lib (version 20200126) (host kicad_symbol_editor "(5.99.0-2251-g5226d6b4d)")
+(kicad_symbol_lib (version 20241209) (host kicad_symbol_editor "(5.99.0-2251-g5226d6b4d)")
   (symbol "passives:C-0402" (pin_numbers hide) (pin_names (offset 0.254))
     (property "Reference" "C" (id 0) (at 0.635 2.54 0)
       (effects (font (size 1.27 1.27)) (justify left))
