@@ -27,10 +27,9 @@
   (fp_line (start -0.5 0.1) (end -0.35 0.25) (layer "F.Fab") (width 0.075) (tstamp 95f74c33-f404-44ff-9a83-1b6082e97d7b))
   (fp_line (start 0.5 -0.25) (end -0.5 -0.25) (layer "F.Fab") (width 0.075) (tstamp d9888163-dfa7-47b6-bc6a-70c87ba83133))
   (fp_line (start -0.35 0.25) (end 0.5 0.25) (layer "F.Fab") (width 0.075) (tstamp ffa95a63-1f16-4153-baf2-b601ec280c9b))
-  (pad "1" smd roundrect (at -0.525 0) (size 0.4 0.5) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.1)
-    (chamfer_ratio 0.5) (chamfer top_left bottom_left)
+  (pad "1" smd trapezoid (at -0.525 0) (size 0.4 0.45) (rect_delta 0 0.05) (layers "F.Cu" "F.Paste" "F.Mask")
     (zone_connect 0) (tstamp ad04f70d-031d-4df4-8df9-2ad27a5cb177))
-  (pad "2" smd rect (at 0.525 0 180) (size 0.4 0.5) (layers "F.Cu" "F.Paste" "F.Mask")
+  (pad "2" smd trapezoid (at 0.525 0 180) (size 0.4 0.55) (rect_delta 0 0.05) (layers "F.Cu" "F.Paste" "F.Mask")
     (zone_connect 0) (tstamp 334408e5-577c-44e7-808b-ada0cbe78d0b))
   (model "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.stp"
     (offset (xyz 0 0 0))
