@@ -258,7 +258,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -446,7 +446,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -634,7 +634,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -822,7 +822,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -1010,7 +1010,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -1198,7 +1198,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -1386,7 +1386,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -1574,7 +1574,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -1762,7 +1762,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -1950,7 +1950,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -2138,7 +2138,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -2326,7 +2326,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -2514,7 +2514,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -2702,7 +2702,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -2890,7 +2890,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -3078,7 +3078,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -3266,7 +3266,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -3454,7 +3454,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -3642,7 +3642,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -3830,7 +3830,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -4018,7 +4018,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -4206,7 +4206,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -4394,7 +4394,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -4582,7 +4582,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -4770,7 +4770,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -4958,7 +4958,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -5146,7 +5146,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -5334,7 +5334,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -5522,7 +5522,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -5710,7 +5710,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -5898,7 +5898,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -6086,7 +6086,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -6274,7 +6274,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -6462,7 +6462,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -6650,7 +6650,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -6838,7 +6838,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -7026,7 +7026,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -7214,7 +7214,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -7402,7 +7402,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -7590,7 +7590,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -7778,7 +7778,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -7966,7 +7966,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -8154,7 +8154,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -8342,7 +8342,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -8530,7 +8530,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -8718,7 +8718,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -8906,7 +8906,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -9094,7 +9094,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -9282,7 +9282,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -9470,7 +9470,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -9658,7 +9658,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -9846,7 +9846,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -10034,7 +10034,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -10222,7 +10222,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -10410,7 +10410,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -10598,7 +10598,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -10786,7 +10786,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -10974,7 +10974,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -11162,7 +11162,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -11350,7 +11350,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -11538,7 +11538,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -11726,7 +11726,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -11914,7 +11914,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -12102,7 +12102,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -12290,7 +12290,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -12478,7 +12478,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -12666,7 +12666,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -12854,7 +12854,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -13042,7 +13042,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -13230,7 +13230,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -13418,7 +13418,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -13606,7 +13606,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -13794,7 +13794,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -13982,7 +13982,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -14170,7 +14170,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -14358,7 +14358,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -14546,7 +14546,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -14734,7 +14734,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -14922,7 +14922,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -15110,7 +15110,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -15298,7 +15298,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -15486,7 +15486,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -15674,7 +15674,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -15862,7 +15862,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -16050,7 +16050,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -16238,7 +16238,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -16426,7 +16426,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -16614,7 +16614,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -16802,7 +16802,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -16990,7 +16990,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
