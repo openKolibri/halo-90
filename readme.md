@@ -1,11 +1,11 @@
 ![wornDynamic]
 
-# HALO-90
-A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. Ninety lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes and a modern touch. This is HALO-90.
+# HALO-156
+A distinct ring of light. An ethereal glow. Patterns that ebb and flow to the music. 156 lights. All controllable. Powered by a common coin cell. An engrossing look with retro vibes and a modern touch. This is HALO-156.
 
 ![presentedCase]
 
-The *HALO* product series, in which these earrings ([HALO-90]) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. `90` refers to the ninety individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
+The *HALO* product series, in which these earrings ([HALO-156]) are the first item, is a fully open source electronic jewelery line. It is designed with elegance and wearability in mind. `156` refers to the 156 individually controllable LEDs on the earring face. The built-in compute power is also suitable for creating complex light shows.
 
 This is the technical manual for anyone wanting to modify, hack, remix, or program their own light patterns onto the earrings. The manual goes into fine detail about construction, assembly, and firmware which should encompass all basic knowledge.
 
@@ -85,13 +85,13 @@ The electronics are kept minimal for cost reduction and manufacturing simplicity
 The schematic is the primary source of truth for the project. The layout is generated programmatically using a custom JavaScript engine (`pcb/halo.js`). This script mathematically calculates the LED positions and generates **elegant, curved trace fan-outs** from the high-density MCU pads to the circular LED ring, achieving a "wow factor" through algorithmic design that would be difficult to route by hand. The code is available [here][nodeHaloBuilding].
 
 #### LEDs
-There are 90 LEDs that make up the ring, All are regular `0402` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `4°` intervals. The LEDS are charlieplexed with ten lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, permits maximizing battery usage
+There are 156 LEDs that make up the ring. All are `0201` red diodes. All the cathodes (K/-) face towards the center of the board, and are placed at `2.307°` intervals. The LEDs are charlieplexed with thirteen lines providing individual control. They are run at as high of a current as the battery's internal resistance and GPIO max current allows, so no resistors are used. The red LEDs, with their `2.0 V` - `2.6 V` forward voltage, permits maximizing battery usage
 We are using [BL-HUB37A-AV-TRB], because it is low cost and has high availability across multiple vendors in China, but any `0402` LED with a V<sub>f</sub> below `2.7 V`, should yield an equivalent battery life.
 
 ![IMG-BL-HUB37A-AV-TRB]
 
 #### Microcontroller
-*STMicroelectonics's* [STM8L151G4] acts as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of `16 MHz` is able to easily charliplex the 90 Leds at over `1 kHz`. The `12b ADC` is used to readout the microphone and has plenty of flash (up to `32k`) to store an assortment of light patterns or complex processed designs.
+*STMicroelectonics's* [STM8L151G4] acts as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of `16 MHz` is able to easily charliplex the 156 LEDs at over `1 kHz`. The `12b ADC` is used to readout the microphone and has plenty of flash (up to `32k`) to store an assortment of light patterns or complex processed designs.
 
 ![IMG-STM8L15xxx]
 
@@ -216,13 +216,13 @@ The mode selected on startup is the audio-based dynamic mode. During every ADC c
 Power profile readings show no correlation with audio level, and an `11.71 mA` power consumption with `105 uA` standard deviation. Projected battery life with a `220 mA` CR2032 cell is ~18.8 hours.
 
 #### Halo
-In the HALO mode, the entire light ring is lit. This is done through interlacing the illumination of each LED. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed `32 kHz` oscillator. On every wake, it changes to illuminate the 13th following LED, wrapping around at 90.
+In the HALO mode, the entire light ring is lit. This is done through interlacing the illumination of each LED. The deep sleep auto wakeup timer is set to wake up every two clock cycles of the low speed `32 kHz` oscillator. On every wake, it changes to illuminate the 13th following LED, wrapping around at 156.
 
 ```c
-setLed((prevLed + 13)%90);
+setLed((prevLed + 13)%156);
 ```
 
-This allows for a cleaner and more consistent scan over the entire halo ring since 13 is the greatest integer factor (besides 91), for all of the LEDs to be turned on evenly around the ring. Greater spacing causes *frames* to interlace with one another, resulting in a cleaner visual experience.
+This allows for a cleaner and more consistent scan over the entire halo ring since 13 is the greatest integer factor (besides 157 for a prime scale), for all of the LEDs to be turned on evenly around the ring. Greater spacing causes *frames* to interlace with one another, resulting in a cleaner visual experience.
 
 ![PWR-halo]
 
@@ -232,7 +232,7 @@ Power profile readings show a `10.88 mA` power consumption with `60 uA` standard
 Sparkle mode is the best for minimal power draw and is implemented in a single line of code. At `~320 Hz`, the processor wakes from deep sleep and runs the selection of which LED to light (if any).
 
 ```c
-rand()%15 ? ledLow(prevLed) : setLed(rand() % 90);
+rand()%15 ? ledLow(prevLed) : setLed(rand() % 156);
 ```
 
 Given a 1/15 chance, a random LED will light up. Otherwise, any previously lit LEDs will be turned off. This results in a more visually pleasing pattern over just randomly lighting LEDs, which produce sharper bursts of light. Since the processor is only awake `0.002%` of the time, and the LED has a chance of being on only `6.6%` of the time, the power consumption is quite minimal. 
@@ -357,7 +357,7 @@ The BOM was selected with parts that are common to the high-volume Chinese manuf
 
 | REF    | QTY | Manufacturer              | MPN              | Description                         |
 | ------ | ---:| ------------------------- | ---------------- | ----------------------------------- |
-| D1-D90 |  90 | Brightled                 | BL-HUB37A-AV-TRB | LED: RED 627-637nm 50mcd@20mA 0402  |
+| D1-D156| 156 | Generic                   | LED_0201_0603Metric | LED: RED 0201                       |
 | U1     |   1 | STMicroelectronics        | STM8L151G4U6     | MCU: 8b 16MHz 16k Flash UQFN-28-4x4 |
 | MK1    |   1 | Knowles Electronics       | SPW2430HR5H-B    | MIC: Omni Si-Sonic 3.1x2.5x1.0mm    |
 | BT1    |   1 | Linx Technologies         | BAT-HLD-001      | BAT: CR2032 Cell Holder             |
@@ -544,7 +544,7 @@ Files of all licenses are required with the distribution of files. All files are
 [SPW2430HR5H-B]:              ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf
 [STM8L151G4]:                 ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
 <!-- Links -->
-[HALO-90]:                    https://openkolibri.com/hlo/90
+[HALO-156]:                    https://openkolibri.com/hlo/156
 [KiCad]:                      https://kicad.org/
 [ST Visual Programmer]:       https://www.st.com/en/development-tools/stvp-stm32.html
 [Quakehold]:                  https://www.quakehold.com/collectibles.html
