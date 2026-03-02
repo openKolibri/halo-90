@@ -47,7 +47,7 @@ function placeSegment(layer, width, x0, y0, x, y, netName) {
 }
 
 function placeVia(x, y, netName) {
-  return `(via (at ${x} ${y}) (size 0.4) (drill 0.2) (layers "Front" "Back") ${getNetIdOnly(netName)} ${genTstamp()}) \n`;
+  return `(via (at ${x} ${y}) (size 0.45) (drill 0.25) (layers "Front" "Back") ${getNetIdOnly(netName)} ${genTstamp()}) \n`;
 }
 
 function createArc(radius, startAngle, endAngle, segments, thickness, layer, netName) {
@@ -242,8 +242,8 @@ function header() {
   (net_class "Default" "Default net class"
     (clearance ${clearance})
     (trace_width ${traceWidth})
-    (via_dia 0.4)
-    (via_drill 0.2)
+    (via_dia 0.45)
+    (via_drill 0.25)
   )
 `;
 }

@@ -378,7 +378,7 @@ There is a single PCB. Although still common, some of the more precise requireme
 | Layers             |     4 | ul   |
 | Copper             |   1.0 | oz   |
 | Copper Inner       |   0.5 | oz   |
-| Thickness          |   1.0 | mm   |
+| Thickness          |   0.8 | mm   |
 | Material           | FR4   | ul   |
 | Min Drill          |   0.2 | mm   |
 | Trace Size         |   5/5 | mil  |
