@@ -10,7 +10,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(property "Reference" "J"
-			(at 0 10.16 0)
+			(at 3.81 8.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19,7 +19,7 @@
 			)
 		)
 		(property "Value" "TC2030-SWIM-NL"
-			(at 0 -7.62 0)
+			(at 0 -8.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28,7 +28,7 @@
 			)
 		)
 		(property "Footprint" "TC2030-IDC-NL:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical"
-			(at -8.89 -2.54 90)
+			(at 0 -25.4 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -46,7 +46,7 @@
 			)
 		)
 		(property "Description" "TagConnect STM SWIM connector"
-			(at 0 0 0)
+			(at 0 -22.86 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -65,8 +65,8 @@
 		)
 		(symbol "TC2030-SWIM-NL_0_1"
 			(rectangle
-				(start 6.35 8.89)
-				(end -6.35 -6.35)
+				(start 6.35 7.62)
+				(end -6.35 -7.62)
 				(stroke
 					(width 0.254)
 					(type default)
@@ -78,27 +78,9 @@
 		)
 		(symbol "TC2030-SWIM-NL_1_1"
 			(pin power_in line
-				(at -2.54 12.7 270)
+				(at -2.54 11.43 270)
 				(length 3.81)
 				(name "VCC"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "1"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
-			(pin power_in line
-				(at -2.54 -10.16 90)
-				(length 3.81)
-				(name "GND"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -113,8 +95,26 @@
 					)
 				)
 			)
+			(pin power_in line
+				(at -2.54 -11.43 90)
+				(length 3.81)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
 			(pin bidirectional line
-				(at 10.16 5.08 180)
+				(at 10.16 3.81 180)
 				(length 3.81)
 				(name "SWIM"
 					(effects
@@ -132,7 +132,7 @@
 				)
 			)
 			(pin output line
-				(at 10.16 2.54 180)
+				(at 10.16 1.27 180)
 				(length 3.81)
 				(name "~{RESET}"
 					(effects
@@ -150,7 +150,7 @@
 				)
 			)
 			(pin bidirectional line
-				(at 10.16 0 180)
+				(at 10.16 -1.27 180)
 				(length 3.81)
 				(name "TX"
 					(effects
@@ -168,7 +168,7 @@
 				)
 			)
 			(pin output line
-				(at 10.16 -2.54 180)
+				(at 10.16 -3.81 180)
 				(length 3.81)
 				(name "RX"
 					(effects
@@ -177,7 +177,7 @@
 						)
 					)
 				)
-				(number "3"
+				(number "1"
 					(effects
 						(font
 							(size 1.27 1.27)

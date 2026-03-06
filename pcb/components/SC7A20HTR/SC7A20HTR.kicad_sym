@@ -154,7 +154,7 @@
 				)
 			)
 			(pin unspecified line
-				(at 0 11.43 270)
+				(at -1.27 11.43 270)
 				(length 2.54)
 				(name "VDD"
 					(effects
@@ -172,7 +172,7 @@
 				)
 			)
 			(pin unspecified line
-				(at 0 -11.43 90)
+				(at -1.27 -11.43 90)
 				(length 2.54)
 				(name "GND"
 					(effects
@@ -247,9 +247,8 @@
 				)
 			)
 			(pin unspecified line
-				(at 0 11.43 270)
+				(at 1.27 11.43 270)
 				(length 2.54)
-				(hide yes)
 				(name "VDDIO"
 					(effects
 						(font
@@ -266,9 +265,8 @@
 				)
 			)
 			(pin unspecified line
-				(at 0 -11.43 90)
+				(at 1.27 -11.43 90)
 				(length 2.54)
-				(hide yes)
 				(name "GNDIO"
 					(effects
 						(font

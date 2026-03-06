@@ -531,7 +531,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "../../../../Desktop/halo-90.step",
+      "step": "../../halo-90-accel.step",
       "svg": "",
       "vmrl": "../../../../Desktop/halo-90.wrl",
       "vrml": ""
