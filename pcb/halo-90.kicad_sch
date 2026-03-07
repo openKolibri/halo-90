@@ -258,7 +258,7 @@
 						)
 					)
 				)
-				(pin output line
+				(pin passive line
 					(at 3.81 0 180)
 					(length 2.54)
 					(name "A"
@@ -843,7 +843,7 @@
 				)
 			)
 			(symbol "DRV5032_1_0"
-				(pin output line
+				(pin passive line
 					(at 8.89 0 180)
 					(length 2.54)
 					(name "OUT"
@@ -3580,24 +3580,8 @@
 		(uuid "ff61e889-ff1c-4598-8592-a590b9a55714")
 	)
 	(no_connect
-		(at 167.64 71.12)
-		(uuid "0296a400-a665-4220-b525-023e62b79044")
-	)
-	(no_connect
 		(at 184.15 116.84)
 		(uuid "0b52952a-237f-4d29-8614-8a25803b02b9")
-	)
-	(no_connect
-		(at 154.94 19.05)
-		(uuid "12a46784-8b9f-4412-ac56-d2db96653daa")
-	)
-	(no_connect
-		(at 129.54 19.05)
-		(uuid "1c7b0ac9-b375-4c37-af91-3bb73353a2f9")
-	)
-	(no_connect
-		(at 53.34 19.05)
-		(uuid "1dba82c4-d290-4205-be4d-21de49b9fec6")
 	)
 	(no_connect
 		(at 198.12 71.12)
@@ -3608,92 +3592,28 @@
 		(uuid "2caf507b-9958-4bfa-8ec9-c69b948eb2ac")
 	)
 	(no_connect
-		(at 167.64 147.32)
-		(uuid "35a5c5c4-12c7-461a-bb55-074d1cfa8c79")
-	)
-	(no_connect
-		(at 40.64 19.05)
-		(uuid "3f21098b-edda-4741-9a96-957468982807")
-	)
-	(no_connect
 		(at 228.6 48.26)
 		(uuid "44446b5c-2cbd-4138-bc3f-c2998f5851e9")
-	)
-	(no_connect
-		(at 116.84 19.05)
-		(uuid "4507a77d-f2e1-4bba-86f9-b0b4cf188577")
-	)
-	(no_connect
-		(at 167.64 83.82)
-		(uuid "53939348-caac-412b-9d1e-6a40fe845bbf")
-	)
-	(no_connect
-		(at 104.14 19.05)
-		(uuid "585555e3-0380-440d-9cfd-c2a20f1d026e")
-	)
-	(no_connect
-		(at 167.64 134.62)
-		(uuid "5ed53ba7-630e-491c-a5b7-9ff8ad9f2288")
 	)
 	(no_connect
 		(at 228.6 43.18)
 		(uuid "80c7c09e-2247-4be2-bc17-77c9bb9bcf7d")
 	)
 	(no_connect
-		(at 167.64 33.02)
-		(uuid "815d1f68-9d18-4cf8-8fd9-8b86cf1109cf")
-	)
-	(no_connect
 		(at 228.6 45.72)
 		(uuid "9610f6a8-7985-46eb-8183-bbe9342444b6")
-	)
-	(no_connect
-		(at 78.74 19.05)
-		(uuid "9ae93a76-6ccc-4bbb-baed-16d0ff247c43")
-	)
-	(no_connect
-		(at 167.64 58.42)
-		(uuid "9e08b1ab-1329-491a-81f5-71a97d8b97ba")
-	)
-	(no_connect
-		(at 167.64 121.92)
-		(uuid "ad788536-dca7-4476-9501-54a5b8049531")
-	)
-	(no_connect
-		(at 66.04 19.05)
-		(uuid "b3aa8d1f-f150-41d7-9bf3-e700acf250c7")
-	)
-	(no_connect
-		(at 142.24 19.05)
-		(uuid "b72a5192-f086-4f01-bcab-adcf89bd3ad9")
 	)
 	(no_connect
 		(at 198.12 73.66)
 		(uuid "b854bc00-0173-409e-a29a-8aa6d73b9f69")
 	)
 	(no_connect
-		(at 167.64 96.52)
-		(uuid "c01a58f9-64f0-453f-93ba-a3a6a36d5391")
-	)
-	(no_connect
 		(at 198.12 76.2)
 		(uuid "c18839d6-40a8-4f99-9708-aa34f3529a17")
 	)
 	(no_connect
-		(at 91.44 19.05)
-		(uuid "e01ab861-be86-42ac-849b-a57afc4500a7")
-	)
-	(no_connect
 		(at 184.15 109.22)
 		(uuid "e6fb8859-e449-4ad0-bf23-c04ab0c9d9b3")
-	)
-	(no_connect
-		(at 167.64 45.72)
-		(uuid "f05430cd-fd20-47b5-8040-54094ee021e2")
-	)
-	(no_connect
-		(at 167.64 109.22)
-		(uuid "f8499053-3a03-43f7-abe6-f788b3aa79b6")
 	)
 	(wire
 		(pts
@@ -16664,6 +16584,15 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+		(property "LCSC Part #" "C7501066"
+			(at 250.19 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(property "Footprint" "BAT-HLD-001:BAT-HLD-001"
