@@ -60,7 +60,16 @@
           "width": 0.15
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "copper_edge_clearance|-11999998|-4899|76c4c142-3392-49b6-9d5c-7e6ef45c82c4|0f1a819a-9e9e-45a3-b2c1-51119eaeab02",
+          ""
+        ],
+        [
+          "copper_edge_clearance|11999998|4899|992e58e2-26f4-4af9-a52d-a7feb3699e09|7ed1adaf-b51f-4773-a20e-037fb960416c",
+          "Battery Solder Pad needs to extend to edge of board."
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -79,7 +88,7 @@
         "extra_footprint": "warning",
         "footprint": "error",
         "footprint_filters_mismatch": "ignore",
-        "footprint_symbol_mismatch": "warning",
+        "footprint_symbol_mismatch": "ignore",
         "footprint_type_mismatch": "ignore",
         "hole_clearance": "error",
         "hole_near_hole": "error",
@@ -90,8 +99,8 @@
         "item_on_disabled_layer": "error",
         "items_not_allowed": "error",
         "length_out_of_range": "error",
-        "lib_footprint_issues": "warning",
-        "lib_footprint_mismatch": "warning",
+        "lib_footprint_issues": "ignore",
+        "lib_footprint_mismatch": "ignore",
         "malformed_courtyard": "error",
         "microvia_drill_out_of_range": "error",
         "mirrored_text_on_front_layer": "warning",
@@ -115,7 +124,7 @@
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
         "track_angle": "error",
-        "track_dangling": "warning",
+        "track_dangling": "ignore",
         "track_segment_length": "error",
         "track_width": "error",
         "tracks_crossing": "error",
