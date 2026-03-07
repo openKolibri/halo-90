@@ -43,20 +43,21 @@
         },
         "silk_line_width": 0.127,
         "silk_text_italic": false,
-        "silk_text_size_h": 0.762,
-        "silk_text_size_v": 0.762,
-        "silk_text_thickness": 0.127,
+        "silk_text_size_h": 0.8,
+        "silk_text_size_v": 0.8,
+        "silk_text_thickness": 0.15,
         "silk_text_upright": true,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.2
+          "min_clearance": 0.2,
+          "min_thickness": 0.2
         }
       },
       "diff_pair_dimensions": [
         {
-          "gap": 0.1524,
+          "gap": 0.15,
           "via_gap": 0.25,
-          "width": 0.1524
+          "width": 0.15
         }
       ],
       "drc_exclusions": [],
@@ -130,7 +131,7 @@
         "allow_blind_buried_vias": false,
         "allow_microvias": false,
         "max_error": 0.005,
-        "min_clearance": 0.127,
+        "min_clearance": 0.09,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.01,
         "min_groove_width": 0.0,
@@ -142,8 +143,8 @@
         "min_silk_clearance": 0.0,
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
-        "min_through_hole_diameter": 0.2,
-        "min_track_width": 0.127,
+        "min_through_hole_diameter": 0.25,
+        "min_track_width": 0.09,
         "min_via_annular_width": 0.05,
         "min_via_annulus": 0.049999999999999996,
         "min_via_diameter": 0.45,
@@ -199,12 +200,17 @@
         }
       ],
       "track_widths": [
-        0.127,
+        0.09,
+        0.1,
+        0.15,
         0.2,
         0.25,
         0.3,
         0.4,
-        0.5
+        0.5,
+        0.6,
+        0.8,
+        1.0
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -235,15 +241,23 @@
       "via_dimensions": [
         {
           "diameter": 0.45,
-          "drill": 0.2
-        },
-        {
-          "diameter": 0.45,
-          "drill": 0.2
+          "drill": 0.25
         },
         {
           "diameter": 0.5,
           "drill": 0.25
+        },
+        {
+          "diameter": 0.6,
+          "drill": 0.3
+        },
+        {
+          "diameter": 0.8,
+          "drill": 0.4
+        },
+        {
+          "diameter": 1.0,
+          "drill": 0.5
         }
       ],
       "zones_allow_external_fillets": false,
@@ -512,6 +526,24 @@
         "track_width": 0.127,
         "via_diameter": 0.45,
         "via_drill": 0.2,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.127,
+        "diff_pair_gap": 0.1524,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.1524,
+        "line_style": 0,
+        "microvia_diameter": 0.6858,
+        "microvia_drill": 0.254,
+        "name": "Power",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2147483647,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.3,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
         "wire_width": 6
       }
     ],
