@@ -2952,7 +2952,7 @@
 		(property "Reference" "U3"
 			(at -0.05 2 90)
 			(unlocked yes)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(hide yes)
 			(uuid "38a4c0c9-2a2f-4d4b-9764-d9b9a09925ce")
 			(effects
@@ -3051,7 +3051,7 @@
 				(type solid)
 			)
 			(fill no)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "25bed625-94c1-48a6-aed9-aac35275cdf2")
 		)
 		(fp_poly
@@ -3063,7 +3063,7 @@
 				(type solid)
 			)
 			(fill yes)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "cb80cb7f-170f-4ff7-beab-96e032b26e25")
 		)
 		(fp_rect
@@ -9748,7 +9748,7 @@
 		(tags "capacitor")
 		(property "Reference" "R2"
 			(at 1.1 0.1 0)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "c4e9fb7b-2f35-47fe-9e08-260b85af653d")
 			(effects
 				(font
@@ -11249,7 +11249,7 @@
 		(tags "capacitor")
 		(property "Reference" "C2"
 			(at 0.8 0 0)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "d2150ee9-6daa-4914-a796-27829e9fb751")
 			(effects
 				(font
@@ -16027,7 +16027,7 @@
 		(tags "tag connect programming header pogo pins")
 		(property "Reference" "J1"
 			(at 0 2.7 90)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(hide yes)
 			(uuid "5e0fea87-1acb-4403-a771-5fa1fcab75c0")
 			(effects
@@ -16084,7 +16084,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "c9206543-d980-4107-8cf1-b4408361afe2")
 		)
 		(fp_line
@@ -16094,7 +16094,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "2e864c73-3b3c-4ce5-a8cc-fbcd980e2dc6")
 		)
 		(fp_text user "${REFERENCE}"
@@ -16948,7 +16948,7 @@
 		(property "Reference" "U1"
 			(at 0 0 270)
 			(unlocked yes)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "8eb7f481-858b-4816-af25-0f8d9616b44f")
 			(effects
 				(font
@@ -17005,7 +17005,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "dbc1d0eb-54ca-40c5-8809-f01fe2f1596b")
 		)
 		(fp_line
@@ -17015,7 +17015,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "f866cea3-799a-487a-a398-2f44d64029f7")
 		)
 		(fp_line
@@ -17025,7 +17025,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "c421e605-d576-496e-8dd7-81013ed8353f")
 		)
 		(fp_line
@@ -17035,7 +17035,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "42b1f0d6-b48c-4122-9d8c-a1681a4dee18")
 		)
 		(fp_line
@@ -17045,7 +17045,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "85cd7656-503c-4975-bc70-ed265b8086dd")
 		)
 		(fp_line
@@ -17055,7 +17055,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "ea1ccde1-1235-4b3d-8c0b-e0a7dcfed356")
 		)
 		(fp_line
@@ -17065,7 +17065,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "a7f75f7a-ed89-4266-ba38-8305e4a99437")
 		)
 		(fp_line
@@ -17075,7 +17075,7 @@
 				(width 0.12)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "1ccf916e-c103-4169-9107-fac8c1ecee4e")
 		)
 		(fp_poly
@@ -17087,7 +17087,7 @@
 				(type solid)
 			)
 			(fill yes)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "e1e80a05-2c69-46ba-a6f9-ef3a36fc2b7f")
 		)
 		(fp_line
@@ -18941,7 +18941,7 @@
 		(tags "capacitor")
 		(property "Reference" "R1"
 			(at 0.8 0 90)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "1d2d4660-a9bb-4ae0-91d5-b1847ae08383")
 			(effects
 				(font
@@ -19939,7 +19939,7 @@
 		(tags "SC7A20HTR C19274408")
 		(property "Reference" "U2"
 			(at -0.000038 -3.150013 0)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(hide yes)
 			(uuid "8d2a94ad-7160-4694-9d47-13dcc70c5142")
 			(effects
@@ -20022,7 +20022,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "a8afba47-0b82-4b25-83b9-c587866269c7")
 		)
 		(fp_line
@@ -20032,7 +20032,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "37a9046c-98b4-4017-8885-5b5b7882d104")
 		)
 		(fp_line
@@ -20042,7 +20042,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "fbd2e03c-b55b-427e-9e00-048d151ae3c4")
 		)
 		(fp_line
@@ -20052,7 +20052,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "0c8e76c9-fd62-45e5-9f0a-bf4c99439ee5")
 		)
 		(fp_line
@@ -20062,7 +20062,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "d05a2df0-c8b2-4e7d-8a45-84c54bc5345f")
 		)
 		(fp_line
@@ -20072,7 +20072,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "486bb127-9d66-40f1-a71d-7e5a113a85ba")
 		)
 		(fp_line
@@ -20082,7 +20082,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "ef6822cf-816a-4850-8a4c-397288bf2645")
 		)
 		(fp_line
@@ -20092,7 +20092,7 @@
 				(width 0.1)
 				(type solid)
 			)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "5e830fe0-3947-4583-92ea-6caeb88a2a8d")
 		)
 		(fp_circle
@@ -20103,7 +20103,7 @@
 				(type solid)
 			)
 			(fill no)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "0e4fd53d-a49d-450f-a6da-e14a38591f24")
 		)
 		(fp_circle
@@ -22524,7 +22524,7 @@
 		(tags "capacitor")
 		(property "Reference" "R3"
 			(at -2.6 0.4 90)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "6f285094-fd46-4e16-ac17-ffcb0eaa7e5a")
 			(effects
 				(font
@@ -23269,7 +23269,7 @@
 		(tags "capacitor")
 		(property "Reference" "C1"
 			(at -0.7 1 90)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "232a786d-f3a8-41b3-9366-10dd9949ae57")
 			(effects
 				(font
@@ -24014,7 +24014,7 @@
 		(tags "capacitor")
 		(property "Reference" "C4"
 			(at 0.8 0 0)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "7d662d3e-ad94-4f37-b1fe-39901b82232a")
 			(effects
 				(font
@@ -25263,7 +25263,7 @@
 		(tags "capacitor")
 		(property "Reference" "C3"
 			(at 1 0 0)
-			(layer "F.SilkS")
+			(layer "F.Fab")
 			(uuid "76603a56-4737-4a34-b7b6-7f85c19f95d6")
 			(effects
 				(font
