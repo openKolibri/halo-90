@@ -19234,7 +19234,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "CR-2032"
+		(property "Value" "BAT-HLD-001"
 			(at 246.7611 26.5493 90)
 			(effects
 				(font
