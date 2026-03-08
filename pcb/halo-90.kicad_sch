@@ -396,7 +396,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "100n"
+			(property "Value" "100nF"
 				(at 0.635 -2.54 0)
 				(effects
 					(font
@@ -16095,7 +16095,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "100nF"
 			(at 223.52 114.2999 0)
 			(effects
 				(font
@@ -16384,7 +16384,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "100nF"
 			(at 242.57 107.9499 0)
 			(effects
 				(font
@@ -16481,7 +16481,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "100nF"
 			(at 182.88 52.0699 0)
 			(effects
 				(font
@@ -17888,7 +17888,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part#" "C2655033"
+		(property "LCSC Part#" "C130005"
 			(at 257.81 123.19 0)
 			(effects
 				(font
