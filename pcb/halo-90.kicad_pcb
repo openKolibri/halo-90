@@ -2604,7 +2604,7 @@
 			(uuid "7cc190dc-8295-4c29-8b0e-ce9ae04fcf19")
 		)
 		(fp_line
-			(start -0.35 0.250001)
+			(start -0.35 0.250002)
 			(end 0.5 0.25)
 			(stroke
 				(width 0.075)
@@ -2625,7 +2625,7 @@
 		)
 		(fp_line
 			(start -0.5 0.1)
-			(end -0.35 0.250001)
+			(end -0.35 0.250002)
 			(stroke
 				(width 0.075)
 				(type solid)
@@ -8416,7 +8416,7 @@
 		(sheetfile "halo-90.kicad_sch")
 		(attr smd)
 		(fp_line
-			(start -0.15 0.000001)
+			(start -0.15 0.000002)
 			(end 0.15 -0.2)
 			(stroke
 				(width 0.08)
@@ -8436,7 +8436,7 @@
 			(uuid "1aad4947-cdea-41a9-845f-c942f221b306")
 		)
 		(fp_line
-			(start 0.15 -0.000001)
+			(start 0.15 -0.000002)
 			(end 0.2 0)
 			(stroke
 				(width 0.08)
@@ -8447,7 +8447,7 @@
 		)
 		(fp_line
 			(start 0.15 0.2)
-			(end -0.15 0.000001)
+			(end -0.15 0.000002)
 			(stroke
 				(width 0.08)
 				(type solid)
@@ -13092,7 +13092,7 @@
 		)
 		(fp_line
 			(start 0.15 0.2)
-			(end -0.15 0.000001)
+			(end -0.15 0.000002)
 			(stroke
 				(width 0.08)
 				(type solid)
@@ -13101,7 +13101,7 @@
 			(uuid "82b1a8d6-4582-4588-bf76-523ab10b3a0e")
 		)
 		(fp_line
-			(start 0.15 -0.000001)
+			(start 0.15 -0.000002)
 			(end 0.2 0)
 			(stroke
 				(width 0.08)
@@ -13121,7 +13121,7 @@
 			(uuid "1345e571-0db0-459a-985b-a3105bdcf59b")
 		)
 		(fp_line
-			(start -0.15 0.000001)
+			(start -0.15 0.000002)
 			(end 0.15 -0.2)
 			(stroke
 				(width 0.08)
@@ -18153,7 +18153,7 @@
 		)
 		(fp_line
 			(start -0.5 0.1)
-			(end -0.35 0.250001)
+			(end -0.35 0.250002)
 			(stroke
 				(width 0.075)
 				(type solid)
@@ -18172,7 +18172,7 @@
 			(uuid "d99e1f79-b9fb-4dc7-ad42-377638ea5cb1")
 		)
 		(fp_line
-			(start -0.35 0.250001)
+			(start -0.35 0.250002)
 			(end 0.5 0.25)
 			(stroke
 				(width 0.075)
@@ -22256,7 +22256,7 @@
 			(uuid "65209d09-4df7-4fd7-86c4-d8fa9763a1d4")
 		)
 		(fp_line
-			(start -0.15 -0.000001)
+			(start -0.15 -0.000002)
 			(end 0.15 -0.2)
 			(stroke
 				(width 0.08)
@@ -22267,7 +22267,7 @@
 		)
 		(fp_line
 			(start 0.15 0.2)
-			(end -0.15 -0.000001)
+			(end -0.15 -0.000002)
 			(stroke
 				(width 0.08)
 				(type solid)
@@ -22286,7 +22286,7 @@
 			(uuid "906c1902-bb4e-49c2-b466-0ead71de78c1")
 		)
 		(fp_line
-			(start 0.15 0.000001)
+			(start 0.15 0.000002)
 			(end 0.2 0)
 			(stroke
 				(width 0.08)
@@ -27505,7 +27505,7 @@
 		(sheetfile "halo-90.kicad_sch")
 		(attr smd)
 		(fp_line
-			(start 0.15 0.000001)
+			(start 0.15 0.000002)
 			(end 0.2 0)
 			(stroke
 				(width 0.08)
@@ -27526,7 +27526,7 @@
 		)
 		(fp_line
 			(start 0.15 0.2)
-			(end -0.15 -0.000001)
+			(end -0.15 -0.000002)
 			(stroke
 				(width 0.08)
 				(type solid)
@@ -27535,7 +27535,7 @@
 			(uuid "714e5098-000e-41eb-aedb-02e07278c91b")
 		)
 		(fp_line
-			(start -0.15 -0.000001)
+			(start -0.15 -0.000002)
 			(end 0.15 -0.2)
 			(stroke
 				(width 0.08)
@@ -32611,7 +32611,7 @@
 					(width 1.5)
 				)
 			)
-			(uuid "0f1a819a-9e9e-45a3-b2c1-51119eaeab02")
+			(uuid "7ea3fa5b-a14d-4de5-ba7a-7a7c60d70a11")
 		)
 		(pad "2" smd circle
 			(at 0 0)
