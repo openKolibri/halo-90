@@ -373,12 +373,12 @@ function placeBattery(ref, x, y, rot){
 
 function placeUc(x , y, rot){
   var ucModule = "\
-  (module STM8L15xxx:UFQFPN28 (layer Front)                      \n\
+  (module STM8151G6U6:UFQFPN28 (layer Front)                      \n\
   (at "+ x + " " + y + " " + rot + ")                            \n\
   (fp_text reference U1 (at 0 0) (layer F.SilkS)                 \n\
     (effects (font (size 1 1) (thickness 0.1)))                  \n\
   )                                                              \n\
-  (fp_text value STM8L15xxx (at 0 0) (layer Dwgs.User)           \n\
+  (fp_text value STM8151G6U6 (at 0 0) (layer Dwgs.User)           \n\
     (effects (font (size 1 1) (thickness 0.1)))                  \n\
   )                                                              \n\
   (fp_text user %R (at 0 0) (layer F.Fab)                        \n\

@@ -16941,7 +16941,7 @@
 			)
 		)
 	)
-	(footprint "STM8L15xxx:UFQFPN28"
+	(footprint "STM8151G6U6:UFQFPN28"
 		(layer "F.Cu")
 		(uuid "c117d107-e92b-4434-be6c-7a8f2de5b3c0")
 		(at -2.4 0.1 -90)
@@ -16957,7 +16957,7 @@
 				)
 			)
 		)
-		(property "Value" "STM8L151xxx"
+		(property "Value" "STM8151G6U6"
 			(at 0 4 270)
 			(unlocked yes)
 			(layer "Eco2.User")
@@ -16970,7 +16970,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/STM8L15xxx/STM8L15xxx.pdf"
+		(property "Datasheet" "${KIPRJMOD}/components/STM8151G6U6/STM8151G6U6.pdf"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -17662,7 +17662,7 @@
 			(uuid "60835547-1149-4230-81a0-db4cdf890eb3")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/components/STM8L15xxx/UFQFPN28.stp"
+		(model "${KIPRJMOD}/components/STM8151G6U6/UFQFPN28.stp"
 			(offset
 				(xyz 0 0 0)
 			)

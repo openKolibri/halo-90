@@ -2,7 +2,7 @@
 	(version 20241209)
 	(generator "kicad_symbol_editor")
 	(generator_version "9.0")
-	(symbol "STM8L151xxx"
+	(symbol "STM8151G6U6"
 		(pin_names
 			(offset 1.016)
 		)
@@ -17,7 +17,7 @@
 				)
 			)
 		)
-		(property "Value" "STM8L151xxx"
+		(property "Value" "STM8151G6U6"
 			(at 7.62 15.24 0)
 			(effects
 				(font
@@ -25,7 +25,7 @@
 				)
 			)
 		)
-		(property "Footprint" "STM8L15xxx:UFQFPN28"
+		(property "Footprint" "STM8151G6U6:UFQFPN28"
 			(at 0 -52.07 0)
 			(effects
 				(font
@@ -34,7 +34,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/STM8L15xxx/STM8L15xxx.pdf"
+		(property "Datasheet" "${KIPRJMOD}/components/STM8151G6U6/STM8151G6U6.pdf"
 			(at 0 -54.61 0)
 			(effects
 				(font
@@ -52,7 +52,7 @@
 				(hide yes)
 			)
 		)
-		(symbol "STM8L151xxx_0_0"
+		(symbol "STM8151G6U6_0_0"
 			(pin input line
 				(at -15.24 8.89 0)
 				(length 2.54)
@@ -562,7 +562,7 @@
 				)
 			)
 		)
-		(symbol "STM8L151xxx_0_1"
+		(symbol "STM8151G6U6_0_1"
 			(rectangle
 				(start -12.7 13.97)
 				(end 12.7 -39.37)

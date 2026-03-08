@@ -5,7 +5,7 @@
   (lib (name "tooling")(type "KiCad")(uri "${KIPRJMOD}/components/tooling/tooling.kicad_sym")(options "")(descr ""))
   (lib (name "nets")(type "KiCad")(uri "${KIPRJMOD}/components/nets/nets.kicad_sym")(options "")(descr ""))
   (lib (name "passives")(type "KiCad")(uri "${KIPRJMOD}/components/passives/passives.kicad_sym")(options "")(descr ""))
-  (lib (name "STM8L15xxx")(type "KiCad")(uri "${KIPRJMOD}/components/STM8L15xxx/STM8L15xxx.kicad_sym")(options "")(descr ""))
+  (lib (name "STM8151G6U6")(type "KiCad")(uri "${KIPRJMOD}/components/STM8151G6U6/STM8151G6U6.kicad_sym")(options "")(descr ""))
   (lib (name "C-0402")(type "KiCad")(uri "${KIPRJMOD}/components/C-0402/C-0402.kicad_sym")(options "")(descr ""))
   (lib (name "DRV5032")(type "KiCad")(uri "${KIPRJMOD}/components/DRV5032/DRV5032.kicad_sym")(options "")(descr ""))
   (lib (name "SC7A20HTR")(type "KiCad")(uri "${KIPRJMOD}/components/SC7A20HTR/SC7A20HTR.kicad_sym")(options "")(descr ""))

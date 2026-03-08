@@ -432,7 +432,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C1525"
+			(property "LCSC Part #" "C85325"
 				(at 0 -15.24 0)
 				(effects
 					(font
@@ -598,7 +598,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C15525"
+			(property "LCSC Part #" "C85325"
 				(at 0 -15.24 0)
 				(effects
 					(font
@@ -782,7 +782,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part#" "C2655033"
+			(property "LCSC Part #" "C85325"
 				(at 0 -16.51 0)
 				(effects
 					(font
@@ -919,7 +919,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C25744"
+			(property "LCSC Part #" "C85325"
 				(at 0 -15.24 0)
 				(effects
 					(font
@@ -1115,7 +1115,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part#" "C19274408"
+			(property "LCSC Part #" "C85325"
 				(at 0 -30.48 0)
 				(effects
 					(font
@@ -1368,7 +1368,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "STM8L15xxx:STM8L151xxx"
+		(symbol "STM8151G6U6:STM8151G6U6"
 			(pin_names
 				(offset 1.016)
 			)
@@ -1383,7 +1383,7 @@
 					)
 				)
 			)
-			(property "Value" "STM8L151xxx"
+			(property "Value" "STM8151G6U6"
 				(at 7.62 15.24 0)
 				(effects
 					(font
@@ -1391,7 +1391,7 @@
 					)
 				)
 			)
-			(property "Footprint" "STM8L15xxx:UFQFPN28"
+			(property "Footprint" "STM8151G6U6:UFQFPN28"
 				(at 0 -52.07 0)
 				(effects
 					(font
@@ -1400,7 +1400,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "${KIPRJMOD}/components/STM8L15xxx/STM8L15xxx.pdf"
+			(property "Datasheet" "${KIPRJMOD}/components/STM8151G6U6/STM8151G6U6.pdf"
 				(at 0 -54.61 0)
 				(effects
 					(font
@@ -1418,7 +1418,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "STM8L151xxx_0_0"
+			(symbol "STM8151G6U6_0_0"
 				(pin input line
 					(at -15.24 8.89 0)
 					(length 2.54)
@@ -1928,7 +1928,7 @@
 					)
 				)
 			)
-			(symbol "STM8L151xxx_0_1"
+			(symbol "STM8151G6U6_0_1"
 				(rectangle
 					(start -12.7 13.97)
 					(end 12.7 -39.37)
@@ -16034,7 +16034,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C25744"
+		(property "LCSC Part #" "C85325"
 			(at 194.31 41.91 0)
 			(effects
 				(font
@@ -16131,7 +16131,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C1525"
+		(property "LCSC Part #" "C85325"
 			(at 219.71 128.27 0)
 			(effects
 				(font
@@ -16420,7 +16420,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C1525"
+		(property "LCSC Part #" "C85325"
 			(at 238.76 121.92 0)
 			(effects
 				(font
@@ -16517,7 +16517,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C1525"
+		(property "LCSC Part #" "C85325"
 			(at 179.07 66.04 0)
 			(effects
 				(font
@@ -16586,7 +16586,7 @@
 				(justify left)
 			)
 		)
-		(property "LCSC Part #" "C7501066"
+		(property "LCSC Part #" "C85325"
 			(at 250.19 31.75 0)
 			(effects
 				(font
@@ -16767,7 +16767,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part#" "C19274408"
+		(property "LCSC Part #" "C85325"
 			(at 193.04 143.51 0)
 			(effects
 				(font
@@ -16940,7 +16940,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C15525"
+		(property "LCSC Part #" "C85325"
 			(at 223.52 170.18 0)
 			(effects
 				(font
@@ -17098,7 +17098,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C25744"
+		(property "LCSC Part #" "C85325"
 			(at 275.59 53.34 0)
 			(effects
 				(font
@@ -17461,7 +17461,7 @@
 		)
 	)
 	(symbol
-		(lib_id "STM8L15xxx:STM8L151xxx")
+		(lib_id "STM8151G6U6:STM8151G6U6")
 		(at 213.36 40.64 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -17479,7 +17479,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "STM8L151xxx"
+		(property "Value" "STM8151G6U6"
 			(at 215.5033 24.13 0)
 			(effects
 				(font
@@ -17488,7 +17488,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "STM8L15xxx:UFQFPN28"
+		(property "Footprint" "STM8151G6U6:UFQFPN28"
 			(at 213.36 92.71 0)
 			(effects
 				(font
@@ -17497,7 +17497,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/STM8L15xxx/STM8L15xxx.pdf"
+		(property "Datasheet" "${KIPRJMOD}/components/STM8151G6U6/STM8151G6U6.pdf"
 			(at 213.36 95.25 0)
 			(effects
 				(font

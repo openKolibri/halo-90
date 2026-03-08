@@ -93,7 +93,7 @@ We are using [BL-HUB37A-AV-TRB], because it is low cost and has high availabilit
 #### Microcontroller
 *STMicroelectonics's* [STM8L151G4] acts as the main controller for the earring. The low power microcontroller has a wide range of peripherals, a long expected production life, and low cost and availability in high quantities. Running at its max speed of `16 MHz` is able to easily charliplex the 90 Leds at over `1 kHz`. The `12b ADC` is used to readout the microphone and has plenty of flash (up to `32k`) to store an assortment of light patterns or complex processed designs.
 
-![IMG-STM8L15xxx]
+![IMG-STM8151G6U6]
 
 #### Battery
 *Linx Technologies's* aptly named [BAT-HLD-001] is a stamped die-cut sheet-metal battery-holder that is as low profile as possible. It is sized for a `CR2032` lithium cell. The metal acts as the anode while the pad on the PCB is the cathode. Battery life varies based on what threshold for brightness you are content with. Over its lifetime, the internal resistance of the battery increases and the voltage decreases. This means that the current possible also decreases and thus the brightness.
@@ -542,7 +542,7 @@ Files of all licenses are required with the distribution of files. All files are
 [KXT3]:                       ./pcb/components/KXT3/KXT3.pdf
 [LSM6DSM]:                    ./pcb/components/LSM6DSM/LSM6DSM.pdf
 [SPW2430HR5H-B]:              ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.pdf
-[STM8L151G4]:                 ./pcb/components/STM8L15xxx/STM8L15xxx.pdf
+[STM8L151G4]:                 ./pcb/components/STM8151G6U6/STM8151G6U6.pdf
 <!-- Links -->
 [HALO-90]:                    https://openkolibri.com/hlo/90
 [KiCad]:                      https://kicad.org/
@@ -573,7 +573,7 @@ Files of all licenses are required with the distribution of files. All files are
 [IMG-KXT3]:                   ./pcb/components/KXT3/KXT3.jpg                            "Miniature low profile button"
 [IMG-LSM6DSM]:                ./pcb/components/LSM6DSM/LSM6DSM.jpg                      "6 axis IMU"
 [IMG-SPW2430HR5H-B]:          ./pcb/components/SPW2430HR5H-B/SPW2430HR5H-B.jpg          "MEMS Microphone"
-[IMG-STM8L15xxx]:             ./pcb/components/STM8L15xxx/STM8L15xxx.jpg                "Low power microcontroller"
+[IMG-STM8151G6U6]:             ./pcb/components/STM8151G6U6/STM8151G6U6.jpg                "Low power microcontroller"
 [IMG-frenchEarwire]:          ./pcb/components/frenchEarwire/frenchEarwire.jpg          "Gold plated french earwire"
 <!-- Magnets -->
 [6x1-magnets]:                ./docs/components/magnets.jpg                             "6mm x 1mm N53 disc mangents"
