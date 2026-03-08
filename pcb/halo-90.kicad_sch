@@ -562,7 +562,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "10u"
+			(property "Value" "10uF"
 				(at 0.635 -2.54 0)
 				(effects
 					(font
@@ -728,7 +728,7 @@
 					(justify right)
 				)
 			)
-			(property "Value" "DRV5032"
+			(property "Value" "HAL2041SO"
 				(at 6.35 7.62 0)
 				(effects
 					(font
@@ -782,7 +782,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C85325"
+			(property "LCSC Part #" "C22400320"
 				(at 0 -16.51 0)
 				(effects
 					(font
@@ -16904,7 +16904,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10u"
+		(property "Value" "10uF"
 			(at 227.33 156.2099 0)
 			(effects
 				(font
@@ -17835,7 +17835,7 @@
 				)
 			)
 		)
-		(property "Value" "DRV5032"
+		(property "Value" "HAL2041SO"
 			(at 257.81 97.79 0)
 			(effects
 				(font
@@ -17888,7 +17888,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part#" "C130005"
+		(property "LCSC Part#" "C22400320"
 			(at 257.81 123.19 0)
 			(effects
 				(font
