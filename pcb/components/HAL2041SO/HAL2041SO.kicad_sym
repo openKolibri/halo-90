@@ -2,7 +2,7 @@
 	(version 20241209)
 	(generator "kicad_symbol_editor")
 	(generator_version "9.0")
-	(symbol "DRV5032"
+	(symbol "HAL2041SO"
 		(pin_numbers
 			(hide yes)
 		)
@@ -21,7 +21,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "DRV5032"
+		(property "Value" "HAL2041SO"
 			(at 6.35 7.62 0)
 			(effects
 				(font
@@ -30,7 +30,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "DRV5032:DRV5032"
+		(property "Footprint" "HAL2041SO:HAL2041SO"
 			(at 0 -11.43 0)
 			(effects
 				(font
@@ -39,7 +39,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/DRV5032/DRV5032.pdf"
+		(property "Datasheet" "${KIPRJMOD}/components/HAL2041SO/HAL2041SO.pdf"
 			(at 0 -13.97 0)
 			(effects
 				(font
@@ -48,7 +48,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "HALL: 1.65V~5.5V 5Hz 690nA Omnipolar Push-pull ±4.8mT"
+		(property "Description" "HALL: 1.5mT 2.5uA 2V~5.5V Omnipolar Open Drain SOT-23"
 			(at 0 -19.05 0)
 			(effects
 				(font
@@ -57,7 +57,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "DRV5032FBDBZR"
+		(property "MPN" "HAL2041SO"
 			(at 0 -21.59 0)
 			(effects
 				(font
@@ -66,7 +66,7 @@
 				(hide yes)
 			)
 		)
-		(property "Manufacturer" "Texas Instruments"
+		(property "Manufacturer" "Hallwee"
 			(at 0 -24.13 0)
 			(effects
 				(font
@@ -75,7 +75,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part#" "C2655033"
+		(property "LCSC Part#" "C22400320"
 			(at 0 -16.51 0)
 			(effects
 				(font
@@ -84,7 +84,16 @@
 				(hide yes)
 			)
 		)
-		(symbol "DRV5032_0_0"
+		(property "ki_keywords" "Hall Magnet"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "HAL2041SO_0_0"
 			(pin power_in line
 				(at -8.89 3.81 0)
 				(length 2.54)
@@ -122,7 +131,7 @@
 				)
 			)
 		)
-		(symbol "DRV5032_0_1"
+		(symbol "HAL2041SO_0_1"
 			(rectangle
 				(start -6.35 6.35)
 				(end 6.35 -6.35)
@@ -135,7 +144,7 @@
 				)
 			)
 		)
-		(symbol "DRV5032_1_0"
+		(symbol "HAL2041SO_1_0"
 			(pin output line
 				(at 8.89 0 180)
 				(length 2.54)

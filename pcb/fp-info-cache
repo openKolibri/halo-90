@@ -1,4 +1,4 @@
-53146359821684
+24815890041877
 BAT-HLD-001
 BAT-HLD-001
 Linx CR 2025/2032 Surface mount coin cell holder
@@ -6,13 +6,6 @@ Linx CR 2025/2032 Surface mount coin cell holder
 0
 3
 2
-BL-HUB37A-AV-TRB
-D-0402
-
-
-0
-2
-2
 C-0402
 C-0402
 
@@ -20,8 +13,8 @@ capacitor
 0
 2
 2
-DRV5032
-DRV5032
+HAL2041SO
+HAL2041SO
 
 
 0
@@ -36,8 +29,8 @@ capacitor
 2
 SC7A20HTR
 SC7A20HTR
-LGA-12_L2.0-W2.0-P0.50-TL footprint
-LGA-12_L2.0-W2.0-P0.50-TL footprint C19274408
+SC7A20HTR
+SC7A20HTR C19274408
 0
 12
 12
@@ -48,138 +41,33 @@ SMTSO1610MTJ
 0
 1
 1
-STM8L15xxx
+STM8151G6U6
 UFQFPN28
 
 
 0
 28
 28
-STM8L15xxx
-UFQFPN32
-
-
-0
-33
-33
 TC2030-IDC-NL
-Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical
+TC2030-IDC-NL
 Tag-Connect programming header; http://www.tag-connect.com/Materials/TC2030-IDC-NL.pdf
 tag connect programming header pogo pins
 0
 6
 6
-passives
-C-0402
+XL-1005SURC
+XL-1005SURC
 
-capacitor
-0
-2
-2
-passives
-C-0603
 
-capacitor
-0
-2
-2
-passives
-C-0805
-
-capacitor
-0
-2
-2
-passives
-C-1206
-
-capacitor
-0
-2
-2
-passives
-C-1210
-
-capacitor
-0
-2
-2
-passives
-C-2220
-
-capacitor
-0
-2
-2
-passives
-L-0402
-
-inductor
-0
-2
-2
-passives
-L-0603
-
-inductor
-0
-2
-2
-passives
-L-0805
-
-inductor
-0
-2
-2
-passives
-L-1206
-
-inductor
-0
-2
-2
-passives
-L-1210
-
-inductor
-0
-2
-2
-passives
-R-0402
-
-resistor
-0
-2
-2
-passives
-R-0603
-
-resistor
-0
-2
-2
-passives
-R-0805
-
-resistor
-0
-2
-2
-passives
-R-1206
-
-resistor
 0
 2
 2
 tooling
-1.152mm-ToolingHole
+1.5mm-ToolingHole
 1.152mm with  0.148mm expansion. JLC Requirements
 
 0
-1
+0
 0
 tooling
 24mm-roundTabs

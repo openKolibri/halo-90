@@ -1,0 +1,108 @@
+(footprint "1.5mm-ToolingHole"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "1.152mm with  0.148mm expansion. JLC Requirements")
+	(property "Reference" "REF**"
+		(at 0 0 0)
+		(layer "Eco2.User")
+		(hide yes)
+		(uuid "10e7f094-9e30-46f5-a045-0b5aee61a07f")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.05)
+			)
+		)
+	)
+	(property "Value" "1.5mm-ToolingHole"
+		(at 0 -2 0)
+		(layer "Eco2.User")
+		(hide yes)
+		(uuid "9fcc46ef-05ee-4ceb-8e58-9951ef8195c6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "937152e2-1fdb-4394-ba5b-3aef84243a4d")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f6d1be2d-ebcd-4b46-b120-ff567fb64b1e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_circle
+		(center 0 0)
+		(end 0.8 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "B.Fab")
+		(uuid "9364c754-b265-43e1-94ed-70c6a785e781")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 0.8 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "7db85bab-4586-49d8-b2d8-2f6dcfdbb48b")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "B.Fab")
+		(uuid "341522e6-14eb-4051-a91e-f92c77be1464")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.05)
+			)
+		)
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "1f55d48d-6e69-4802-96ca-683b73c5a40a")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.05)
+			)
+		)
+	)
+	(pad "" np_thru_hole circle
+		(at 0 0)
+		(size 1.5 1.5)
+		(drill 1.5)
+		(layers "*.Cu" "*.Mask")
+		(uuid "077ceccf-19e3-43e1-a9b2-6e7947038ad9")
+	)
+	(embedded_fonts no)
+)

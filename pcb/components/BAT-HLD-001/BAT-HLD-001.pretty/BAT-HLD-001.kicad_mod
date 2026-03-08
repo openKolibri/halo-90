@@ -18,6 +18,7 @@
 	(property "Value" "BAT-HLD-001"
 		(at 0 -6 0)
 		(layer "F.CrtYd")
+		(hide yes)
 		(uuid "ae84a4c9-4ca3-47d2-8354-09fbb76fdc62")
 		(effects
 			(font

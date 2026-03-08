@@ -7,6 +7,7 @@
 		(at 0 -2.5 0)
 		(unlocked yes)
 		(layer "F.SilkS")
+		(hide yes)
 		(uuid "c1a1b922-17b8-41dd-9359-e878de9bcc9a")
 		(effects
 			(font
@@ -69,7 +70,7 @@
 		(at 0 0)
 		(size 4.2 4.2)
 		(drill 2.5)
-		(layers "*.Cu" "*.Mask")
+		(layers "*.Cu" "*.Mask" "F.Paste")
 		(remove_unused_layers no)
 		(thermal_bridge_angle 90)
 		(uuid "5aed2ea7-267d-49b8-bf35-9d5573bfe9d5")

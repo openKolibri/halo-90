@@ -7,7 +7,7 @@
 			(offset 1.016)
 		)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(property "Reference" "J"
 			(at 3.81 8.89 0)
@@ -27,7 +27,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "TC2030-IDC-NL:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical"
+		(property "Footprint" "TC2030-IDC-NL:TC2030-IDC-NL"
 			(at 0 -25.4 0)
 			(effects
 				(font

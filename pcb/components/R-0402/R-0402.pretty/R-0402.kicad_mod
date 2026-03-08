@@ -1,4 +1,4 @@
-(footprint "C-0402"
+(footprint "R-0402"
 	(version 20241229)
 	(generator "pcbnew")
 	(generator_version "9.0")
@@ -7,6 +7,7 @@
 	(property "Reference" "REF**"
 		(at 0.8 0 0)
 		(layer "F.SilkS")
+		(hide yes)
 		(uuid "a0994d8a-54bc-4899-b629-49e31ee64f50")
 		(effects
 			(font
@@ -181,7 +182,7 @@
 		(uuid "6e20758a-12da-4a5d-9660-00f8aa6e032f")
 	)
 	(embedded_fonts no)
-	(model "${KIPRJMOD}/components/C-0402/C-0402.stp"
+	(model "${KIPRJMOD}/components/R-0402/R-0402.stp"
 		(offset
 			(xyz 0 0 0)
 		)

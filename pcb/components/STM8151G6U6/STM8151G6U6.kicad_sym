@@ -43,7 +43,34 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "MCU: 8b 16Mhz 16k Flash UQFN-28-4x4"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "STMicroelectronics"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "STM8151G6U6"
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ki_keywords" "Microcontroller Low Power"
 			(at 0 0 0)
 			(effects
 				(font

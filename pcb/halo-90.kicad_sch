@@ -189,194 +189,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB"
-			(pin_names
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "D"
-				(at 0 3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "BL-HUB37A-AV-TRB"
-				(at 0 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-				(at 0 -6.35 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-				(at 0 -8.89 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "BL-HUB37A-AV-TRB_0_0"
-				(pin input line
-					(at -3.81 0 0)
-					(length 2.54)
-					(name "K"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 3.81 0 180)
-					(length 2.54)
-					(name "A"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(symbol "BL-HUB37A-AV-TRB_0_1"
-				(polyline
-					(pts
-						(xy -1.27 1.27) (xy -1.27 -1.27) (xy 1.27 0) (xy -1.27 1.27)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -0.508 1.27) (xy 0 2.032)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 2.032) (xy -0.381 1.905)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 2.032) (xy 0 1.651)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.254 0.889) (xy 0.762 1.651)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 1.651) (xy 0.381 1.524)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 1.651) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 1.27) (xy 1.27 -1.27)
-					)
-					(stroke
-						(width 0.0006)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "C-0402:100n"
 			(pin_numbers
 				(hide yes)
@@ -396,7 +208,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "100nF"
+			(property "Value" "100n"
 				(at 0.635 -2.54 0)
 				(effects
 					(font
@@ -432,7 +244,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C85325"
+			(property "LCSC Part #" "C1525"
 				(at 0 -15.24 0)
 				(effects
 					(font
@@ -562,7 +374,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "10uF"
+			(property "Value" "10u"
 				(at 0.635 -2.54 0)
 				(effects
 					(font
@@ -598,7 +410,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C85325"
+			(property "LCSC Part #" "C15525"
 				(at 0 -15.24 0)
 				(effects
 					(font
@@ -709,7 +521,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "DRV5032:DRV5032"
+		(symbol "HAL2041SO:HAL2041SO"
 			(pin_numbers
 				(hide yes)
 			)
@@ -737,7 +549,7 @@
 					(justify right)
 				)
 			)
-			(property "Footprint" "DRV5032:DRV5032"
+			(property "Footprint" "HAL2041SO:HAL2041SO"
 				(at 0 -11.43 0)
 				(effects
 					(font
@@ -746,7 +558,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "${KIPRJMOD}/components/DRV5032/DRV5032.pdf"
+			(property "Datasheet" "${KIPRJMOD}/components/HAL2041SO/HAL2041SO.pdf"
 				(at 0 -13.97 0)
 				(effects
 					(font
@@ -755,7 +567,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "HALL: 1.65V~5.5V 5Hz 690nA Omnipolar Push-pull ±4.8mT"
+			(property "Description" "HALL: 1.5mT 2.5uA 2V~5.5V Omnipolar Open Drain SOT-23"
 				(at 0 -19.05 0)
 				(effects
 					(font
@@ -764,7 +576,7 @@
 					(hide yes)
 				)
 			)
-			(property "MPN" "DRV5032FBDBZR"
+			(property "MPN" "HAL2041SO"
 				(at 0 -21.59 0)
 				(effects
 					(font
@@ -773,7 +585,7 @@
 					(hide yes)
 				)
 			)
-			(property "Manufacturer" "Texas Instruments"
+			(property "Manufacturer" "Hallwee"
 				(at 0 -24.13 0)
 				(effects
 					(font
@@ -782,7 +594,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C22400320"
+			(property "LCSC Part#" "C22400320"
 				(at 0 -16.51 0)
 				(effects
 					(font
@@ -791,7 +603,16 @@
 					(hide yes)
 				)
 			)
-			(symbol "DRV5032_0_0"
+			(property "ki_keywords" "Hall Magnet"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "HAL2041SO_0_0"
 				(pin power_in line
 					(at -8.89 3.81 0)
 					(length 2.54)
@@ -829,7 +650,7 @@
 					)
 				)
 			)
-			(symbol "DRV5032_0_1"
+			(symbol "HAL2041SO_0_1"
 				(rectangle
 					(start -6.35 6.35)
 					(end 6.35 -6.35)
@@ -842,8 +663,8 @@
 					)
 				)
 			)
-			(symbol "DRV5032_1_0"
-				(pin passive line
+			(symbol "HAL2041SO_1_0"
+				(pin output line
 					(at 8.89 0 180)
 					(length 2.54)
 					(name "OUT"
@@ -919,7 +740,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C85325"
+			(property "LCSC Part #" "C25744"
 				(at 0 -15.24 0)
 				(effects
 					(font
@@ -1096,7 +917,7 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://cn.bing.com/search?q=datasheet： KX132-1211"
+			(property "Datasheet" "${KIPRJMOD}/components/SC7A20HTR/SC7A20HTR.pdf"
 				(at -24.13 -27.94 0)
 				(effects
 					(font
@@ -1106,8 +927,8 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
-				(at 0 0 0)
+			(property "Description" "ACCEL: 1.71V~3.6V 500nA SPI/I2C ±16g LGA-12(2x2)"
+				(at 0 -33.02 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1115,7 +936,7 @@
 					(hide yes)
 				)
 			)
-			(property "LCSC Part #" "C85325"
+			(property "LCSC Part#" "C19274408"
 				(at 0 -30.48 0)
 				(effects
 					(font
@@ -1124,7 +945,25 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "C19274408"
+			(property "Manufacturer" "Hangzhou Silan Microelectronics"
+				(at 0 -35.56 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "SC7A20HTR"
+				(at 0 -38.1 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Accelerometer"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1409,7 +1248,34 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "MCU: 8b 16Mhz 16k Flash UQFN-28-4x4"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "STMicroelectronics"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "STM8151G6U6"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Microcontroller Low Power"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1948,7 +1814,7 @@
 				(offset 1.016)
 			)
 			(exclude_from_sim no)
-			(in_bom yes)
+			(in_bom no)
 			(on_board yes)
 			(property "Reference" "J"
 				(at 3.81 8.89 0)
@@ -1968,7 +1834,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "TC2030-IDC-NL:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical"
+			(property "Footprint" "TC2030-IDC-NL:TC2030-IDC-NL"
 				(at 0 -25.4 0)
 				(effects
 					(font
@@ -2124,6 +1990,230 @@
 								(size 1.27 1.27)
 							)
 						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "XL-1005SURC:XL-1005SURC"
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "XL-1005SURC"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "XL-1005SURC:XL-1005SURC"
+				(at 0 -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+				(at 0 -8.89 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+				(at 0 -11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MPN" "XL-1005SURC"
+				(at 0 -13.97 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Manufacturer" "XINGLIGHT"
+				(at 0 -19.05 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part#" "C25503345"
+				(at 0 -16.51 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Red LED 0402"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "XL-1005SURC_0_0"
+				(pin tri_state line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin tri_state line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(symbol "XL-1005SURC_1_1"
+				(polyline
+					(pts
+						(xy -1.27 1.27) (xy -1.27 -1.27) (xy 1.27 0) (xy -1.27 1.27)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.508 1.27) (xy 0 2.032)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.032) (xy -0.381 1.905)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.032) (xy 0 1.651)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0.889) (xy 0.762 1.651)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 1.651) (xy 0.381 1.524)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 1.651) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 1.27) (xy 1.27 -1.27)
+					)
+					(stroke
+						(width 0.1524)
+						(type solid)
+					)
+					(fill
+						(type none)
 					)
 				)
 			)
@@ -2908,7 +2998,7 @@
 		(uuid "6737c098-40f0-4d7f-a861-331bdb3aaff6")
 	)
 	(junction
-		(at 238.76 102.87)
+		(at 238.76 106.68)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "6d339989-8784-4839-a352-4d8b4dbe95e3")
@@ -3448,12 +3538,6 @@
 		(uuid "e0a09d9e-9416-4cdf-a8d4-36b397e68532")
 	)
 	(junction
-		(at 158.75 109.22)
-		(diameter 1.016)
-		(color 0 0 0 0)
-		(uuid "e10eecb7-85a0-4924-a49e-9946c07fecb6")
-	)
-	(junction
 		(at 129.54 137.16)
 		(diameter 1.016)
 		(color 0 0 0 0)
@@ -3532,6 +3616,12 @@
 		(uuid "ed1a5f1e-7d60-4e3b-9bfd-55f53c62dcfa")
 	)
 	(junction
+		(at 273.05 110.49)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f06faf46-8fe3-466b-ae07-821a85aea806")
+	)
+	(junction
 		(at 82.55 33.02)
 		(diameter 1.016)
 		(color 0 0 0 0)
@@ -3568,7 +3658,7 @@
 		(uuid "fdec0771-d369-4d70-b6de-9d4ea2be45a4")
 	)
 	(junction
-		(at 238.76 110.49)
+		(at 238.76 114.3)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ff0da5ef-8ae2-4530-9b48-4423f219107c")
@@ -3934,6 +4024,16 @@
 			(type solid)
 		)
 		(uuid "0b7bf858-f63e-4036-970e-7092871ac44f")
+	)
+	(wire
+		(pts
+			(xy 273.05 100.33) (xy 273.05 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0b95a29a-2ba3-4d0e-832e-e527571e6515")
 	)
 	(wire
 		(pts
@@ -4394,6 +4494,16 @@
 			(type solid)
 		)
 		(uuid "1f41ee84-c82c-42d6-92b3-61dc884cd414")
+	)
+	(wire
+		(pts
+			(xy 273.05 110.49) (xy 275.59 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20c638d1-d8ff-4c26-8d94-d565f8dae538")
 	)
 	(wire
 		(pts
@@ -4897,16 +5007,6 @@
 	)
 	(wire
 		(pts
-			(xy 158.75 109.22) (xy 167.64 109.22)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "3885499e-ee25-4efb-9167-766f6027697a")
-	)
-	(wire
-		(pts
 			(xy 133.35 45.72) (xy 142.24 45.72)
 		)
 		(stroke
@@ -5387,7 +5487,7 @@
 	)
 	(polyline
 		(pts
-			(xy 232.41 125.73) (xy 276.86 125.73)
+			(xy 232.41 125.73) (xy 284.48 125.73)
 		)
 		(stroke
 			(width 0.152)
@@ -5827,7 +5927,7 @@
 	)
 	(polyline
 		(pts
-			(xy 276.86 125.73) (xy 276.86 92.71)
+			(xy 284.48 125.73) (xy 284.48 92.71)
 		)
 		(stroke
 			(width 0.152)
@@ -6757,7 +6857,7 @@
 	)
 	(polyline
 		(pts
-			(xy 276.86 92.71) (xy 232.41 92.71)
+			(xy 284.48 92.71) (xy 232.41 92.71)
 		)
 		(stroke
 			(width 0.152)
@@ -6934,6 +7034,16 @@
 			(type solid)
 		)
 		(uuid "a3ffcf96-8c7c-4657-97eb-1a2f8a9e8f0f")
+	)
+	(wire
+		(pts
+			(xy 273.05 109.22) (xy 273.05 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a42743df-86a3-41ba-ae4a-13576433c7a8")
 	)
 	(wire
 		(pts
@@ -7247,7 +7357,7 @@
 	)
 	(wire
 		(pts
-			(xy 238.76 110.49) (xy 248.92 110.49)
+			(xy 238.76 114.3) (xy 248.92 114.3)
 		)
 		(stroke
 			(width 0)
@@ -7847,7 +7957,7 @@
 	)
 	(wire
 		(pts
-			(xy 238.76 101.6) (xy 238.76 102.87)
+			(xy 238.76 105.41) (xy 238.76 106.68)
 		)
 		(stroke
 			(width 0)
@@ -8067,7 +8177,7 @@
 	)
 	(wire
 		(pts
-			(xy 238.76 110.49) (xy 238.76 111.76)
+			(xy 238.76 114.3) (xy 238.76 115.57)
 		)
 		(stroke
 			(width 0)
@@ -8097,7 +8207,7 @@
 	)
 	(wire
 		(pts
-			(xy 266.7 106.68) (xy 267.97 106.68)
+			(xy 266.7 110.49) (xy 273.05 110.49)
 		)
 		(stroke
 			(width 0)
@@ -8247,7 +8357,7 @@
 	)
 	(wire
 		(pts
-			(xy 238.76 102.87) (xy 248.92 102.87)
+			(xy 238.76 106.68) (xy 248.92 106.68)
 		)
 		(stroke
 			(width 0)
@@ -8868,7 +8978,7 @@
 	)
 	(global_label "HALL"
 		(shape input)
-		(at 267.97 106.68 0)
+		(at 275.59 110.49 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8877,7 +8987,7 @@
 		)
 		(uuid "1fee3d08-572e-4ed4-8019-a80405775482")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 161.29 -43.18 0)
+			(at 168.91 -39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9707,7 +9817,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -9734,8 +9844,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9743,8 +9853,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9752,12 +9862,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -9776,7 +9914,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -9803,8 +9941,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9812,8 +9950,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9821,12 +9959,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -9845,7 +10011,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -9872,8 +10038,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9881,8 +10047,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9890,12 +10056,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -9914,7 +10108,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -9941,8 +10135,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9950,8 +10144,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9959,12 +10153,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -9983,7 +10205,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -10010,8 +10232,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10019,8 +10241,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10028,12 +10250,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10052,7 +10302,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -10079,8 +10329,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10088,8 +10338,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10097,12 +10347,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10121,7 +10399,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -10148,8 +10426,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10157,8 +10435,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10166,12 +10444,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10190,7 +10496,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -10217,8 +10523,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10226,8 +10532,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10235,12 +10541,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10259,7 +10593,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -10286,8 +10620,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10295,8 +10629,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10304,12 +10638,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10328,7 +10690,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -10355,8 +10717,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10364,8 +10726,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10373,12 +10735,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10397,7 +10787,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -10424,8 +10814,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10433,8 +10823,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10442,12 +10832,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10466,7 +10884,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -10493,8 +10911,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10502,8 +10920,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10511,12 +10929,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10535,7 +10981,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -10562,8 +11008,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10571,8 +11017,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10580,12 +11026,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10604,7 +11078,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -10631,8 +11105,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10640,8 +11114,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10649,12 +11123,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10673,7 +11175,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -10700,8 +11202,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10709,8 +11211,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10718,12 +11220,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10742,7 +11272,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -10769,8 +11299,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10778,8 +11308,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10787,12 +11317,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10811,7 +11369,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -10838,8 +11396,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10847,8 +11405,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10856,12 +11414,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10880,7 +11466,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -10907,8 +11493,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10916,8 +11502,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10925,12 +11511,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -10949,7 +11563,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -10976,8 +11590,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10985,8 +11599,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10994,12 +11608,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11018,7 +11660,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -11045,8 +11687,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11054,8 +11696,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11063,12 +11705,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11087,7 +11757,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -11114,8 +11784,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11123,8 +11793,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11132,12 +11802,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11156,7 +11854,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -11183,8 +11881,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11192,8 +11890,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11201,12 +11899,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11225,7 +11951,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -11252,8 +11978,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11261,8 +11987,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11270,12 +11996,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11294,7 +12048,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -11321,8 +12075,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11330,8 +12084,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11339,12 +12093,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11363,7 +12145,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -11390,8 +12172,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11399,8 +12181,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11408,12 +12190,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11432,7 +12242,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -11459,8 +12269,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11468,8 +12278,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11477,12 +12287,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11501,7 +12339,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -11528,8 +12366,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11537,8 +12375,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11546,12 +12384,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11570,7 +12436,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -11597,8 +12463,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11606,8 +12472,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11615,12 +12481,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11639,7 +12533,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -11666,8 +12560,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11675,8 +12569,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11684,12 +12578,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11708,7 +12630,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -11735,8 +12657,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11744,8 +12666,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11753,12 +12675,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11777,7 +12727,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -11804,8 +12754,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11813,8 +12763,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11822,12 +12772,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11846,7 +12824,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -11873,8 +12851,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11882,8 +12860,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11891,12 +12869,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11915,7 +12921,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -11942,8 +12948,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11951,8 +12957,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11960,12 +12966,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -11984,7 +13018,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12011,8 +13045,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12020,8 +13054,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12029,12 +13063,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12053,7 +13115,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12080,8 +13142,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12089,8 +13151,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12098,12 +13160,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12122,7 +13212,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12149,8 +13239,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12158,8 +13248,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12167,12 +13257,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12191,7 +13309,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12218,8 +13336,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12227,8 +13345,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12236,12 +13354,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12260,7 +13406,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12287,8 +13433,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12296,8 +13442,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12305,12 +13451,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12329,7 +13503,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12356,8 +13530,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12365,8 +13539,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12374,12 +13548,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12398,7 +13600,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12425,8 +13627,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12434,8 +13636,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12443,12 +13645,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12467,7 +13697,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 39.37 90)
 		(mirror x)
 		(unit 1)
@@ -12494,8 +13724,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 39.37 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12503,8 +13733,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 39.37 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12512,12 +13742,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 39.37 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12536,7 +13794,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -12563,8 +13821,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12572,8 +13830,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12581,12 +13839,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12605,7 +13891,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -12632,8 +13918,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12641,8 +13927,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12650,12 +13936,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12674,7 +13988,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -12701,8 +14015,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12710,8 +14024,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12719,12 +14033,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12743,7 +14085,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -12770,8 +14112,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12779,8 +14121,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12788,12 +14130,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12812,7 +14182,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -12839,8 +14209,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12848,8 +14218,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12857,12 +14227,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12881,7 +14279,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -12908,8 +14306,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12917,8 +14315,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12926,12 +14324,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -12950,7 +14376,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -12977,8 +14403,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12986,8 +14412,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12995,12 +14421,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13019,7 +14473,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -13046,8 +14500,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13055,8 +14509,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13064,12 +14518,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13088,7 +14570,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -13115,8 +14597,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13124,8 +14606,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13133,12 +14615,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13157,7 +14667,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -13184,8 +14694,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13193,8 +14703,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13202,12 +14712,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13226,7 +14764,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -13253,8 +14791,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13262,8 +14800,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13271,12 +14809,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13295,7 +14861,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -13322,8 +14888,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13331,8 +14897,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13340,12 +14906,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13428,7 +15022,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -13455,8 +15049,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13464,8 +15058,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13473,12 +15067,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13497,7 +15119,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -13524,8 +15146,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13533,8 +15155,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13542,12 +15164,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13566,7 +15216,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -13593,8 +15243,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13602,8 +15252,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13611,12 +15261,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13635,7 +15313,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -13662,8 +15340,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13671,8 +15349,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13680,12 +15358,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13704,7 +15410,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -13731,8 +15437,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13740,8 +15446,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13749,12 +15455,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13773,7 +15507,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -13800,8 +15534,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13809,8 +15543,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13818,12 +15552,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13842,7 +15604,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -13869,8 +15631,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13878,8 +15640,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13887,12 +15649,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13911,7 +15701,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 64.77 90)
 		(mirror x)
 		(unit 1)
@@ -13938,8 +15728,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 64.77 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13947,8 +15737,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 64.77 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13956,12 +15746,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 64.77 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -13980,7 +15798,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -14007,8 +15825,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14016,8 +15834,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14025,12 +15843,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14049,7 +15895,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -14076,8 +15922,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14085,8 +15931,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14094,12 +15940,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14118,7 +15992,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -14145,8 +16019,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14154,8 +16028,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14163,12 +16037,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14187,7 +16089,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -14214,8 +16116,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14223,8 +16125,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14232,12 +16134,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14256,7 +16186,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -14283,8 +16213,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14292,8 +16222,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14301,12 +16231,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14325,7 +16283,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -14352,8 +16310,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14361,8 +16319,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14370,12 +16328,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14394,7 +16380,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -14421,8 +16407,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14430,8 +16416,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14439,12 +16425,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14463,7 +16477,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -14490,8 +16504,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14499,8 +16513,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14508,12 +16522,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14532,7 +16574,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -14559,8 +16601,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14568,8 +16610,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14577,12 +16619,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14601,7 +16671,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -14628,8 +16698,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14637,8 +16707,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14646,12 +16716,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14670,7 +16768,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -14697,8 +16795,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14706,8 +16804,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14715,12 +16813,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14739,7 +16865,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -14766,8 +16892,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14775,8 +16901,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14784,12 +16910,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14808,7 +16962,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -14835,8 +16989,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14844,8 +16998,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14853,12 +17007,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14877,7 +17059,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 140.97 90)
 		(mirror x)
 		(unit 1)
@@ -14904,8 +17086,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 140.97 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14913,8 +17095,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 140.97 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14922,12 +17104,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 140.97 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 140.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -14946,7 +17156,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 128.27 90)
 		(mirror x)
 		(unit 1)
@@ -14973,8 +17183,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 128.27 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14982,8 +17192,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 128.27 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14991,12 +17201,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 128.27 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 128.27 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15015,7 +17253,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 102.87 90)
 		(mirror x)
 		(unit 1)
@@ -15042,8 +17280,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 102.87 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15051,8 +17289,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 102.87 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15060,12 +17298,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 102.87 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15084,7 +17350,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 52.07 90)
 		(mirror x)
 		(unit 1)
@@ -15111,8 +17377,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 52.07 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15120,8 +17386,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 52.07 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15129,12 +17395,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 52.07 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15153,7 +17447,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 77.47 90)
 		(mirror x)
 		(unit 1)
@@ -15180,8 +17474,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 77.47 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15189,8 +17483,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 77.47 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15198,12 +17492,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 77.47 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 77.47 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15222,7 +17544,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 115.57 90)
 		(mirror x)
 		(unit 1)
@@ -15249,8 +17571,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 115.57 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15258,8 +17580,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 115.57 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15267,12 +17589,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 115.57 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15291,7 +17641,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 158.75 90.17 90)
 		(mirror x)
 		(unit 1)
@@ -15318,8 +17668,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 158.75 90.17 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 165.1 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15327,8 +17677,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 158.75 90.17 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 167.64 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15336,12 +17686,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 158.75 90.17 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 170.18 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 172.72 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 177.8 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 175.26 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15360,7 +17738,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 44.45 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15387,8 +17765,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 44.45 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 50.8 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15396,8 +17774,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 44.45 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 53.34 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15405,12 +17783,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 44.45 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 55.88 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 58.42 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 63.5 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 60.96 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15429,7 +17835,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 57.15 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15456,8 +17862,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 57.15 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 63.5 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15465,8 +17871,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 57.15 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 66.04 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15474,12 +17880,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 57.15 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 68.58 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 71.12 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 76.2 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 73.66 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15498,7 +17932,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 69.85 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15525,8 +17959,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 69.85 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 76.2 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15534,8 +17968,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 69.85 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 78.74 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15543,12 +17977,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 69.85 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 81.28 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 83.82 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 88.9 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 86.36 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15567,7 +18029,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 82.55 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15594,8 +18056,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 82.55 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 88.9 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15603,8 +18065,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 82.55 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 91.44 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15612,12 +18074,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 82.55 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 93.98 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 96.52 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 101.6 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 99.06 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15636,7 +18126,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 95.25 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15663,8 +18153,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 95.25 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 101.6 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15672,8 +18162,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 95.25 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 104.14 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15681,12 +18171,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 95.25 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 106.68 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 109.22 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 114.3 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 111.76 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15705,7 +18223,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 107.95 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15732,8 +18250,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 107.95 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 114.3 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15741,8 +18259,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 107.95 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 116.84 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15750,12 +18268,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 107.95 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 119.38 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 121.92 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 127 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 124.46 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15774,7 +18320,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 120.65 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15801,8 +18347,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 120.65 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 127 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15810,8 +18356,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 120.65 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 129.54 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15819,12 +18365,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 120.65 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 132.08 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 134.62 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 139.7 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 137.16 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15843,7 +18417,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 133.35 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15870,8 +18444,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 133.35 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 139.7 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15879,8 +18453,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 133.35 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 142.24 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15888,12 +18462,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 133.35 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 144.78 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 147.32 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 152.4 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 149.86 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -15912,7 +18514,7 @@
 		)
 	)
 	(symbol
-		(lib_id "BL-HUB37A-AV-TRB:BL-HUB37A-AV-TRB")
+		(lib_id "XL-1005SURC:XL-1005SURC")
 		(at 146.05 26.67 90)
 		(mirror x)
 		(unit 1)
@@ -15939,8 +18541,8 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "BL-HUB37A-AV-TRB:D-0402"
-			(at 146.05 26.67 0)
+		(property "Footprint" "XL-1005SURC:XL-1005SURC"
+			(at 152.4 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15948,8 +18550,8 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "${KIPRJMOD}/components/BL-HUB37A-AV-TRB/BL-HUB37A-AV-TRB.pdf"
-			(at 146.05 26.67 0)
+		(property "Datasheet" "${KIPRJMOD}/components/XL-1005SURC/XL-1005SURC.pdf"
+			(at 154.94 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15957,12 +18559,40 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 146.05 26.67 0)
+		(property "Description" "LED: 1.8V~2.4V 120° 200mcd 20mA 50mW 625nmRed Clear 0402"
+			(at 157.48 26.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "XL-1005SURC"
+			(at 160.02 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "XINGLIGHT"
+			(at 165.1 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C25503345"
+			(at 162.56 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
 			)
 		)
 		(pin "1"
@@ -16034,7 +18664,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C85325"
+		(property "LCSC Part #" "C25744"
 			(at 194.31 41.91 0)
 			(effects
 				(font
@@ -16131,7 +18761,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C85325"
+		(property "LCSC Part #" "C1525"
 			(at 219.71 128.27 0)
 			(effects
 				(font
@@ -16367,7 +18997,7 @@
 	)
 	(symbol
 		(lib_id "C-0402:100n")
-		(at 238.76 106.68 0)
+		(at 238.76 110.49 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16376,7 +19006,7 @@
 		(fields_autoplaced yes)
 		(uuid "3338c57b-f8d4-4368-bab9-c5cdfce748df")
 		(property "Reference" "C3"
-			(at 242.57 105.4099 0)
+			(at 242.57 109.2199 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16385,7 +19015,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 242.57 107.9499 0)
+			(at 242.57 111.7599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16394,7 +19024,7 @@
 			)
 		)
 		(property "Footprint" "C-0402:C-0402"
-			(at 238.76 124.46 0)
+			(at 238.76 128.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16403,7 +19033,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 238.76 106.68 0)
+			(at 238.76 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16412,7 +19042,7 @@
 			)
 		)
 		(property "Description" "CAP: 100nF 16V X7R ±10% 0402 MLCC"
-			(at 238.76 132.08 0)
+			(at 238.76 135.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16420,8 +19050,8 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C85325"
-			(at 238.76 121.92 0)
+		(property "LCSC Part #" "C1525"
+			(at 238.76 125.73 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16430,7 +19060,7 @@
 			)
 		)
 		(property "MPN" "CL05B104KO5NNNC"
-			(at 238.76 127 0)
+			(at 238.76 130.81 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16439,7 +19069,7 @@
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 238.76 129.54 0)
+			(at 238.76 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16517,7 +19147,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C85325"
+		(property "LCSC Part #" "C1525"
 			(at 179.07 66.04 0)
 			(effects
 				(font
@@ -16586,15 +19216,6 @@
 				(justify left)
 			)
 		)
-		(property "LCSC Part #" "C85325"
-			(at 250.19 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Footprint" "BAT-HLD-001:BAT-HLD-001"
 			(at 245.11 29.21 90)
 			(effects
@@ -16615,6 +19236,15 @@
 		)
 		(property "Description" "CR-2032 Coin Cell Holder"
 			(at 250.19 29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C85325"
+			(at 250.19 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16739,7 +19369,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cn.bing.com/search?q=datasheet： KX132-1211"
+		(property "Datasheet" "${KIPRJMOD}/components/SC7A20HTR/SC7A20HTR.pdf"
 			(at 168.91 140.97 0)
 			(effects
 				(font
@@ -16749,7 +19379,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "ACCEL: 1.71V~3.6V 500nA SPI/I2C ±16g LGA-12(2x2)"
 			(at 193.04 113.03 0)
 			(effects
 				(font
@@ -16769,6 +19399,33 @@
 		)
 		(property "LCSC Part #" "C85325"
 			(at 193.04 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C19274408"
+			(at 193.04 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Hangzhou Silan Microelectronics"
+			(at 193.04 148.59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SC7A20HTR"
+			(at 193.04 151.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16940,7 +19597,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C85325"
+		(property "LCSC Part #" "C15525"
 			(at 223.52 170.18 0)
 			(effects
 				(font
@@ -17047,6 +19704,70 @@
 		)
 	)
 	(symbol
+		(lib_id "nets:+3V")
+		(at 273.05 100.33 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "6b404326-f2e5-409d-a4a8-9c8fb4a7540e")
+		(property "Reference" "#PWR011"
+			(at 273.05 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V"
+			(at 273.4183 96.0056 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 273.05 100.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 273.05 100.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 273.05 100.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "aa5dc41e-2ab9-42d9-bf4f-a5eb4e0049de")
+		)
+		(instances
+			(project "halo-90"
+				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
+					(reference "#PWR011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "R-0402:10k")
 		(at 260.35 53.34 90)
 		(unit 1)
@@ -17098,7 +19819,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part #" "C85325"
+		(property "LCSC Part #" "C25744"
 			(at 275.59 53.34 0)
 			(effects
 				(font
@@ -17506,7 +20227,25 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "MCU: 8b 16Mhz 16k Flash UQFN-28-4x4"
+			(at 213.36 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "STMicroelectronics"
+			(at 213.36 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "STM8151G6U6"
 			(at 213.36 40.64 0)
 			(effects
 				(font
@@ -17699,7 +20438,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "TC2030-IDC-NL:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical"
+		(property "Footprint" "TC2030-IDC-NL:TC2030-IDC-NL"
 			(at 179.07 158.75 90)
 			(effects
 				(font
@@ -17755,7 +20494,7 @@
 	)
 	(symbol
 		(lib_id "nets:GND")
-		(at 238.76 111.76 0)
+		(at 238.76 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17763,7 +20502,7 @@
 		(dnp no)
 		(uuid "a2913599-3f2a-4b11-8df5-d93850e7a3cc")
 		(property "Reference" "#PWR08"
-			(at 238.76 118.11 0)
+			(at 238.76 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17772,7 +20511,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 238.887 116.1542 0)
+			(at 238.887 119.9642 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17780,7 +20519,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 238.76 111.76 0)
+			(at 238.76 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17789,7 +20528,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 238.76 111.76 0)
+			(at 238.76 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17798,7 +20537,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 238.76 111.76 0)
+			(at 238.76 115.57 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17812,104 +20551,6 @@
 			(project "halo-90"
 				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
 					(reference "#PWR08")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "DRV5032:DRV5032")
-		(at 257.81 106.68 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "ac0e7156-3a9c-496e-926e-a22e49e47869")
-		(property "Reference" "U3"
-			(at 257.81 95.25 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "HAL2041SO"
-			(at 257.81 97.79 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "DRV5032:DRV5032"
-			(at 257.81 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "${KIPRJMOD}/components/DRV5032/DRV5032.pdf"
-			(at 257.81 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "HALL: 1.65V~5.5V 5Hz 690nA Omnipolar Push-pull ±4.8mT"
-			(at 257.81 106.68 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "DRV5032FBDBZR"
-			(at 257.81 128.27 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "Texas Instruments"
-			(at 257.81 130.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC Part#" "C22400320"
-			(at 257.81 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "2f52fbab-9e51-4e4d-8cf8-d3776ac10d20")
-		)
-		(pin "3"
-			(uuid "d16f0b80-90b6-4603-a5fd-d8156ba28368")
-		)
-		(pin "1"
-			(uuid "7fa5ddcf-c1c9-48fc-846a-0a666ac67314")
-		)
-		(instances
-			(project ""
-				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
-					(reference "U3")
 					(unit 1)
 				)
 			)
@@ -18139,7 +20780,7 @@
 	)
 	(symbol
 		(lib_id "nets:+3V")
-		(at 238.76 101.6 0)
+		(at 238.76 105.41 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18147,7 +20788,7 @@
 		(dnp no)
 		(uuid "c506d8f1-f3a4-4474-b4e7-e4f1816dae80")
 		(property "Reference" "#PWR07"
-			(at 238.76 105.41 0)
+			(at 238.76 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18156,7 +20797,7 @@
 			)
 		)
 		(property "Value" "+3V"
-			(at 239.1283 97.2756 0)
+			(at 239.1283 101.0856 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18164,7 +20805,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 238.76 101.6 0)
+			(at 238.76 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18173,7 +20814,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 238.76 101.6 0)
+			(at 238.76 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18182,7 +20823,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 238.76 101.6 0)
+			(at 238.76 105.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18196,6 +20837,100 @@
 			(project "halo-90"
 				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
 					(reference "#PWR07")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "R-0402:10k")
+		(at 273.05 105.41 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d6f9bd75-36fa-4ad1-bf54-d565742f2461")
+		(property "Reference" "R4"
+			(at 267.97 105.41 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 270.51 105.41 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "R-0402:R-0402"
+			(at 273.05 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 273.05 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "RES: 10k 150V 62.5mW ±1% 0402"
+			(at 273.05 80.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C25744"
+			(at 273.05 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "0402WGF1002TCE"
+			(at 273.05 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 273.05 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "b43be076-c4a8-4f05-bb1f-03bbb4ee7158")
+		)
+		(pin "1"
+			(uuid "43deead7-83fd-49b9-b817-57a4b558192d")
+		)
+		(instances
+			(project "halo-90"
+				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
+					(reference "R4")
 					(unit 1)
 				)
 			)
@@ -18260,6 +20995,104 @@
 			(project ""
 				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
 					(reference "#PWR0106")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "HAL2041SO:HAL2041SO")
+		(at 257.81 110.49 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e3a7ecf4-2f19-4ea0-b00a-22c76edd70bc")
+		(property "Reference" "U3"
+			(at 257.81 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "HAL2041SO"
+			(at 257.81 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "HAL2041SO:HAL2041SO"
+			(at 257.81 121.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "${KIPRJMOD}/components/HAL2041SO/HAL2041SO.pdf"
+			(at 257.81 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "HALL: 1.5mT 2.5uA 2V~5.5V Omnipolar Open Drain SOT-23"
+			(at 257.81 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "HAL2041SO"
+			(at 257.81 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Hallwee"
+			(at 257.81 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part#" "C22400320"
+			(at 257.81 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "650f4d15-78da-4e3b-91b7-911f27265513")
+		)
+		(pin "1"
+			(uuid "edcade89-914f-41dd-98af-ec2f666ba02f")
+		)
+		(pin "3"
+			(uuid "b300a362-62d1-498b-878c-4cda1b7a9db7")
+		)
+		(instances
+			(project ""
+				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
+					(reference "U3")
 					(unit 1)
 				)
 			)

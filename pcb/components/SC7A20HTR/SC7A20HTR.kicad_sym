@@ -32,7 +32,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://cn.bing.com/search?q=datasheet： KX132-1211"
+		(property "Datasheet" "${KIPRJMOD}/components/SC7A20HTR/SC7A20HTR.pdf"
 			(at -24.13 -27.94 0)
 			(effects
 				(font
@@ -42,8 +42,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
-			(at 0 0 0)
+		(property "Description" "ACCEL: 1.71V~3.6V 500nA SPI/I2C ±16g LGA-12(2x2)"
+			(at 0 -33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -60,7 +60,25 @@
 				(hide yes)
 			)
 		)
-		(property "ki_keywords" "C19274408"
+		(property "Manufacturer" "Hangzhou Silan Microelectronics"
+			(at 0 -35.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "SC7A20HTR"
+			(at 0 -38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "ki_keywords" "Accelerometer"
 			(at 0 0 0)
 			(effects
 				(font
