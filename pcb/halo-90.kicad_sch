@@ -41,16 +41,7 @@
 					(justify left)
 				)
 			)
-			(property "LCSC Part #" "C7501066"
-			(at 0 0 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" "BAT-HLD-001:BAT-HLD-001"
+			(property "Footprint" "BAT-HLD-001:BAT-HLD-001"
 				(at -5.08 0 90)
 				(effects
 					(font
@@ -69,6 +60,15 @@
 				)
 			)
 			(property "Description" "CR-2032 Coin Cell Holder"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C7501066"
 				(at 0 0 0)
 				(effects
 					(font
@@ -558,16 +558,7 @@
 					(justify right)
 				)
 			)
-			(property "LCSC Part #" "C22400320"
-			(at 0 0 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" "HAL2041SO:HAL2041SO"
+			(property "Footprint" "HAL2041SO:HAL2041SO"
 				(at 0 -11.43 0)
 				(effects
 					(font
@@ -587,6 +578,15 @@
 			)
 			(property "Description" "HALL: 1.5mT 2.5uA 2V~5.5V Omnipolar Open Drain SOT-23"
 				(at 0 -19.05 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C22400320"
+				(at 0 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -1248,16 +1248,7 @@
 					)
 				)
 			)
-			(property "LCSC Part #" "C7501066"
-			(at 0 0 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" "STM8151G6U6:UFQFPN28"
+			(property "Footprint" "STM8151G6U6:UFQFPN28"
 				(at 0 -52.07 0)
 				(effects
 					(font
@@ -1276,6 +1267,15 @@
 				)
 			)
 			(property "Description" "MCU: 8b 16Mhz 16k Flash UQFN-28-4x4"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part #" "C7501066"
 				(at 0 0 0)
 				(effects
 					(font
@@ -3697,10 +3697,6 @@
 		(uuid "ff61e889-ff1c-4598-8592-a590b9a55714")
 	)
 	(no_connect
-		(at 184.15 116.84)
-		(uuid "0b52952a-237f-4d29-8614-8a25803b02b9")
-	)
-	(no_connect
 		(at 198.12 71.12)
 		(uuid "28e0f2bf-d920-4f43-b4c8-a1f570f6787b")
 	)
@@ -4692,6 +4688,16 @@
 		)
 		(uuid "25ab1b6d-c59e-4e5d-899f-bad0cbd612f2")
 	)
+	(wire
+		(pts
+			(xy 182.88 116.84) (xy 184.15 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "262892a2-7ed1-4e36-b2b6-fd066a0321a4")
+	)
 	(polyline
 		(pts
 			(xy 173.99 92.71) (xy 173.99 133.35)
@@ -4921,6 +4927,16 @@
 			(type solid)
 		)
 		(uuid "32671588-99fc-42f2-83f5-ea2b8f6651fd")
+	)
+	(wire
+		(pts
+			(xy 182.88 118.11) (xy 182.88 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3271c0e6-c5ca-4a41-b456-2e87c0112ab5")
 	)
 	(wire
 		(pts
@@ -19235,7 +19251,7 @@
 			)
 		)
 		(property "Value" "BAT-HLD-001"
-			(at 246.7611 26.5493 90)
+			(at 246.38 31.75 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20236,9 +20252,6 @@
 				(justify left)
 			)
 		)
-		(property "LCSC Part #" "C85325"
-			(effects (hide yes))
-		)
 		(property "Footprint" "STM8151G6U6:UFQFPN28"
 			(at 213.36 92.71 0)
 			(effects
@@ -20259,6 +20272,15 @@
 		)
 		(property "Description" "MCU: 8b 16Mhz 16k Flash UQFN-28-4x4"
 			(at 213.36 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part #" "C85325"
+			(at -0.0001 -0.0001 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20517,6 +20539,70 @@
 			(project ""
 				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
 					(reference "J1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "nets:+3V")
+		(at 182.88 118.11 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a0c7547e-4943-429a-b623-e3b2ff1ffc2c")
+		(property "Reference" "#PWR012"
+			(at 182.88 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V"
+			(at 182.5117 122.4344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 182.88 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 182.88 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 182.88 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "6efc016a-a146-4863-927d-838373766bee")
+		)
+		(instances
+			(project "halo-90"
+				(path "/5b10fd11-3eea-4ed1-85e0-64e6a45ea671"
+					(reference "#PWR012")
 					(unit 1)
 				)
 			)
