@@ -80,8 +80,11 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   // Persistence of Vision Sweep Engine
   if (effect_mode == 1) {
     setLed(flat_led_idx);
-    flat_led_idx = (flat_led_idx + 9);
-    if (flat_led_idx >= 90) flat_led_idx -= 90;
+    flat_led_idx += 9;
+    if (flat_led_idx >= 90) {
+      flat_led_idx -= 89;
+      if (flat_led_idx >= 9) flat_led_idx = 0;
+    }
   } else if (led_width == 0) {
     setLed(base_led);
     led_offset = 0;
