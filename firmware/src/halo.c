@@ -34,17 +34,20 @@ void disableTim2(void);
 
 // Accelerometer & I2C Prototypes
 void initAccel(void);
-uint16_t readAccelMag(void);
+void readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
 uint8_t accel_read_reg(uint8_t reg);
 void accel_write_reg(uint8_t reg, uint8_t val);
 
 void initUart(void);
 int putchar(int c);
 
-
-// Global previousLed
+// Global previousLed and POV visualizer engine
 volatile uint8_t prevLed = 0;
 volatile uint8_t sleep = 0;
+volatile int8_t led_offset = 0;
+volatile int8_t led_dir = 1;
+volatile uint8_t base_led = 0;
+volatile uint8_t led_width = 0;
 volatile uint8_t sc7a20_addr = 0x30;
 
 // Accelerometer SC7A20HTR (I2C)
@@ -72,8 +75,26 @@ uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
 
 
 ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
-  // Advance the LED clockwise around the ring
-  setLed((prevLed + 1) % 90);
+  // Persistence of Vision Sweep Engine
+  if (led_width == 0) {
+    setLed(base_led);
+    led_offset = 0;
+    led_dir = 1;
+  } else {
+    led_offset += led_dir;
+    if (led_offset >= (int8_t)led_width) {
+      led_offset = (int8_t)led_width;
+      led_dir = -1;
+    } else if (led_offset <= -(int8_t)led_width) {
+      led_offset = -(int8_t)led_width;
+      led_dir = 1;
+    }
+    int16_t target_led = (int16_t)base_led + led_offset;
+    while (target_led < 0) target_led += 90;
+    while (target_led >= 90) target_led -= 90;
+    setLed((uint8_t)target_led);
+  }
+
   sfr_TIM2.SR1.UIF = 0;  // clear timer 2 interrupt flag
   return;
 }
@@ -153,8 +174,8 @@ void main(void) {
   if (!(sfr_PORTD.IDR.byte & PIN0)) {
     sleep = 1;
   } else {
-    // Set TIM2 to have exactly an interrupt every 10ms (1250 * 8us = 10ms)
-    initTim2(1250);
+    // Set TIM2 to POV speed (250 * 8us = ~2ms)
+    initTim2(250);
     enableTim2();
     setLed(0);
   }
@@ -167,21 +188,30 @@ void main(void) {
     } else {
       WAIT_FOR_INTERRUPT();
       
-      uint16_t mag = readAccelMag();
-      uint16_t new_arr = 1250;
+      int8_t rx, ry, rz;
+      readAccelRaw(&rx, &ry, &rz);
       
-      uint8_t whoami = accel_read_reg(0x0F);
-      printf("WHO_AM_I: 0x%02X | MAG: %d\r\n", whoami, mag);
+      uint16_t mag = abs(rx) + abs(ry) + abs(rz);
       
-      // Typical 1G resting magnitude is ~64.
-      if (mag > 64) {
-        // Cap magnitude to prevent negative or overly fast periods
-        if (mag > 314) mag = 314;
-        new_arr = 1250 - ((mag - 64) * 4); // Min ARR ~ 250 (fastest speed)
-      }
+      // Calculate dynamic base angle visually mapping gravity pointing down physically
+      // atan2f(y, x) returns radians in [-pi, pi]
+      float angle = atan2f((float)ry, (float)rx);
+      if (angle < 0) angle += 2.0f * 3.14159f;
       
-      sfr_TIM2.ARRH.byte = (uint8_t)(new_arr >> 8);
-      sfr_TIM2.ARRL.byte = (uint8_t)new_arr;
+      // Map 0 -> 2pi radially directly array mapped
+      uint8_t new_base = (uint8_t)((angle / 6.28318f) * 90.0f) % 90;
+      
+      // Distribute visual dynamic width against violent shaking vectors
+      int16_t shake = (int16_t)mag - 64; 
+      if (shake < 0) shake = 0;
+      uint8_t new_width = shake / 3;
+      if (new_width > 20) new_width = 20; // Cap width constraints symmetrically 
+
+      // Push asynchronous execution hooks
+      base_led = new_base;
+      led_width = new_width;
+      
+      printf("X:%4d Y:%4d Z:%4d MAG:%4d WIDTH:%2d BASE:%2d\r\n", rx, ry, rz, mag, led_width, base_led);
     }
   }
 }
@@ -356,11 +386,10 @@ void initAccel(void) {
   for(uint16_t i=0; i<10000; i++) NOP();
 }
 
-uint16_t readAccelMag(void) {
-  int8_t x = accel_read_reg(0x29);
-  int8_t y = accel_read_reg(0x2B);
-  int8_t z = accel_read_reg(0x2D);
-  return abs(x) + abs(y) + abs(z);
+void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
+  *x = accel_read_reg(0x29);
+  *y = accel_read_reg(0x2B);
+  *z = accel_read_reg(0x2D);
 }
 
 void initUart(void) {
