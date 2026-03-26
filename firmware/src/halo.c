@@ -38,6 +38,9 @@ uint16_t readAccelMag(void);
 uint8_t accel_read_reg(uint8_t reg);
 void accel_write_reg(uint8_t reg, uint8_t val);
 
+void initUart(void);
+int putchar(int c);
+
 
 // Global previousLed
 volatile uint8_t prevLed = 0;
@@ -109,6 +112,11 @@ void main(void) {
 
   initHall();
   initAccel();
+  initUart();
+
+  printf("\r\n--- HALO-90 Booting ---\r\n");
+  uint8_t whoami = accel_read_reg(0x0F);
+  printf("SC7A20 WHO_AM_I: 0x%02X\r\n", whoami);
 
   // Check initial state
   if (!(sfr_PORTD.IDR.byte & PIN0)) {
@@ -130,6 +138,8 @@ void main(void) {
       
       uint16_t mag = readAccelMag();
       uint16_t new_arr = 1250;
+      
+      printf("MAG: %d\r\n", mag);
       
       // Typical 1G resting magnitude is ~64.
       if (mag > 64) {
@@ -309,4 +319,27 @@ uint16_t readAccelMag(void) {
   int8_t y = accel_read_reg(0x2B);
   int8_t z = accel_read_reg(0x2D);
   return abs(x) + abs(y) + abs(z);
+}
+
+void initUart(void) {
+  sfr_CLK.PCKENR1.PCKEN15 = 1;
+
+  sfr_PORTC.DDR.byte |= (1<<3);
+  sfr_PORTC.CR1.byte |= (1<<3);
+  sfr_PORTC.CR2.byte |= (1<<3);
+
+  sfr_PORTC.DDR.byte &= ~(1<<2);
+  sfr_PORTC.CR1.byte |= (1<<2);
+
+  sfr_USART1.BRR2.byte = 0x03; 
+  sfr_USART1.BRR1.byte = 0x68;
+
+  sfr_USART1.CR2.TEN = 1;
+  sfr_USART1.CR2.REN = 1;
+}
+
+int putchar(int c) {
+  sfr_USART1.DR.byte = c;
+  while (!sfr_USART1.SR.TXE);
+  return c;
 }
