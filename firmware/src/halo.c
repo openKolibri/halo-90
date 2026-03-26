@@ -203,9 +203,7 @@ void main(void) {
       
       // Rotate the LED mapping by 90 degrees (22 LEDs) to point DOWN instead of LEFT.
       // If it points UP instead of DOWN, simply invert to "+ 22" or adjust accordingly!
-      int16_t rotated_base = (int16_t)new_base - 22; 
-      while (rotated_base >= 90) rotated_base -= 90;
-      while (rotated_base < 0)   rotated_base += 90;
+      uint8_t rotated_base = (new_base + 90 - 22) % 90; 
       
       // Distribute visual dynamic width against violent shaking vectors
       int16_t shake = (int16_t)mag - 64; 
