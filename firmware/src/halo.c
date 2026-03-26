@@ -45,6 +45,7 @@ int putchar(int c);
 // Global previousLed
 volatile uint8_t prevLed = 0;
 volatile uint8_t sleep = 0;
+volatile uint8_t sc7a20_addr = 0x30;
 
 // Accelerometer SC7A20HTR (I2C)
 // SDA: PC0, SCL: PC1, INT1: PD4, INT2: PB7
@@ -114,9 +115,39 @@ void main(void) {
   initAccel();
   initUart();
 
+  // Add a small delay for serial console attachment
+  for(uint32_t d=0; d<300000; d++) NOP();
+
   printf("\r\n--- HALO-90 Booting ---\r\n");
-  uint8_t whoami = accel_read_reg(0x0F);
-  printf("SC7A20 WHO_AM_I: 0x%02X\r\n", whoami);
+
+  uint8_t found_addr = 0x00;
+  for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
+    sfr_I2C1.CR2.START = 1;
+    uint16_t t = 10000; while (!sfr_I2C1.SR1.SB && --t);
+    if (!t) { sfr_I2C1.CR2.STOP = 1; continue; }
+    
+    sfr_I2C1.DR.byte = (addr << 1);
+    t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t);
+    
+    if (sfr_I2C1.SR1.ADDR) {
+      (void)sfr_I2C1.SR1.byte;
+      (void)sfr_I2C1.SR3.byte;
+      sfr_I2C1.CR2.STOP = 1;
+      found_addr = addr;
+      break;
+    }
+    
+    sfr_I2C1.SR2.byte &= ~0x04; // clear AF
+    sfr_I2C1.CR2.STOP = 1;
+  }
+  printf("I2C Scan found: 0x%02X\r\n", found_addr);
+  if (found_addr != 0) {
+      sc7a20_addr = (found_addr << 1);
+  }
+
+  // Reload the initialization since it might have failed previously with the old address
+  accel_write_reg(0x20, 0x47); 
+  accel_write_reg(0x23, 0x80);
 
   // Check initial state
   if (!(sfr_PORTD.IDR.byte & PIN0)) {
@@ -139,7 +170,8 @@ void main(void) {
       uint16_t mag = readAccelMag();
       uint16_t new_arr = 1250;
       
-      printf("MAG: %d\r\n", mag);
+      uint8_t whoami = accel_read_reg(0x0F);
+      printf("WHO_AM_I: 0x%02X | MAG: %d\r\n", whoami, mag);
       
       // Typical 1G resting magnitude is ~64.
       if (mag > 64) {
@@ -247,21 +279,24 @@ uint8_t accel_read_reg(uint8_t reg) {
   uint16_t t;
   
   sfr_I2C1.CR2.START = 1;
-  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return 0;
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return 0xF1;
   
-  sfr_I2C1.DR.byte = 0x30;
-  t = 10000; while (!sfr_I2C1.SR1.ADDR && --t); if (!t) return 0;
+  sfr_I2C1.DR.byte = sc7a20_addr;
+  t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0xF2; }
   (void)sfr_I2C1.SR1.byte;
   (void)sfr_I2C1.SR3.byte;
   
   sfr_I2C1.DR.byte = reg;
-  t = 10000; while (!sfr_I2C1.SR1.TXE && --t); if (!t) return 0;
+  t = 10000; while (!sfr_I2C1.SR1.TXE && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0xF3; }
   
   sfr_I2C1.CR2.START = 1;
-  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return 0;
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0xF4; }
   
-  sfr_I2C1.DR.byte = 0x31;
-  t = 10000; while (!sfr_I2C1.SR1.ADDR && --t); if (!t) return 0;
+  sfr_I2C1.DR.byte = sc7a20_addr | 0x01;
+  t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0xF5; }
   
   sfr_I2C1.CR2.ACK = 0;
   (void)sfr_I2C1.SR1.byte;
@@ -271,6 +306,7 @@ uint8_t accel_read_reg(uint8_t reg) {
   
   t = 10000; while (!sfr_I2C1.SR1.RXNE && --t); 
   if (t) val = sfr_I2C1.DR.byte;
+  else val = 0xF6;
   
   return val;
 }
@@ -281,16 +317,19 @@ void accel_write_reg(uint8_t reg, uint8_t val) {
   sfr_I2C1.CR2.START = 1;
   t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return;
   
-  sfr_I2C1.DR.byte = 0x30;
-  t = 10000; while (!sfr_I2C1.SR1.ADDR && --t); if (!t) return;
+  sfr_I2C1.DR.byte = sc7a20_addr;
+  t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
   (void)sfr_I2C1.SR1.byte;
   (void)sfr_I2C1.SR3.byte;
   
   sfr_I2C1.DR.byte = reg;
-  t = 10000; while (!sfr_I2C1.SR1.TXE && --t); if (!t) return;
+  t = 10000; while (!sfr_I2C1.SR1.TXE && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
   
   sfr_I2C1.DR.byte = val;
-  t = 10000; while (!sfr_I2C1.SR1.TXE && --t); if (!t) return;
+  t = 10000; while (!sfr_I2C1.SR1.TXE && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
   
   sfr_I2C1.CR2.STOP = 1;
 }
@@ -298,8 +337,14 @@ void accel_write_reg(uint8_t reg, uint8_t val) {
 void initAccel(void) {
   sfr_CLK.PCKENR1.PCKEN13 = 1; 
 
+  // Reset peripheral before re-enabling
+  sfr_I2C1.CR1.PE = 0;
+
+  // Set PC0/PC1 as Inputs, WITH Internal Pull-Ups enabled.
+  // The HW schematic lacks external pull-ups; I2C will fail without this.
   sfr_PORTC.DDR.byte &= ~((1<<0) | (1<<1));
-  sfr_PORTC.CR1.byte &= ~((1<<0) | (1<<1));
+  sfr_PORTC.CR1.byte |= ((1<<0) | (1<<1));
+  sfr_PORTC.CR2.byte &= ~((1<<0) | (1<<1));
   
   sfr_I2C1.CR1.PE = 0;
   sfr_I2C1.FREQR.FREQ = 16;
@@ -309,9 +354,6 @@ void initAccel(void) {
   sfr_I2C1.CR1.PE = 1;
   
   for(uint16_t i=0; i<10000; i++) NOP();
-  
-  accel_write_reg(0x20, 0x47); 
-  accel_write_reg(0x23, 0x80);
 }
 
 uint16_t readAccelMag(void) {
