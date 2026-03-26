@@ -174,8 +174,8 @@ void main(void) {
   if (!(sfr_PORTD.IDR.byte & PIN0)) {
     sleep = 1;
   } else {
-    // Set TIM2 to POV speed (250 * 8us = ~2ms)
-    initTim2(250);
+    // Set TIM2 to ultra-fast POV speed for smooth rendering (25 * 8us = ~200us per LED)
+    initTim2(25);
     enableTim2();
     setLed(0);
   }
@@ -201,6 +201,12 @@ void main(void) {
       // Map 0 -> 2pi radially directly array mapped
       uint8_t new_base = (uint8_t)((angle / 6.28318f) * 90.0f) % 90;
       
+      // Rotate the LED mapping by 90 degrees (22 LEDs) to point DOWN instead of LEFT.
+      // If it points UP instead of DOWN, simply invert to "+ 22" or adjust accordingly!
+      int16_t rotated_base = (int16_t)new_base - 22; 
+      while (rotated_base >= 90) rotated_base -= 90;
+      while (rotated_base < 0)   rotated_base += 90;
+      
       // Distribute visual dynamic width against violent shaking vectors
       int16_t shake = (int16_t)mag - 64; 
       if (shake < 0) shake = 0;
@@ -208,10 +214,12 @@ void main(void) {
       if (new_width > 20) new_width = 20; // Cap width constraints symmetrically 
 
       // Push asynchronous execution hooks
-      base_led = new_base;
+      base_led = (uint8_t)rotated_base;
       led_width = new_width;
       
-      printf("X:%4d Y:%4d Z:%4d MAG:%4d WIDTH:%2d BASE:%2d\r\n", rx, ry, rz, mag, led_width, base_led);
+      // Commented out printf to prevent UART from bottlenecking the 9600 baud polling loop
+      // Printing ~50 chars takes ~45ms, causing strict latency jitter!
+      // printf("X:%4d Y:%4d Z:%4d MAG:%4d WIDTH:%2d BASE:%2d\r\n", rx, ry, rz, mag, led_width, base_led);
     }
   }
 }
