@@ -48,6 +48,8 @@ volatile int8_t led_offset = 0;
 volatile int8_t led_dir = 1;
 volatile uint8_t base_led = 0;
 volatile uint8_t led_width = 0;
+volatile uint8_t effect_mode = 0; // 0 = ARC, 1 = FLAT RING
+volatile uint8_t flat_led_idx = 0;
 volatile uint8_t sc7a20_addr = 0x30;
 
 // Accelerometer SC7A20HTR (I2C)
@@ -76,7 +78,11 @@ uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
 
 ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   // Persistence of Vision Sweep Engine
-  if (led_width == 0) {
+  if (effect_mode == 1) {
+    setLed(flat_led_idx);
+    flat_led_idx = (flat_led_idx + 9);
+    if (flat_led_idx >= 90) flat_led_idx -= 90;
+  } else if (led_width == 0) {
     setLed(base_led);
     led_offset = 0;
     led_dir = 1;
@@ -193,27 +199,33 @@ void main(void) {
       
       uint16_t mag = abs(rx) + abs(ry) + abs(rz);
       
-      // Calculate dynamic base angle visually mapping gravity pointing down physically
-      // atan2f(y, x) returns radians in [-pi, pi]
-      float angle = atan2f((float)ry, (float)rx);
-      if (angle < 0) angle += 2.0f * 3.14159f;
-      
-      // Map 0 -> 2pi radially directly array mapped
-      uint8_t new_base = (uint8_t)((angle / 6.28318f) * 90.0f) % 90;
-      
-      // Rotate the LED mapping by 90 degrees (22 LEDs) to point DOWN instead of LEFT.
-      // If it points UP instead of DOWN, simply invert to "+ 22" or adjust accordingly!
-      uint8_t rotated_base = (new_base + 90 - 22) % 90; 
-      
-      // Distribute visual dynamic width against violent shaking vectors
-      int16_t shake = (int16_t)mag - 64; 
-      if (shake < 0) shake = 0;
-      uint8_t new_width = shake / 3;
-      if (new_width > 20) new_width = 20; // Cap width constraints symmetrically 
+      // If X and Y are low, the earring is lying flat (gravity is mostly on Z)
+      if (abs(rx) < 15 && abs(ry) < 15) {
+          effect_mode = 1;
+      } else {
+          effect_mode = 0;
+          
+          // Calculate dynamic base angle visually mapping gravity pointing down physically
+          // atan2f(y, x) returns radians in [-pi, pi]
+          float angle = atan2f((float)ry, (float)rx);
+          if (angle < 0) angle += 2.0f * 3.14159f;
+          
+          // Map 0 -> 2pi radially directly array mapped
+          uint8_t new_base = (uint8_t)((angle / 6.28318f) * 90.0f) % 90;
+          
+          // 180 degree shift from previous -22 offset pointing TOP, now correctly +23 to point DOWN
+          uint8_t rotated_base = (new_base + 23) % 90; 
+          
+          // Distribute visual dynamic width against violent shaking vectors
+          int16_t shake = (int16_t)mag - 64; 
+          if (shake < 0) shake = 0;
+          uint8_t new_width = shake / 3;
+          if (new_width > 20) new_width = 20; // Cap width constraints symmetrically 
 
-      // Push asynchronous execution hooks
-      base_led = (uint8_t)rotated_base;
-      led_width = new_width;
+          // Push asynchronous execution hooks
+          base_led = rotated_base;
+          led_width = new_width;
+      }
       
       // Commented out printf to prevent UART from bottlenecking the 9600 baud polling loop
       // Printing ~50 chars takes ~45ms, causing strict latency jitter!
