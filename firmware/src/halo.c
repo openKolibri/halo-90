@@ -6,18 +6,9 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 // #define __SDCC
 #include "STM8L151G6.h"
@@ -58,23 +49,14 @@ volatile uint8_t sc7a20_addr = 0x30;
 // Hall Sensor HAL2041S
 // HALL: PD0
 
-// CPX-0, PA2
-// CPX-1, PA3
-// CPX-2, PB3
-// CPX-3, PA5
-// CPX-4, PD3
-// CPX-5, PD2
-// CPX-6, PD1
-// CPX-7, PA4
-// CPX-8, PB6
-// CPX-9, PB5
 PORT_t *CPX_PORT[] = {&sfr_PORTA, &sfr_PORTA, &sfr_PORTB, &sfr_PORTA,
                       &sfr_PORTD, &sfr_PORTD, &sfr_PORTD, &sfr_PORTA,
                       &sfr_PORTB, &sfr_PORTB};
 uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
                      PIN2, PIN1, PIN4, PIN6, PIN5};
 
-
+// Global loop rate-limiting tick
+volatile uint8_t accel_tick = 0;
 
 ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   // Persistence of Vision Sweep Engine
@@ -111,29 +93,48 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
 // Hall Sensor ISR
 ISR_HANDLER(HALL_ISR, _EXTI0_VECTOR_) {
   if (!(sfr_PORTD.IDR.byte & PIN0)) {
-    // Magnet near (LOW): go to sleep
-    disableTim2();
-    ledLow(prevLed);
-    sleep = 1;
-  } else {
-    // Magnet away (HIGH): wake up
-    if (sleep) {
-      sleep = 0;
-      enableTim2();
-      setLed(prevLed);
-    }
+    sleep = 1; // Trigger main loop to sequence a safe shutdown
   }
   sfr_ITC_EXTI.SR1.P0F = 1; // Clear interrupt flag
   return;
 }
 
-
+// Fast integer atan2 approximation for 8-bit MCU, directly outputs 0-89 LEDs
+uint8_t fast_atan2_to_led(int8_t y, int8_t x) {
+    int16_t abs_y = abs((int16_t)y);
+    int16_t abs_x = abs((int16_t)x);
+    int16_t a;
+    
+    if (abs_x == 0 && abs_y == 0) return 0;
+    
+    if (abs_x >= abs_y) {
+        a = (11 * abs_y) / abs_x;
+    } else {
+        a = 22 - (11 * abs_x) / abs_y;
+    }
+    
+    if (x < 0) {
+        a = 45 - a;
+    }
+    if (y < 0) {
+        a = 90 - a;
+    }
+    return (uint8_t)(a % 90);
+}
 
 void main(void) {
   DISABLE_INTERRUPTS();
 
   // Bump up clock to 16MHz
   sfr_CLK.CKDIVR.byte = 0x00;
+
+  // Initialize ALL pins to Input Pull-Up initially to prevent any floating input buffer leakage
+  sfr_PORTA.DDR.byte = 0x00; sfr_PORTA.CR1.byte = 0xFF; sfr_PORTA.CR2.byte = 0x00;
+  sfr_PORTB.DDR.byte = 0x00; sfr_PORTB.CR1.byte = 0xFF; sfr_PORTB.CR2.byte = 0x00;
+  sfr_PORTC.DDR.byte = 0x00; sfr_PORTC.CR1.byte = 0xFF; sfr_PORTC.CR2.byte = 0x00;
+  sfr_PORTD.DDR.byte = 0x00; sfr_PORTD.CR1.byte = 0xFF; sfr_PORTD.CR2.byte = 0x00;
+  sfr_PORTE.DDR.byte = 0x00; sfr_PORTE.CR1.byte = 0xFF; sfr_PORTE.CR2.byte = 0x00;
+  sfr_PORTF.DDR.byte = 0x00; sfr_PORTF.CR1.byte = 0xFF; sfr_PORTF.CR2.byte = 0x00;
 
   // Init and Set all CPX pins to hi-z
   for (int k = 0; k < sizeof(CPX_PIN) / sizeof(CPX_PIN[0]); k++) {
@@ -179,12 +180,24 @@ void main(void) {
   accel_write_reg(0x20, 0x47); 
   accel_write_reg(0x23, 0x80);
 
+  // Enable Ultra-Low Power (disables internal references when halted)
+  // Enable Flash/EEPROM power-down during HALT (Fixes the 1.2mA standby leak!)
+  sfr_PWR.CSR2.ULP = 1;
+  sfr_PWR.CSR2.FWU = 1;
+  sfr_FLASH.CR1.EEPM = 1;
+
+  // LPF state variables
+  static int16_t smooth_base_q4 = 0;
+  static int16_t smooth_width_q4 = 0;
+
+  // Boot timer logic explicitly to ensure consistent sequence
+  initTim2(25);
+  disableTim2();
+
   // Check initial state
   if (!(sfr_PORTD.IDR.byte & PIN0)) {
     sleep = 1;
   } else {
-    // Set TIM2 to ultra-fast POV speed for smooth rendering (25 * 8us = ~200us per LED)
-    initTim2(25);
     enableTim2();
     setLed(0);
   }
@@ -193,46 +206,110 @@ void main(void) {
 
   while(1){
     if (sleep) {
-      ENTER_HALT();
+      // -- SAFE SLEEP SHUTDOWN SEQUENCE --
+      disableTim2();
+      
+      // Remove PE toggle as it ruins I2C clock configuration registers!
+      // Simply power down the accelerometer.
+      accel_write_reg(0x20, 0x00);
+      
+      // Explicitly set all CPX pins to OUT LOW to prevent current leakage through floating buffer
+      for (int k = 0; k < sizeof(CPX_PIN) / sizeof(CPX_PIN[0]); k++) {
+        CPX_PORT[k]->ODR.byte &= ~CPX_PIN[k];
+        CPX_PORT[k]->CR1.byte |= CPX_PIN[k];
+        CPX_PORT[k]->DDR.byte |= CPX_PIN[k];
+      }
+
+      // Disable UART explicitly to prevent back-powering any connected serial bridges!
+      // PC3 = TX. We must disable transmitter and set pin to Output LOW or Floating to kill the 1.2mA leak.
+      sfr_USART1.CR2.TEN = 0;
+      sfr_USART1.CR2.REN = 0;
+      sfr_PORTC.ODR.byte &= ~(1<<3);
+      sfr_PORTC.CR1.byte |= (1<<3);
+      sfr_PORTC.DDR.byte |= (1<<3);
+
+      // Ensure EXTI flags are clear before entering halt loop
+      sfr_ITC_EXTI.SR1.P0F = 1;
+
+      // Enter ultra-low power HALT tightly while magnetic field is present (debounce-loop)
+      while (!(sfr_PORTD.IDR.byte & PIN0)) {
+        sfr_ITC_EXTI.SR1.P0F = 1; 
+        ENTER_HALT(); 
+      }
+      
+      // -- WE WAKE UP HERE AFTER EXTI AND PADDING (Magnet Removed) --
+
+      // Re-initialize all CPX pins back to HI-Z for matrix multiplexing
+      for (int k = 0; k < sizeof(CPX_PIN) / sizeof(CPX_PIN[0]); k++) {
+        CPX_PORT[k]->ODR.byte &= ~CPX_PIN[k];
+        CPX_PORT[k]->DDR.byte &= ~CPX_PIN[k];
+        CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
+      }
+      
+      // Re-enable UART TX/RX
+      sfr_PORTC.DDR.byte |= (1<<3); 
+      sfr_PORTC.CR1.byte |= (1<<3);
+      sfr_USART1.CR2.TEN = 1;
+      sfr_USART1.CR2.REN = 1;
+
+      // Ensure initAccel is called to refresh configuration if I2C was disrupted
+      initAccel();
+      accel_write_reg(0x20, 0x47);
+      
+      enableTim2();
+      setLed(prevLed);
+      sleep = 0; 
+
     } else {
       WAIT_FOR_INTERRUPT();
       
-      int8_t rx, ry, rz;
-      readAccelRaw(&rx, &ry, &rz);
-      
-      uint16_t mag = abs(rx) + abs(ry) + abs(rz);
-      
-      // If X and Y are low, the earring is lying flat (gravity is mostly on Z)
-      if (abs(rx) < 15 && abs(ry) < 15) {
-          effect_mode = 1;
-      } else {
-          effect_mode = 0;
-          
-          // Calculate dynamic base angle visually mapping gravity pointing down physically
-          // atan2f(y, x) returns radians in [-pi, pi]
-          float angle = atan2f((float)ry, (float)rx);
-          if (angle < 0) angle += 2.0f * 3.14159f;
-          
-          // Map 0 -> 2pi radially directly array mapped
-          uint8_t new_base = (uint8_t)((angle / 6.28318f) * 90.0f) % 90;
-          
-          // 180 degree shift from previous -22 offset pointing TOP, now correctly +23 to point DOWN
-          uint8_t rotated_base = (new_base + 23) % 90; 
-          
-          // Distribute visual dynamic width against violent shaking vectors
-          int16_t shake = (int16_t)mag - 64; 
-          if (shake < 0) shake = 0;
-          uint8_t new_width = shake / 3;
-          if (new_width > 20) new_width = 20; // Cap width constraints symmetrically 
+      if (!sleep && (++accel_tick >= 100)) {
+        accel_tick = 0;
+        
+        int8_t rx, ry, rz;
+        readAccelRaw(&rx, &ry, &rz);
+        
+        uint16_t mag = abs((int16_t)rx) + abs((int16_t)ry) + abs((int16_t)rz);
+        
+        // If X and Y are low, the earring is lying flat (gravity is mostly on Z)
+        if (abs((int16_t)rx) < 15 && abs((int16_t)ry) < 15) {
+            effect_mode = 1;
+        } else {
+            effect_mode = 0;
+            
+            // Map 0 -> 2pi radially directly array mapped
+            uint8_t new_base = fast_atan2_to_led(ry, rx);
+            
+            // 180 degree shift from previous -22 offset pointing TOP, now correctly +23 to point DOWN
+            uint8_t rotated_base = (new_base + 23) % 90; 
+            
+            // Distribute visual dynamic width against violent shaking vectors
+            int16_t shake = (int16_t)mag - 64; 
+            if (shake < 0) shake = 0;
+            uint8_t new_width = shake / 3;
+            if (new_width > 20) new_width = 20; // Cap width constraints symmetrically 
 
-          // Push asynchronous execution hooks
-          base_led = rotated_base;
-          led_width = new_width;
+            // Organic Earring Smoothing Filter (Fixed Point Low-Pass LPF)
+            int16_t target_q4 = (int16_t)rotated_base << 4;
+            int16_t diff = target_q4 - smooth_base_q4;
+            
+            // Shortest path around 90-LED circle (90 * 16 = 1440)
+            if (diff > 720) diff -= 1440;
+            else if (diff < -720) diff += 1440;
+            
+            smooth_base_q4 += diff / 4; // alpha = 0.25 smooth glide
+            
+            if (smooth_base_q4 < 0) smooth_base_q4 += 1440;
+            else if (smooth_base_q4 >= 1440) smooth_base_q4 -= 1440;
+            
+            int16_t width_target_q4 = (int16_t)new_width << 4;
+            smooth_width_q4 += (width_target_q4 - smooth_width_q4) / 4;
+
+            // Push asynchronous execution hooks
+            base_led = (uint8_t)(smooth_base_q4 >> 4);
+            led_width = (uint8_t)(smooth_width_q4 >> 4);
+        }
       }
-      
-      // Commented out printf to prevent UART from bottlenecking the 9600 baud polling loop
-      // Printing ~50 chars takes ~45ms, causing strict latency jitter!
-      // printf("X:%4d Y:%4d Z:%4d MAG:%4d WIDTH:%2d BASE:%2d\r\n", rx, ry, rz, mag, led_width, base_led);
     }
   }
 }
@@ -265,10 +342,6 @@ void disableTim2(void){
   sfr_TIM2.CR1.CEN = 0;         // disable timer
   sfr_CLK.PCKENR1.PCKEN10 = 0;  // disable tim4 clock gate
 }
-
-
-
-
 
 void initHall(void){
   // Hall sensor on PD0
@@ -382,7 +455,59 @@ void accel_write_reg(uint8_t reg, uint8_t val) {
   t = 10000; while (!sfr_I2C1.SR1.TXE && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
   if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
   
+  // Wait for the shift register to physically finish pushing bits to wire
+  t = 10000; while (!sfr_I2C1.SR1.BTF && !(sfr_I2C1.SR2.byte & 0x04) && --t);
+
+  // Command physical STOP 
   sfr_I2C1.CR2.STOP = 1;
+  // Tightly block until STOP sequence clears cleanly from the hardware bus
+  t = 10000; while ((sfr_I2C1.CR2.byte & 0x02) && --t);
+}
+
+void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
+  uint16_t t;
+  
+  sfr_I2C1.CR2.START = 1;
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return;
+  
+  sfr_I2C1.DR.byte = sc7a20_addr;
+  t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  (void)sfr_I2C1.SR1.byte;
+  (void)sfr_I2C1.SR3.byte;
+  
+  // 0x28 is OUT_X_L. MSB set (0x80) -> 0xA8 for auto-increment read in LIS2DH12/SC7A20
+  sfr_I2C1.DR.byte = 0xA8; 
+  t = 10000; while (!sfr_I2C1.SR1.TXE && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  
+  sfr_I2C1.CR2.START = 1;
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  
+  sfr_I2C1.DR.byte = sc7a20_addr | 0x01;
+  t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  
+  sfr_I2C1.CR2.ACK = 1; // enable ACK for multi-byte read
+  (void)sfr_I2C1.SR1.byte;
+  (void)sfr_I2C1.SR3.byte;
+  
+  uint8_t buf[6];
+  for (uint8_t i = 0; i < 6; i++) {
+    if (i == 5) { // last byte
+      sfr_I2C1.CR2.ACK = 0;
+      sfr_I2C1.CR2.STOP = 1;
+    }
+    t = 10000; while (!sfr_I2C1.SR1.RXNE && --t); 
+    if (t) buf[i] = sfr_I2C1.DR.byte;
+    else buf[i] = 0;
+  }
+  
+  // Data in SC7A20 Normal mode (10-bit) is left-justified.
+  // OUT_X_H = buf[1] (upper 8 bits)
+  *x = (int8_t)buf[1];
+  *y = (int8_t)buf[3];
+  *z = (int8_t)buf[5];
 }
 
 void initAccel(void) {
@@ -405,12 +530,6 @@ void initAccel(void) {
   sfr_I2C1.CR1.PE = 1;
   
   for(uint16_t i=0; i<10000; i++) NOP();
-}
-
-void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
-  *x = accel_read_reg(0x29);
-  *y = accel_read_reg(0x2B);
-  *z = accel_read_reg(0x2D);
 }
 
 void initUart(void) {
