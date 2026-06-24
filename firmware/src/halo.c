@@ -14,10 +14,11 @@
 #include "STM8L151G6.h"
 
 #define LED_COUNT 90
-#define SWEEP_STEP 13
 #define BRIGHTNESS_STEPS 32
 #define FULL_BRIGHTNESS BRIGHTNESS_STEPS
 #define SPARK_COUNT 4
+#define SCAN_STRIDE 10
+#define SCAN_BANKS 10
 
 // Prototypes
 void setLed(uint8_t led);
@@ -25,6 +26,9 @@ void ledHigh(uint8_t led);
 void ledLow(uint8_t led);
 uint16_t fast_rand(void);
 uint16_t safe_rand(void);
+uint8_t nextPwmScanLed(void);
+uint8_t ringDistance(uint8_t a, uint8_t b);
+uint8_t pwmAllows(uint8_t led, uint8_t brightness);
 
 void initHall(void);
 void initTim2(uint16_t timeout);
@@ -71,9 +75,10 @@ volatile uint8_t energy = 0;             // Q8 energy (0 to 255)
 volatile int16_t halo_angle_q4 = 0;       // Q4 angular position (0 to 1439)
 volatile int16_t angular_velocity_q4 = 0; // Q4 angular velocity
 volatile uint8_t time_ticks = 0;          // Dynamic mask reference counter
-volatile uint8_t sweep_led = 0;           // Independent sweep LED for solid ring
 volatile uint8_t breathing_brightness = 32; // PWM duty cycle (0 to 32)
-volatile uint8_t brightness_phase = 0;
+volatile uint8_t pwm_scan_led = 0;
+volatile uint8_t pwm_scan_bank = 0;
+volatile uint8_t pwm_phase = 0;
 volatile uint8_t burst_pos = 0;
 volatile uint8_t burst_radius = 0;
 volatile uint8_t burst_life = 0;
@@ -98,6 +103,46 @@ uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
 // Global loop rate-limiting tick
 volatile uint8_t accel_tick = 0;
 
+uint8_t nextPwmScanLed(void) {
+  uint8_t led = pwm_scan_led;
+
+  pwm_scan_led += SCAN_STRIDE;
+  if (pwm_scan_led >= LED_COUNT) {
+    pwm_scan_bank++;
+    if (pwm_scan_bank >= SCAN_BANKS) {
+      pwm_scan_bank = 0;
+      pwm_phase++;
+      if (pwm_phase >= BRIGHTNESS_STEPS) {
+        pwm_phase = 0;
+      }
+    }
+    pwm_scan_led = pwm_scan_bank;
+  }
+
+  return led;
+}
+
+uint8_t ringDistance(uint8_t a, uint8_t b) {
+  uint8_t diff = (a > b) ? (a - b) : (b - a);
+  if (diff > (LED_COUNT / 2)) {
+    diff = LED_COUNT - diff;
+  }
+  return diff;
+}
+
+uint8_t pwmAllows(uint8_t led, uint8_t brightness) {
+  if (brightness >= FULL_BRIGHTNESS) {
+    return 1;
+  }
+  if (brightness == 0) {
+    return 0;
+  }
+
+  // Per-LED phase offsets keep equally bright LEDs from blinking in lockstep.
+  uint8_t phase = (pwm_phase + ((led * 13) & (BRIGHTNESS_STEPS - 1))) & (BRIGHTNESS_STEPS - 1);
+  return phase < brightness;
+}
+
 ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   if (sleep) {
     sfr_TIM2.SR1.UIF = 0;  // clear timer 2 interrupt flag
@@ -106,124 +151,74 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
 
   time_ticks++;
 
-  brightness_phase++;
-  if (brightness_phase >= BRIGHTNESS_STEPS) {
-    brightness_phase = 0;
-  }
-
-  if (effect_mode == 1) {
-    sweep_led += SWEEP_STEP;
-    if (sweep_led >= LED_COUNT) {
-      sweep_led -= LED_COUNT;
-    }
-
-    if (brightness_phase < breathing_brightness) {
-      setLed(sweep_led);
-    } else {
-      ledLow(prevLed);
-    }
-
-    sfr_TIM2.SR1.UIF = 0;
-    return;
-  }
-
-  // Get a pseudo-random number
-  uint16_t r = fast_rand();
-  uint8_t r_prob = r & 0xFF;
+  uint8_t led_to_light = nextPwmScanLed();
+  uint8_t brightness = breathing_brightness;
 
   if (burst_life > 0) {
-    uint8_t burst_led = burst_pos;
-    if (r & 1) {
-      burst_led += burst_radius;
-      while (burst_led >= LED_COUNT) {
-        burst_led -= LED_COUNT;
-      }
-    } else if (burst_radius > burst_led) {
-      burst_led = (burst_led + LED_COUNT) - burst_radius;
+    uint8_t burst_forward = burst_pos + burst_radius;
+    uint8_t burst_back;
+
+    while (burst_forward >= LED_COUNT) {
+      burst_forward -= LED_COUNT;
+    }
+
+    if (burst_radius > burst_pos) {
+      burst_back = (burst_pos + LED_COUNT) - burst_radius;
     } else {
-      burst_led -= burst_radius;
+      burst_back = burst_pos - burst_radius;
     }
 
-    setLed(burst_led);
-    sfr_TIM2.SR1.UIF = 0;
-    return;
+    if (ringDistance(led_to_light, burst_forward) <= 1 || ringDistance(led_to_light, burst_back) <= 1) {
+      brightness = FULL_BRIGHTNESS;
+    }
   }
 
-  // Orbiting Sparks logic
-  if (energy > 50 && r_prob > 240) {
-    uint8_t chosen_spark = (r >> 8) & (SPARK_COUNT - 1);
-    if (spark_life[chosen_spark] > 0) {
-      if (brightness_phase < breathing_brightness) {
-        setLed(spark_pos[chosen_spark]);
-      } else {
-        ledLow(prevLed);
+  for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+    if (spark_life[j] > 0) {
+      uint8_t spark_dist = ringDistance(led_to_light, spark_pos[j]);
+      if (spark_dist == 0) {
+        brightness = FULL_BRIGHTNESS;
+      } else if (spark_dist == 1 && brightness < 24) {
+        brightness = 24;
       }
-
-      sfr_TIM2.SR1.UIF = 0;
-      return;
     }
   }
 
-  // Determine LED selection
-  uint8_t led_to_light = 0;
-  uint8_t select_gravity = 0;
-
-  // The threshold for gravity selection vs interlaced sweep
-  // At energy = 0: 70% interlaced, 30% gravity
-  // At energy = 255: 50% gravity selection for more fragments and sparkles.
-  uint8_t gravity_threshold = 76 + ((uint16_t)energy * 52) / 255;
-
-  if (r_prob < gravity_threshold) {
-    select_gravity = 1;
-  }
-
-  if (select_gravity) {
-    // Gravity Glow: light up near base_led
-    // The spread narrows with energy, producing a brighter highlight.
-    uint8_t range = 9 - ((uint16_t)energy * 6) / 255;
-
-    int8_t offset = (int8_t)(((uint16_t)(r >> 8) * range) >> 8) - (int8_t)(range >> 1);
-    int16_t target = (int16_t)base_led + offset;
-    if (target < 0) {
-      target += LED_COUNT;
-    } else if (target >= LED_COUNT) {
-      target -= LED_COUNT;
+  if (effect_mode == 0) {
+    uint8_t glow_width = 10 - ((uint16_t)energy * 5) / 255;
+    uint8_t glow_dist = ringDistance(led_to_light, base_led);
+    if (glow_dist <= glow_width) {
+      uint8_t glow = ((uint16_t)(glow_width - glow_dist) * (8 + (energy >> 5))) / glow_width;
+      brightness += glow;
+      if (brightness > FULL_BRIGHTNESS) {
+        brightness = FULL_BRIGHTNESS;
+      }
     }
-    led_to_light = (uint8_t)target;
-  } else {
-    // Coprime sweep for solid background ring
-    sweep_led += SWEEP_STEP;
-    if (sweep_led >= LED_COUNT) {
-      sweep_led -= LED_COUNT;
+
+    if (energy > 24) {
+      uint16_t r = fast_rand();
+      if ((uint8_t)r < energy) {
+        uint8_t shimmer = ((r >> 8) & 0x07) + (energy >> 6);
+        brightness += shimmer;
+        if (brightness > FULL_BRIGHTNESS) {
+          brightness = FULL_BRIGHTNESS;
+        }
+      }
     }
-    led_to_light = sweep_led;
-  }
 
-  // Apply Shimmer Sparkles:
-  // Chance of a random sparkle increases with energy
-  // At energy=255, we have up to 25% chance of a random sparkle
-  // At energy=0, 0%
-  uint8_t sparkle_threshold = energy >> 2; // energy / 4
-  if (r_prob < sparkle_threshold) {
-    led_to_light = (uint8_t)(((uint16_t)(r >> 8) * LED_COUNT) >> 8);
-  }
-
-  // Apply Fragmentation Mask:
-  // If energy is high, we dynamically mask out parts of the ring to make it look fragmented
-  uint8_t show_led = 1;
-  if (energy > 80) {
-    uint8_t mask_pos = (led_to_light + time_ticks) & 0x1F;
-    // Threshold ranges from 30 (at energy=80) to 12 (at energy=255).
-    uint8_t threshold = 30 - ((uint16_t)(energy - 80) * 18) / 175;
-    if (mask_pos >= threshold) {
-      show_led = 0;
+    // Fragmentation breaks the base ring only after burst/spark layers are applied.
+    if (energy > 80 && brightness < FULL_BRIGHTNESS) {
+      uint8_t mask_pos = (led_to_light + time_ticks) & 0x1F;
+      uint8_t threshold = 30 - ((uint16_t)(energy - 80) * 18) / 175;
+      if (mask_pos >= threshold) {
+        brightness = 0;
+      }
     }
   }
 
-  if (show_led && brightness_phase < breathing_brightness) {
+  if (pwmAllows(led_to_light, brightness)) {
     setLed(led_to_light);
   } else {
-    // Turn off last LED to maintain dark space in fragmented arcs
     ledLow(prevLed);
   }
 
@@ -401,9 +396,10 @@ void main(void) {
       energy = 0;
       halo_angle_q4 = (int16_t)prevLed << 4;
       angular_velocity_q4 = 0;
-      sweep_led = 0;
       breathing_brightness = FULL_BRIGHTNESS;
-      brightness_phase = 0;
+      pwm_scan_led = 0;
+      pwm_scan_bank = 0;
+      pwm_phase = 0;
       burst_life = 0;
 
       enableTim2();
@@ -549,7 +545,10 @@ void main(void) {
         uint8_t breath_idx = (uint8_t)((uint16_t)breath_tick * 32 / 500);
         uint8_t target_br = breath_lut[breath_idx];
 
-        // Scale up toward full brightness (32/32) as energy rises
+        // Keep a dim ring at rest, then use scan-density PWM for breathing.
+        target_br += 4;
+
+        // Scale up toward full brightness (32/32) as energy rises.
         uint16_t current_br = target_br + (((uint16_t)energy * (32 - target_br)) / 255);
         breathing_brightness = (uint8_t)current_br;
       }
