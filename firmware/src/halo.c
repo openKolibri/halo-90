@@ -19,6 +19,8 @@
 #define SPARK_COUNT 4
 #define SCAN_STRIDE 10
 #define SCAN_BANKS 10
+#define BUBBLE_LEVEL_OFFSET 68
+#define TILT_DEADZONE 3
 
 // Prototypes
 void setLed(uint8_t led);
@@ -67,7 +69,6 @@ uint16_t safe_rand(void) {
 volatile uint8_t prevLed = 0;
 volatile uint8_t sleep = 0;
 volatile uint8_t base_led = 0;
-volatile uint8_t effect_mode = 0; // 0 = ARC, 1 = FLAT RING
 volatile uint8_t sc7a20_addr = 0x30;
 
 // Balance Halo visual state variables
@@ -184,35 +185,34 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
   }
 
-  if (effect_mode == 0) {
-    uint8_t glow_width = 10 - ((uint16_t)energy * 5) / 255;
-    uint8_t glow_dist = ringDistance(led_to_light, base_led);
-    if (glow_dist <= glow_width) {
-      uint8_t glow = ((uint16_t)(glow_width - glow_dist) * (8 + (energy >> 5))) / glow_width;
-      brightness += glow;
+  uint8_t glow_width = 16 - ((uint16_t)energy * 9) / 255;
+  uint8_t glow_dist = ringDistance(led_to_light, base_led);
+  if (glow_dist <= glow_width) {
+    uint8_t glow_peak = 18 + (energy >> 4);
+    uint8_t glow = ((uint16_t)(glow_width - glow_dist) * glow_peak) / glow_width;
+    brightness += glow;
+    if (brightness > FULL_BRIGHTNESS) {
+      brightness = FULL_BRIGHTNESS;
+    }
+  }
+
+  if (energy > 12) {
+    uint16_t r = fast_rand();
+    if ((uint8_t)r < energy) {
+      uint8_t shimmer = ((r >> 8) & 0x07) + (energy >> 6);
+      brightness += shimmer;
       if (brightness > FULL_BRIGHTNESS) {
         brightness = FULL_BRIGHTNESS;
       }
     }
+  }
 
-    if (energy > 24) {
-      uint16_t r = fast_rand();
-      if ((uint8_t)r < energy) {
-        uint8_t shimmer = ((r >> 8) & 0x07) + (energy >> 6);
-        brightness += shimmer;
-        if (brightness > FULL_BRIGHTNESS) {
-          brightness = FULL_BRIGHTNESS;
-        }
-      }
-    }
-
-    // Fragmentation breaks the base ring only after burst/spark layers are applied.
-    if (energy > 80 && brightness < FULL_BRIGHTNESS) {
-      uint8_t mask_pos = (led_to_light + time_ticks) & 0x1F;
-      uint8_t threshold = 30 - ((uint16_t)(energy - 80) * 18) / 175;
-      if (mask_pos >= threshold) {
-        brightness = 0;
-      }
+  // Fragmentation breaks the ring as movement energy rises, while preserving the bubble core.
+  if (energy > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
+    uint8_t mask_pos = ((led_to_light * 5) + time_ticks + (energy >> 3)) & 0x1F;
+    uint8_t threshold = 28 - ((uint16_t)(energy - 36) * 20) / 219;
+    if (mask_pos >= threshold) {
+      brightness = 0;
     }
   }
 
@@ -421,30 +421,25 @@ void main(void) {
         ry_prev = ry;
         rz_prev = rz;
 
-        // Apply deadzone to filter out sensor noise when still (threshold of 3 counts)
+        // Apply a small deadzone to filter sensor noise when still.
         int16_t active_jolt = 0;
-        if (jolt > 3) {
-          active_jolt = jolt - 3;
+        if (jolt > 2) {
+          active_jolt = jolt - 2;
         }
 
         // 2. Update and Decay Energy (Q8)
         // Decays by ~0.9725 per frame (approx. (energy * 249) >> 8)
         uint16_t next_energy = ((uint16_t)energy * 249) >> 8;
-        // Jolt adds to energy with a responsive gain of 8
-        next_energy += (active_jolt * 8);
+        // Steps and jolts need to visibly disturb the ring.
+        next_energy += (active_jolt * 12);
         if (next_energy > 255) next_energy = 255;
         energy = (uint8_t)next_energy;
 
-        // 3. Physical Inertia System (First-Order LPF Gravity Tracker)
-        // If X and Y are low, the earring is lying flat (effect_mode = 1)
-        if (abs((int16_t)rx) < 15 && abs((int16_t)ry) < 15) {
-            effect_mode = 1;
-        } else {
-            effect_mode = 0;
-
-            // Target angle (gravity down direction)
+        // 3. Physical Inertia System: bubble rides opposite the gravity projection.
+        int16_t planar_tilt = abs((int16_t)rx) + abs((int16_t)ry);
+        if (planar_tilt > TILT_DEADZONE) {
             uint8_t new_base = fast_atan2_to_led(ry, rx);
-            uint8_t rotated_base = new_base + 23;
+            uint8_t rotated_base = new_base + BUBBLE_LEVEL_OFFSET;
             if (rotated_base >= LED_COUNT) {
               rotated_base -= LED_COUNT;
             }
@@ -455,7 +450,7 @@ void main(void) {
             else if (error < -720) error += 1440;
 
             // Spring inertia: calm motion is heavy; charged motion is tighter.
-            uint8_t spring_shift = 5 - ((uint16_t)energy * 2) / 255;
+            uint8_t spring_shift = 4 - ((uint16_t)energy * 2) / 255;
             int16_t spring_impulse = error >> spring_shift;
             if (spring_impulse == 0 && error != 0) {
               spring_impulse = (error > 0) ? 1 : -1;
@@ -466,15 +461,17 @@ void main(void) {
             else if (angular_velocity_q4 < -120) angular_velocity_q4 = -120;
 
             // Damping moves from about 0.92 at rest to about 0.82 when charged.
-            uint8_t damping = 235 - ((uint16_t)energy * 25) / 255;
+            uint8_t damping = 238 - ((uint16_t)energy * 30) / 255;
             angular_velocity_q4 = ((int16_t)angular_velocity_q4 * (int16_t)damping) >> 8;
-
-            halo_angle_q4 += angular_velocity_q4;
-            while (halo_angle_q4 < 0) halo_angle_q4 += 1440;
-            while (halo_angle_q4 >= 1440) halo_angle_q4 -= 1440;
-
-            base_led = (uint8_t)(halo_angle_q4 >> 4);
+        } else {
+            angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
         }
+
+        halo_angle_q4 += angular_velocity_q4;
+        while (halo_angle_q4 < 0) halo_angle_q4 += 1440;
+        while (halo_angle_q4 >= 1440) halo_angle_q4 -= 1440;
+
+        base_led = (uint8_t)(halo_angle_q4 >> 4);
 
         // 4. Update Burst and Orbiting Sparks Positions
         if (burst_life > 0) {
@@ -485,10 +482,10 @@ void main(void) {
           }
         }
 
-        if (active_jolt > 10) {
-          uint8_t burst_duration = 6 + (active_jolt >> 2);
-          if (burst_duration > 18) {
-            burst_duration = 18;
+        if (active_jolt > 7) {
+          uint8_t burst_duration = 8 + (active_jolt >> 1);
+          if (burst_duration > 24) {
+            burst_duration = 24;
           }
 
           burst_pos = base_led;
@@ -502,7 +499,7 @@ void main(void) {
           }
         }
 
-        if (energy > 50) {
+        if (energy > 32) {
           for (uint8_t j = 0; j < SPARK_COUNT; j++) {
             if (spark_life[j] > 0) {
               if (spark_vel[j] > 0) {
@@ -516,9 +513,9 @@ void main(void) {
                 spark_pos[j]--;
               }
               spark_life[j]--;
-            } else if (energy > 128) {
+            } else if (energy > 96) {
               uint16_t sr = safe_rand();
-              if ((sr & 0x1F) == 0) {
+              if ((sr & 0x0F) == 0) {
                 spark_pos[j] = base_led;
                 spark_vel[j] = (sr & 1) ? 1 : -1;
                 spark_life[j] = 10 + ((sr >> 8) & 15); // lifetime in 20ms steps
@@ -545,8 +542,8 @@ void main(void) {
         uint8_t breath_idx = (uint8_t)((uint16_t)breath_tick * 32 / 500);
         uint8_t target_br = breath_lut[breath_idx];
 
-        // Keep a dim ring at rest, then use scan-density PWM for breathing.
-        target_br += 4;
+        // Keep a low base so the bubble and motion chaos are obvious.
+        target_br = 2 + (target_br >> 1);
 
         // Scale up toward full brightness (32/32) as energy rises.
         uint16_t current_br = target_br + (((uint16_t)energy * (32 - target_br)) / 255);
