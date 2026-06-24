@@ -22,6 +22,8 @@
 #define BUBBLE_LEVEL_OFFSET 68
 #define TILT_DEADZONE 3
 #define ACCEL_SAMPLE_TICKS 163
+#define ACCEL_DIAGNOSTICS 1
+#define ACCEL_DIAG_PRINT_SAMPLES 48
 
 // Prototypes
 void setLed(uint8_t led);
@@ -43,6 +45,7 @@ void initAccel(void);
 uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
 uint8_t accel_read_reg(uint8_t reg);
 void accel_write_reg(uint8_t reg, uint8_t val);
+void printAccelConfig(const char *label);
 
 void initUart(void);
 int putchar(int c);
@@ -313,11 +316,14 @@ void main(void) {
   printf("I2C Scan found: 0x%02X\r\n", found_addr);
   if (found_addr != 0) {
       sc7a20_addr = (found_addr << 1);
+  } else {
+      printf("ACCEL WARN: no I2C ACK found, using default 8-bit addr 0x%02X\r\n", sc7a20_addr);
   }
 
   // Reload the initialization since it might have failed previously with the old address
   accel_write_reg(0x20, 0x47); 
   accel_write_reg(0x23, 0x80);
+  printAccelConfig("boot");
 
   // Enable Ultra-Low Power (disables internal references when halted)
   // Enable Flash/EEPROM power-down during HALT (Fixes the 1.2mA standby leak!)
@@ -340,6 +346,12 @@ void main(void) {
   }
 
   ENABLE_INTERRUPTS();
+
+#if ACCEL_DIAGNOSTICS
+  uint16_t accel_ok_count = 0;
+  uint16_t accel_fail_count = 0;
+  uint8_t accel_diag_tick = 0;
+#endif
 
   while(1){
     if (sleep) {
@@ -394,6 +406,7 @@ void main(void) {
       initAccel();
       accel_write_reg(0x20, 0x47);
       accel_write_reg(0x23, 0x80);
+      printAccelConfig("wake");
       
       energy = 0;
       halo_angle_q4 = (int16_t)prevLed << 4;
@@ -418,9 +431,21 @@ void main(void) {
         int8_t ry = ry_prev;
         int8_t rz = rz_prev;
         if (!readAccelRaw(&rx, &ry, &rz)) {
+#if ACCEL_DIAGNOSTICS
+          accel_fail_count++;
+          accel_diag_tick++;
+          if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
+            accel_diag_tick = 0;
+            printf("ACCEL read_fail ok=%u fail=%u addr8=0x%02X status=0x%02X\r\n",
+                   accel_ok_count, accel_fail_count, sc7a20_addr, accel_read_reg(0x27));
+          }
+#endif
           angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
           continue;
         }
+#if ACCEL_DIAGNOSTICS
+        accel_ok_count++;
+#endif
 
         // 1. Compute Jolt Energy
         int16_t jolt = abs((int16_t)rx - rx_prev) + abs((int16_t)ry - ry_prev) + abs((int16_t)rz - rz_prev);
@@ -555,6 +580,19 @@ void main(void) {
         // Scale up toward full brightness (32/32) as energy rises.
         uint16_t current_br = target_br + (((uint16_t)energy * (32 - target_br)) / 255);
         breathing_brightness = (uint8_t)current_br;
+
+#if ACCEL_DIAGNOSTICS
+        accel_diag_tick++;
+        if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
+          accel_diag_tick = 0;
+          printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d tilt=%d energy=%u base=%u vel=%d br=%u status=0x%02X\r\n",
+                 accel_ok_count, accel_fail_count,
+                 (int)rx, (int)ry, (int)rz,
+                 (int)jolt, (int)active_jolt, (int)planar_tilt,
+                 energy, base_led, (int)angular_velocity_q4,
+                 breathing_brightness, accel_read_reg(0x27));
+        }
+#endif
       }
     }
   }
@@ -709,6 +747,33 @@ void accel_write_reg(uint8_t reg, uint8_t val) {
   sfr_I2C1.CR2.STOP = 1;
   // Tightly block until STOP sequence clears cleanly from the hardware bus
   t = 10000; while ((sfr_I2C1.CR2.byte & 0x02) && --t);
+}
+
+void printAccelConfig(const char *label) {
+#if ACCEL_DIAGNOSTICS
+  uint8_t who = accel_read_reg(0x0F);
+  uint8_t ctrl1 = accel_read_reg(0x20);
+  uint8_t ctrl4 = accel_read_reg(0x23);
+  uint8_t status = accel_read_reg(0x27);
+
+  printf("ACCEL %s addr8=0x%02X who=0x%02X ctrl1=0x%02X ctrl4=0x%02X status=0x%02X\r\n",
+         label, sc7a20_addr, who, ctrl1, ctrl4, status);
+
+  if ((who & 0xF0) == 0xF0) {
+    printf("ACCEL WARN: WHO_AM_I read looks like I2C timeout code\r\n");
+  }
+  if ((ctrl1 & 0x07) != 0x07) {
+    printf("ACCEL WARN: XYZ axis enable bits are not all set\r\n");
+  }
+  if ((ctrl1 & 0xF0) == 0x00) {
+    printf("ACCEL WARN: ODR bits show power-down\r\n");
+  }
+  if ((ctrl4 & 0x80) == 0x00) {
+    printf("ACCEL WARN: BDU bit is not set\r\n");
+  }
+#else
+  (void)label;
+#endif
 }
 
 uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
