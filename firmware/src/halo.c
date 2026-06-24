@@ -21,6 +21,7 @@
 #define SCAN_BANKS 10
 #define BUBBLE_LEVEL_OFFSET 68
 #define TILT_DEADZONE 3
+#define ACCEL_SAMPLE_TICKS 163
 
 // Prototypes
 void setLed(uint8_t led);
@@ -39,7 +40,7 @@ void disableTim2(void);
 
 // Accelerometer & I2C Prototypes
 void initAccel(void);
-void readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
+uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
 uint8_t accel_read_reg(uint8_t reg);
 void accel_write_reg(uint8_t reg, uint8_t val);
 
@@ -392,6 +393,7 @@ void main(void) {
       // Ensure initAccel is called to refresh configuration if I2C was disrupted
       initAccel();
       accel_write_reg(0x20, 0x47);
+      accel_write_reg(0x23, 0x80);
       
       energy = 0;
       halo_angle_q4 = (int16_t)prevLed << 4;
@@ -409,11 +411,16 @@ void main(void) {
     } else {
       WAIT_FOR_INTERRUPT();
 
-      if (!sleep && (++accel_tick >= 156)) {
+      if (!sleep && (++accel_tick >= ACCEL_SAMPLE_TICKS)) {
         accel_tick = 0;
 
-        int8_t rx, ry, rz;
-        readAccelRaw(&rx, &ry, &rz);
+        int8_t rx = rx_prev;
+        int8_t ry = ry_prev;
+        int8_t rz = rz_prev;
+        if (!readAccelRaw(&rx, &ry, &rz)) {
+          angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
+          continue;
+        }
 
         // 1. Compute Jolt Energy
         int16_t jolt = abs((int16_t)rx - rx_prev) + abs((int16_t)ry - ry_prev) + abs((int16_t)rz - rz_prev);
@@ -704,29 +711,29 @@ void accel_write_reg(uint8_t reg, uint8_t val) {
   t = 10000; while ((sfr_I2C1.CR2.byte & 0x02) && --t);
 }
 
-void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
+uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
   uint16_t t;
   
   sfr_I2C1.CR2.START = 1;
-  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return;
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return 0;
   
   sfr_I2C1.DR.byte = sc7a20_addr;
   t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
-  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   (void)sfr_I2C1.SR1.byte;
   (void)sfr_I2C1.SR3.byte;
   
   // 0x28 is OUT_X_L. MSB set (0x80) -> 0xA8 for auto-increment read in LIS2DH12/SC7A20
   sfr_I2C1.DR.byte = 0xA8; 
   t = 10000; while (!sfr_I2C1.SR1.TXE && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
-  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   
   sfr_I2C1.CR2.START = 1;
-  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   
   sfr_I2C1.DR.byte = sc7a20_addr | 0x01;
   t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
-  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   
   sfr_I2C1.CR2.ACK = 1; // enable ACK for multi-byte read
   (void)sfr_I2C1.SR1.byte;
@@ -740,7 +747,11 @@ void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
     }
     t = 10000; while (!sfr_I2C1.SR1.RXNE && --t); 
     if (t) buf[i] = sfr_I2C1.DR.byte;
-    else buf[i] = 0;
+    else {
+      sfr_I2C1.CR2.ACK = 0;
+      sfr_I2C1.CR2.STOP = 1;
+      return 0;
+    }
   }
   
   // Data in SC7A20 Normal mode (10-bit) is left-justified.
@@ -748,6 +759,7 @@ void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
   *x = (int8_t)buf[1];
   *y = (int8_t)buf[3];
   *z = (int8_t)buf[5];
+  return 1;
 }
 
 void initAccel(void) {
