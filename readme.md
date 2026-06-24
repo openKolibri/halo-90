@@ -532,8 +532,8 @@ Files of all licenses are required with the distribution of files. All files are
 - [STM8 Headers] Copyright (c) - 2020 Georg Icking-Konert
 
 ## ToDo
-- [ ] Led sometimes remains on after shutdown
-- [ ] Randomly HALO pattern forms high low pattern 
+- [x] Led sometimes remains on after shutdown
+- [x] Randomly HALO pattern forms high low pattern
 
 <!--                       References                                      -->
 <!-- Files -->
