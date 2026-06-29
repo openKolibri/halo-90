@@ -23,6 +23,11 @@
 #define TILT_DEADZONE 3
 #define JOLT_DEADZONE 5
 #define STILL_ENERGY_THRESHOLD 10
+#define MOTION_CHARGE_START 18
+#define MOTION_CHARGE_BURST 70
+#define MOTION_CHARGE_DECAY 204
+#define MOTION_CHARGE_SCALE_DIVISOR 5
+#define MOTION_CHARGE_INPUT_MAX 120
 #define ACCEL_SAMPLE_TICKS 163
 #define ACCEL_DIAGNOSTICS 1
 #define ACCEL_DIAG_PRINT_SAMPLES 48
@@ -79,6 +84,7 @@ volatile uint8_t sc7a20_addr = 0x30;
 
 // Balance Halo visual state variables
 volatile uint8_t energy = 0;             // Q8 energy (0 to 255)
+volatile uint8_t motion_charge = 0;      // Smoothed motion input (0 to 255)
 volatile int16_t halo_angle_q4 = 0;       // Q4 angular position (0 to 1439)
 volatile int16_t angular_velocity_q4 = 0; // Q4 angular velocity
 volatile uint8_t time_ticks = 0;          // Dynamic mask reference counter
@@ -412,6 +418,7 @@ void main(void) {
       printAccelConfig("wake");
       
       energy = 0;
+      motion_charge = 0;
       halo_angle_q4 = (int16_t)prevLed << 4;
       angular_velocity_q4 = 0;
       breathing_brightness = 2;
@@ -463,14 +470,27 @@ void main(void) {
           active_jolt = jolt - JOLT_DEADZONE;
         }
 
-        // 2. Update and Decay Energy (Q8)
-        // Decays by ~0.9725 per frame (approx. (energy * 249) >> 8)
+        // 2. Build motion charge, then let charge feed visual energy.
+        // Isolated jolts decay away; repeated steps build enough charge to wake the pattern.
+        uint16_t next_charge = ((uint16_t)motion_charge * MOTION_CHARGE_DECAY) >> 8;
+        if (active_jolt > 0) {
+          uint8_t charge_input = active_jolt;
+          if (charge_input > MOTION_CHARGE_INPUT_MAX) {
+            charge_input = MOTION_CHARGE_INPUT_MAX;
+          }
+          charge_input = (charge_input + (MOTION_CHARGE_SCALE_DIVISOR - 1)) / MOTION_CHARGE_SCALE_DIVISOR;
+          next_charge += charge_input;
+        }
+        motion_charge = (uint8_t)next_charge;
+
+        // Decays by ~0.9725 per frame (approx. (energy * 249) >> 8).
         uint16_t next_energy = ((uint16_t)energy * 249) >> 8;
-        // Steps and jolts need to visibly disturb the ring.
-        next_energy += (active_jolt * 12);
+        if (motion_charge > MOTION_CHARGE_START) {
+          next_energy += (motion_charge - MOTION_CHARGE_START) >> 1;
+        }
         if (next_energy > 255) next_energy = 255;
         energy = (uint8_t)next_energy;
-        still_mode = (energy <= STILL_ENERGY_THRESHOLD && active_jolt == 0);
+        still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= MOTION_CHARGE_START);
 
         // 3. Physical Inertia System: bubble rides opposite the gravity projection.
         int16_t planar_tilt = abs((int16_t)rx) + abs((int16_t)ry);
@@ -519,11 +539,8 @@ void main(void) {
           }
         }
 
-        if (active_jolt > 7) {
-          uint8_t burst_duration = 8 + (active_jolt >> 1);
-          if (burst_duration > 24) {
-            burst_duration = 24;
-          }
+        if (motion_charge > MOTION_CHARGE_BURST && active_jolt > 3) {
+          uint8_t burst_duration = 6 + (motion_charge >> 4);
 
           burst_pos = base_led;
           burst_radius = 0;
@@ -532,7 +549,7 @@ void main(void) {
           for (uint8_t j = 0; j < SPARK_COUNT; j++) {
             spark_pos[j] = base_led;
             spark_vel[j] = (j & 1) ? 1 : -1;
-            spark_life[j] = 10 + ((active_jolt + (j * 3)) & 0x0F);
+            spark_life[j] = 8 + ((motion_charge + (j * 3)) & 0x0F);
           }
         }
 
@@ -590,10 +607,10 @@ void main(void) {
         accel_diag_tick++;
         if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
           accel_diag_tick = 0;
-          printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d tilt=%d energy=%u base=%u vel=%d br=%u status=0x%02X\r\n",
+          printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d charge=%u tilt=%d energy=%u base=%u vel=%d br=%u status=0x%02X\r\n",
                  accel_ok_count, accel_fail_count,
                  (int)rx, (int)ry, (int)rz,
-                 (int)jolt, (int)active_jolt, (int)planar_tilt,
+                 (int)jolt, (int)active_jolt, motion_charge, (int)planar_tilt,
                  energy, base_led, (int)angular_velocity_q4,
                  breathing_brightness, accel_read_reg(0x27));
         }
