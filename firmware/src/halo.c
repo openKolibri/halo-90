@@ -21,6 +21,8 @@
 #define SCAN_BANKS 10
 #define BUBBLE_LEVEL_OFFSET 68
 #define TILT_DEADZONE 3
+#define JOLT_DEADZONE 5
+#define STILL_ENERGY_THRESHOLD 10
 #define ACCEL_SAMPLE_TICKS 163
 #define ACCEL_DIAGNOSTICS 1
 #define ACCEL_DIAG_PRINT_SAMPLES 48
@@ -80,7 +82,8 @@ volatile uint8_t energy = 0;             // Q8 energy (0 to 255)
 volatile int16_t halo_angle_q4 = 0;       // Q4 angular position (0 to 1439)
 volatile int16_t angular_velocity_q4 = 0; // Q4 angular velocity
 volatile uint8_t time_ticks = 0;          // Dynamic mask reference counter
-volatile uint8_t breathing_brightness = 32; // PWM duty cycle (0 to 32)
+volatile uint8_t breathing_brightness = 2; // PWM duty cycle (0 to 32)
+volatile uint8_t still_mode = 1;
 volatile uint8_t pwm_scan_led = 0;
 volatile uint8_t pwm_scan_bank = 0;
 volatile uint8_t pwm_phase = 0;
@@ -158,8 +161,9 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
 
   uint8_t led_to_light = nextPwmScanLed();
   uint8_t brightness = breathing_brightness;
+  uint8_t glow_dist = ringDistance(led_to_light, base_led);
 
-  if (burst_life > 0) {
+  if (!still_mode && burst_life > 0) {
     uint8_t burst_forward = burst_pos + burst_radius;
     uint8_t burst_back;
 
@@ -178,7 +182,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
   }
 
-  for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+  for (uint8_t j = 0; !still_mode && j < SPARK_COUNT; j++) {
     if (spark_life[j] > 0) {
       uint8_t spark_dist = ringDistance(led_to_light, spark_pos[j]);
       if (spark_dist == 0) {
@@ -190,8 +194,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   }
 
   uint8_t glow_width = 16 - ((uint16_t)energy * 9) / 255;
-  uint8_t glow_dist = ringDistance(led_to_light, base_led);
-  if (glow_dist <= glow_width) {
+  if (!still_mode && glow_dist <= glow_width) {
     uint8_t glow_peak = 18 + (energy >> 4);
     uint8_t glow = ((uint16_t)(glow_width - glow_dist) * glow_peak) / glow_width;
     brightness += glow;
@@ -200,7 +203,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
   }
 
-  if (energy > 12) {
+  if (!still_mode && energy > 12) {
     uint16_t r = fast_rand();
     if ((uint8_t)r < energy) {
       uint8_t shimmer = ((r >> 8) & 0x07) + (energy >> 6);
@@ -212,7 +215,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   }
 
   // Fragmentation breaks the ring as movement energy rises, while preserving the bubble core.
-  if (energy > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
+  if (!still_mode && energy > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
     uint8_t mask_pos = ((led_to_light * 5) + time_ticks + (energy >> 3)) & 0x1F;
     uint8_t threshold = 28 - ((uint16_t)(energy - 36) * 20) / 219;
     if (mask_pos >= threshold) {
@@ -411,7 +414,8 @@ void main(void) {
       energy = 0;
       halo_angle_q4 = (int16_t)prevLed << 4;
       angular_velocity_q4 = 0;
-      breathing_brightness = FULL_BRIGHTNESS;
+      breathing_brightness = 2;
+      still_mode = 1;
       pwm_scan_led = 0;
       pwm_scan_bank = 0;
       pwm_phase = 0;
@@ -453,10 +457,10 @@ void main(void) {
         ry_prev = ry;
         rz_prev = rz;
 
-        // Apply a small deadzone to filter sensor noise when still.
+        // Apply a deadzone to filter sensor noise when still.
         int16_t active_jolt = 0;
-        if (jolt > 2) {
-          active_jolt = jolt - 2;
+        if (jolt > JOLT_DEADZONE) {
+          active_jolt = jolt - JOLT_DEADZONE;
         }
 
         // 2. Update and Decay Energy (Q8)
@@ -466,6 +470,7 @@ void main(void) {
         next_energy += (active_jolt * 12);
         if (next_energy > 255) next_energy = 255;
         energy = (uint8_t)next_energy;
+        still_mode = (energy <= STILL_ENERGY_THRESHOLD && active_jolt == 0);
 
         // 3. Physical Inertia System: bubble rides opposite the gravity projection.
         int16_t planar_tilt = abs((int16_t)rx) + abs((int16_t)ry);
