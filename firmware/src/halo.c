@@ -33,6 +33,7 @@
 #define MOTION_CHARGE_START 8
 #define MOTION_CHARGE_BURST 20
 #define MOTION_CHARGE_DECAY 204
+#define ENERGY_DECAY_DIVISOR 183
 #define MOTION_CHARGE_SCALE_DIVISOR 25
 #define MOTION_CHARGE_INPUT_MAX 120
 // Double-tap detection on the 48 Hz jolt stream: a tap is an isolated jolt
@@ -848,8 +849,18 @@ accel_read_ok:
         }
         motion_charge = (uint8_t)next_charge;
 
-        // Decays by ~0.9725 per frame (approx. (energy * 249) >> 8).
-        uint16_t next_energy = ((uint16_t)energy * 249) >> 8;
+        // Decay by about energy/183 per 48 Hz sample: roughly 5x longer
+        // than the old energy/37 decay, but still proportional to energy.
+        static uint16_t energy_decay_accum = 0;
+        uint16_t next_energy = energy;
+        energy_decay_accum += energy;
+        while (energy_decay_accum >= ENERGY_DECAY_DIVISOR && next_energy > 0) {
+          next_energy--;
+          energy_decay_accum -= ENERGY_DECAY_DIVISOR;
+        }
+        if (next_energy == 0) {
+          energy_decay_accum = 0;
+        }
         if (motion_charge > cfg_charge_start) {
           next_energy += motion_charge - cfg_charge_start;
         }
