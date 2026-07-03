@@ -31,18 +31,13 @@
 #define MOTION_CHARGE_DECAY 204
 #define MOTION_CHARGE_SCALE_DIVISOR 25
 #define MOTION_CHARGE_INPUT_MAX 120
-// Double-tap detection on the 48 Hz jolt stream: a tap is an isolated jolt
-// spike; two spikes inside the window with no sustained motion toggle the
-// display mode. (Software detection because the accel's 50 Hz ODR is too
-// slow for the hardware click engine, which wants 400 Hz.)
-// Calibrated from a wearer recording (2026-07-03): real taps sampled at
-// active_jolt 203-213, so 200 left no margin; 150 catches softer taps
-// reliably. Dance/shake spikes can exceed this, but sustained movement
-// builds charge past the <12 stillness guard below, which is what
-// actually rejects dancing - the jolt bar only filters casual movement.
-#define TAP_JOLT_MIN 150
-#define TAP_WINDOW_SAMPLES 24   // ~0.5 s to land the second tap
-#define TAP_GAP_SAMPLES 4       // ~80 ms refractory; one tap spans 1-2 samples
+// Double-tap detection lives in the accelerometer's hardware click engine
+// (400 Hz ODR), which can require the shock to end within TIME_LIMIT -
+// the time-domain gate that separates sub-10 ms fingernail taps from
+// 50-200 ms train/table thumps. A 48 Hz software jolt detector cannot
+// see that difference (tried 2026-07-03: track joints fake double-taps).
+// Threshold LSB is FS/128 = 15.6 mg; live-tunable via the 'c' command.
+#define CLICK_THS_DEFAULT 0x18  // ~0.375 g
 #define ACCEL_SAMPLE_TICKS 163
 #define SERIAL_DIAGNOSTICS 1
 #define ACCEL_DIAGNOSTICS SERIAL_DIAGNOSTICS
@@ -75,6 +70,9 @@ void cfgLoad(void);
 void cfgSave(void);
 void printCfg(void);
 void pollUartCmd(void);
+void enterSolidMode(void);
+void exitSolidMode(void);
+void accelConfig(void);
 
 void initUart(void);
 int putchar(int c);
@@ -115,7 +113,28 @@ volatile int8_t comet_dir = 1;            // Last direction of travel; tail trai
 volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the comet on settle
 volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down after long stillness
 volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = breathing solid ring
-volatile uint8_t solid_breath = FULL_BRIGHTNESS; // Ring level in mode 1, driven by the breath curve
+volatile uint8_t solid_breath = 1;        // Ring level in mode 1, driven by the breath curve
+volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
+volatile uint8_t isr_frames = 0;          // Free-running 48 Hz frame counter (click pairing timebase)
+volatile uint8_t jolt_skip = 0;           // Discard the first jolt after re-entering polling
+
+// Sleep breathing curve for the solid ring, Apple-indicator style: cosine
+// ease up over ~1.9 s, near-imperceptible hold at the peak, slower ~2.9 s
+// ease back down, lingering at a dim floor of 1 (never off, never a blink -
+// zero slope at both extremes). Stepped at 48 Hz: 240 steps = 5.0 s/cycle,
+// 12 breaths per minute. Values are perceptual 1-32; the ISR's gamma LUT
+// makes the fade eye-linear and the dithered PWM keeps it flicker-free.
+static const uint8_t sleep_breath_lut[64] = {
+   1,  1,  1,  2,  3,  4,  5,  6,
+   8, 10, 11, 13, 15, 17, 19, 21,
+  22, 24, 26, 27, 28, 30, 31, 31,
+  32, 32, 32, 32, 32, 31, 31, 31,
+  30, 29, 28, 28, 27, 26, 25, 24,
+  22, 21, 20, 19, 18, 16, 15, 14,
+  12, 11, 10,  9,  8,  7,  6,  5,
+   4,  3,  3,  2,  2,  1,  1,  1
+};
+static uint8_t solid_breath_tick = 0;     // 0-239 position in the cycle
 
 // Render parameters precomputed at the 48 Hz sample rate so the 7.8 kHz
 // render ISR never performs a (software) division.
@@ -129,6 +148,7 @@ uint8_t cfg_jolt_deadzone = JOLT_DEADZONE;
 uint8_t cfg_charge_divisor = MOTION_CHARGE_SCALE_DIVISOR;
 uint8_t cfg_charge_start = MOTION_CHARGE_START;
 uint8_t cfg_charge_burst = MOTION_CHARGE_BURST;
+uint8_t cfg_click_ths = CLICK_THS_DEFAULT;
 volatile uint8_t still_mode = 1;
 volatile uint8_t pwm_scan_led = 0;
 volatile uint8_t pwm_scan_bank = 0;
@@ -231,6 +251,17 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   }
 
   time_ticks++;
+
+  // 48 Hz frame clock, independent of the main loop: paces the solid-mode
+  // breathing and timestamps click pulses for double-tap pairing.
+  static uint16_t frame_div = 0;
+  if (++frame_div >= ACCEL_SAMPLE_TICKS) {
+    frame_div = 0;
+    isr_frames++;
+    if (display_mode) {
+      solid_frames++;
+    }
+  }
 
   uint8_t led_to_light = nextPwmScanLed();
 
@@ -442,8 +473,7 @@ void main(void) {
   }
 
   // Reload the initialization since it might have failed previously with the old address
-  accel_write_reg(0x20, 0x47); 
-  accel_write_reg(0x23, 0x80);
+  accelConfig();
   printAccelConfig("boot");
 
   // Enable Ultra-Low Power (disables internal references when halted)
@@ -525,8 +555,7 @@ void main(void) {
 
       // Ensure initAccel is called to refresh configuration if I2C was disrupted
       initAccel();
-      accel_write_reg(0x20, 0x47);
-      accel_write_reg(0x23, 0x80);
+      accelConfig();
       printAccelConfig("wake");
       
       energy = 0;
@@ -549,6 +578,58 @@ void main(void) {
 
       if (!sleep) {
         pollUartCmd();
+
+        // Each hardware-validated tap raises INT1 (PD4). Two taps between
+        // ~83 ms and ~500 ms apart (4-24 frames at 48 Hz) form a double-tap
+        // and toggle the display mode, in both modes. CLICK_SRC is read to
+        // report which axis fired and release the latch.
+        static uint8_t int1_prev = 0;
+        uint8_t int1_now = (sfr_PORTD.IDR.byte & PIN4) ? 1 : 0;
+        if (int1_now && !int1_prev) {
+          static uint8_t last_click_frame = 0;
+          static uint8_t click_armed = 0;
+          uint8_t click_src = accel_read_reg(0x39);
+          uint8_t delta = (uint8_t)(isr_frames - last_click_frame);
+          last_click_frame = isr_frames;
+#if ACCEL_DIAGNOSTICS
+          printf("CLICK src=0x%02X dt=%u armed=%u\r\n", click_src, delta, click_armed);
+#else
+          (void)click_src;
+#endif
+          if (click_armed && delta >= 4 && delta <= 24) {
+            click_armed = 0;
+            if (display_mode) {
+              exitSolidMode();
+            } else {
+              enterSolidMode();
+            }
+          } else {
+            click_armed = 1;
+          }
+        }
+        int1_prev = int1_now;
+      }
+
+      if (!sleep && display_mode) {
+        // Solid breathing mode: the accelerometer's data registers are not
+        // polled; the breathing advances on frame pulses from the render ISR.
+        if (solid_frames > 0) {
+          solid_frames--;
+          solid_breath_tick++;
+          if (solid_breath_tick >= 240) {
+            solid_breath_tick = 0;
+          }
+          solid_breath = sleep_breath_lut[(uint8_t)(((uint16_t)solid_breath_tick * 64) / 240)];
+#if ACCEL_DIAGNOSTICS
+          static uint8_t solid_diag = 0;
+          if (++solid_diag >= 48) {
+            solid_diag = 0;
+            printf("SOLID breath=%u tick=%u int1=%u\r\n", solid_breath, solid_breath_tick,
+                   (uint8_t)((sfr_PORTD.IDR.byte & PIN4) ? 1 : 0));
+          }
+#endif
+        }
+        continue;
       }
 
       if (!sleep && (++accel_tick >= ACCEL_SAMPLE_TICKS)) {
@@ -585,6 +666,13 @@ accel_read_ok:
         ry_prev = ry;
         rz_prev = rz;
 
+        // First sample after returning from the unpolled solid mode: the
+        // prev values are stale, so the delta is meaningless. Discard it.
+        if (jolt_skip) {
+          jolt_skip = 0;
+          jolt = 0;
+        }
+
         // Apply a deadzone to filter sensor noise when still.
         int16_t active_jolt = 0;
         if (jolt > cfg_jolt_deadzone) {
@@ -612,30 +700,6 @@ accel_read_ok:
         if (next_energy > 255) next_energy = 255;
         energy = (uint8_t)next_energy;
         still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= cfg_charge_start);
-
-        // 2b. Double-tap: two isolated jolt spikes within the window, with
-        // no sustained motion between (charge stays low during taps but
-        // builds past 12 while shaking), toggle the display mode. The tap
-        // energy is swallowed so the switch reads as deliberate, not as a
-        // motion wake-up.
-        static uint8_t tap_window = 0;
-        static uint8_t tap_refractory = 0;
-        if (tap_refractory > 0) {
-          tap_refractory--;
-        } else if (active_jolt > TAP_JOLT_MIN && motion_charge < 12) {
-          if (tap_window > 0) {
-            display_mode ^= 1;
-            tap_window = 0;
-            motion_charge = 0;
-            energy = 0;
-          } else {
-            tap_window = TAP_WINDOW_SAMPLES;
-          }
-          tap_refractory = TAP_GAP_SAMPLES;
-        }
-        if (tap_window > 0) {
-          tap_window--;
-        }
 
         // Precompute the ISR's render parameters here at 48 Hz so the
         // 7.8 kHz ISR does table lookups and shifts only, no division.
@@ -775,34 +839,6 @@ accel_read_ok:
         // maximum. No oscillating modulation.
         breathing_brightness = 2 + (uint8_t)(((uint16_t)energy * 30) / 255);
 
-        // 5b. Sleep breathing for the solid ring mode, in the style of the
-        // Apple sleep indicator: cosine ease up over ~1.9 s, a barely
-        // perceptible hold at the peak, then a slower ~2.9 s ease back
-        // down, lingering at a dim floor of 1 (never off, never a blink -
-        // zero slope at both extremes). 240 samples at 48 Hz = 5.0 s per
-        // cycle, i.e. 12 breaths per minute. Values are perceptual 1-32;
-        // the gamma LUT in the ISR makes the fade eye-linear, and the
-        // dithered PWM keeps every intermediate level flicker-free.
-        static const uint8_t sleep_breath_lut[64] = {
-           1,  1,  1,  2,  3,  4,  5,  6,
-           8, 10, 11, 13, 15, 17, 19, 21,
-          22, 24, 26, 27, 28, 30, 31, 31,
-          32, 32, 32, 32, 32, 31, 31, 31,
-          30, 29, 28, 28, 27, 26, 25, 24,
-          22, 21, 20, 19, 18, 16, 15, 14,
-          12, 11, 10,  9,  8,  7,  6,  5,
-           4,  3,  3,  2,  2,  1,  1,  1
-        };
-        static uint8_t solid_breath_tick = 0;
-        if (display_mode) {
-          solid_breath_tick++;
-          if (solid_breath_tick >= 240) {
-            solid_breath_tick = 0;
-          }
-          solid_breath = sleep_breath_lut[(uint8_t)(((uint16_t)solid_breath_tick * 64) / 240)];
-        } else {
-          solid_breath_tick = 0; // each entry into the mode starts at the dim floor
-        }
 
 #if ACCEL_DIAGNOSTICS
         accel_diag_tick++;
@@ -1018,8 +1054,7 @@ void resetAccelBus(void) {
   for(uint16_t i=0; i<1000; i++) NOP();
 
   initAccel();
-  accel_write_reg(0x20, 0x47);
-  accel_write_reg(0x23, 0x80);
+  accelConfig();
 }
 
 uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
@@ -1095,6 +1130,41 @@ void initAccel(void) {
   for(uint16_t i=0; i<10000; i++) NOP();
 }
 
+// One-stop sensor configuration, called at boot, after wake, and by the
+// bus recovery path: 400 Hz low-power ODR (fast enough for the hardware
+// click engine to time real taps; raw polling stays at 48 Hz and just
+// reads fresher samples), plus the double-click engine routed to INT1
+// (PD4). Click time units are 1/400 s.
+void accelConfig(void) {
+  accel_write_reg(0x20, 0x7F); // CTRL1: 400 Hz low-power, XYZ enabled
+  accel_write_reg(0x23, 0x80); // CTRL4: block data update
+  // Single-click on all axes, paired into a double-tap by the MCU (below):
+  // this clone's CLICK_CFG drops the Z double-click bit (0x2A reads back
+  // 0x0A), and face taps on the earring are almost purely Z. The hardware
+  // still time-gates each tap via TIME_LIMIT; only the pairing is ours.
+  accel_write_reg(0x38, 0x15); // CLICK_CFG: single-click on X, Y and Z
+  accel_write_reg(0x3A, cfg_click_ths); // CLICK_THS ('c' command tunes live)
+  accel_write_reg(0x3B, 0x10); // TIME_LIMIT: shock must end within ~40 ms
+  accel_write_reg(0x3C, 0x20); // TIME_LATENCY: ~80 ms debounce after 1st tap
+  accel_write_reg(0x3D, 0x60); // TIME_WINDOW: 2nd tap within ~240 ms
+  accel_write_reg(0x22, 0x80); // CTRL3: route click interrupt to INT1
+}
+
+// ---- Solid mode transitions ----
+// The click engine is always armed, so switching modes is pure display
+// state; the sensor keeps running identically in both.
+void enterSolidMode(void) {
+  solid_breath_tick = 0;   // every entry starts at the dim floor
+  solid_frames = 0;
+  solid_breath = 1;
+  display_mode = 1;
+}
+
+void exitSolidMode(void) {
+  jolt_skip = 1;           // first polled delta is against stale prevs
+  display_mode = 0;
+}
+
 // ---- Live tuning shell ----
 // Newline-terminated single-letter commands over the UART:
 //   d<n>  jolt deadzone      s<n>  charge scale divisor
@@ -1104,8 +1174,13 @@ void initAccel(void) {
 #define CFG_MAGIC 0xA5
 
 void printCfg(void) {
-  printf("cfg d=%u s=%u t=%u b=%u\r\n", cfg_jolt_deadzone, cfg_charge_divisor,
-         cfg_charge_start, cfg_charge_burst);
+  printf("cfg d=%u s=%u t=%u b=%u c=%u\r\n", cfg_jolt_deadzone, cfg_charge_divisor,
+         cfg_charge_start, cfg_charge_burst, cfg_click_ths);
+  // Readback of the click-engine registers: a clone that doesn't implement
+  // them typically reads back 0x00 regardless of what was written.
+  printf("clickregs ctrl3=0x%02X cfg=0x%02X ths=0x%02X lim=0x%02X src=0x%02X\r\n",
+         accel_read_reg(0x22), accel_read_reg(0x38), accel_read_reg(0x3A),
+         accel_read_reg(0x3B), accel_read_reg(0x39));
 }
 
 void cfgLoad(void) {
@@ -1116,6 +1191,9 @@ void cfgLoad(void) {
   cfg_charge_divisor = CFG_EEPROM[2] ? CFG_EEPROM[2] : 1;
   cfg_charge_start = CFG_EEPROM[3];
   cfg_charge_burst = CFG_EEPROM[4];
+  if (CFG_EEPROM[5] != 0xFF && (CFG_EEPROM[5] & 0x7F) != 0) {
+    cfg_click_ths = CFG_EEPROM[5] & 0x7F; // erased/zero cell: keep default
+  }
 }
 
 static void cfgWriteByte(volatile uint8_t *addr, uint8_t val) {
@@ -1142,6 +1220,7 @@ void cfgSave(void) {
   cfgWriteByte(&CFG_EEPROM[2], cfg_charge_divisor);
   cfgWriteByte(&CFG_EEPROM[3], cfg_charge_start);
   cfgWriteByte(&CFG_EEPROM[4], cfg_charge_burst);
+  cfgWriteByte(&CFG_EEPROM[5], cfg_click_ths);
   cfgWriteByte(&CFG_EEPROM[0], CFG_MAGIC);
   sfr_FLASH.IAPSR.DUL = 0; // relock
   printf("saved\r\n");
@@ -1157,6 +1236,9 @@ void pollUartCmd(void) {
   char c = sfr_USART1.DR.byte;
 
   if (c != '\r' && c != '\n') {
+    if (c < ' ' || c > '~') {
+      return; // line noise / port-open glitch bytes: ignore
+    }
     if (len < sizeof(buf)) {
       buf[len++] = c;
     } else {
@@ -1171,7 +1253,11 @@ void pollUartCmd(void) {
   if (buf[0] == 'p' && len == 1) {
     printCfg();
   } else if (buf[0] == 'm' && len == 1) {
-    display_mode ^= 1;
+    if (display_mode) {
+      exitSolidMode();
+    } else {
+      enterSolidMode();
+    }
     printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'w' && len == 1) {
     cfgSave();
@@ -1192,6 +1278,10 @@ void pollUartCmd(void) {
         case 's': cfg_charge_divisor = v ? (uint8_t)v : 1; break;
         case 't': cfg_charge_start = (uint8_t)v; break;
         case 'b': cfg_charge_burst = (uint8_t)v; break;
+        case 'c':
+          cfg_click_ths = (uint8_t)v & 0x7F;
+          accel_write_reg(0x3A, cfg_click_ths); // applies immediately
+          break;
         default: ok = 0;
       }
     } else {
@@ -1200,7 +1290,7 @@ void pollUartCmd(void) {
     if (ok) {
       printCfg();
     } else {
-      printf("? d/s/t/b<0-255> m p w\r\n");
+      printf("? d/s/t/b/c<0-255> m p w\r\n");
     }
   }
   len = 0;
