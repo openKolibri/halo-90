@@ -87,6 +87,10 @@ void pollUartCmd(void);
 void enterSolidMode(void);
 void exitSolidMode(void);
 void accelConfig(void);
+void micPowerOn(void);
+void micPowerOff(void);
+uint8_t micBurst(uint8_t *density_out, uint8_t *spread_out);
+uint8_t micScopeFrame(void);
 
 void initUart(void);
 int putchar(int c);
@@ -130,6 +134,7 @@ volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = breathing s
 volatile uint8_t solid_breath = 1;        // Ring level in mode 1, driven by the breath curve
 volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
 volatile uint8_t solid_wake_hold = 0;     // Frames of full darkness after waking in breathing mode
+volatile uint8_t mic_warmup = 0;          // Frames until the PDM mic's modulator output is trusted
 volatile uint8_t isr_frames = 0;          // Free-running 48 Hz frame counter
 volatile uint8_t jolt_skip = 0;           // Hide the mode-exit tap from the motion pattern
 
@@ -408,6 +413,13 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
 
   uint8_t led_to_light = nextPwmScanLed();
 
+  // Scope mode: the main loop draws waveform positions directly; leaving
+  // the current LED lit between windows is what gives the POV persistence.
+  if (display_mode == 3) {
+    sfr_TIM2.SR1.UIF = 0;
+    return;
+  }
+
   // Solid ring mode: the whole ring at one level, breathing on the sleep
   // curve. Nothing else (comet, sparks, glow, fragmentation) renders.
   if (display_mode) {
@@ -664,6 +676,9 @@ void main(void) {
   while(1){
     if (sleep) {
       // -- SAFE SLEEP SHUTDOWN SEQUENCE --
+      if (display_mode >= 2) {
+        exitSolidMode(); // mic modes are bench modes: power the mic down
+      }
       disableTim2();
       ledLow(prevLed);
       
@@ -771,7 +786,56 @@ void main(void) {
         pollUartCmd();
       }
 
-      if (!sleep && display_mode) {
+      if (!sleep && display_mode == 2) {
+        // Mic VU mode: each 48 Hz frame captures one 2 ms PDM burst and
+        // maps the audio activity (density spread) onto ring brightness.
+        // Accelerometer polling continues below so double-tap still exits.
+        if (solid_frames > 0) {
+          solid_frames--;
+          uint8_t dens = 0, spread = 0;
+          uint8_t ok = micBurst(&dens, &spread);
+          if (mic_warmup > 0) {
+            mic_warmup--;      // modulator still settling: ignore output
+            solid_breath = 1;
+          } else if (ok) {
+            uint8_t level = (spread > 31) ? 31 : spread;
+            // Fast attack, slow release so speech reads as flicker-free
+            if ((uint8_t)(1 + level) > solid_breath) {
+              solid_breath = 1 + level;
+            } else if (solid_breath > 1) {
+              solid_breath--;
+            }
+          }
+#if ACCEL_DIAGNOSTICS
+          static uint8_t mic_diag = 0;
+          if (++mic_diag >= 48) {
+            mic_diag = 0;
+            printf("MIC ok=%u dens=%u spread=%u br=%u\r\n",
+                   ok, dens, spread, solid_breath);
+          }
+#endif
+        }
+      }
+
+      if (!sleep && display_mode == 3) {
+        // Oscilloscope mode: one ~18 ms drawing frame per pass, then fall
+        // through with the accel divider forced so motion sampling and the
+        // double-tap exit keep running at ~50 Hz despite the long passes.
+        uint8_t peak = micScopeFrame();
+        if (mic_warmup > 0) {
+          mic_warmup--;
+        }
+#if ACCEL_DIAGNOSTICS
+        static uint8_t scope_diag = 0;
+        if (++scope_diag >= 50) {
+          scope_diag = 0;
+          printf("SCOPE peak=%u\r\n", peak);
+        }
+#endif
+        accel_tick = ACCEL_SAMPLE_TICKS;
+      }
+
+      if (!sleep && display_mode == 1) {
         // Solid breathing mode: the ISR renders the ring, while the main loop
         // keeps polling the accelerometer so software double-tap can exit.
         if (solid_frames > 0 && solid_wake_hold > 0) {
@@ -1443,8 +1507,181 @@ void enterSolidMode(void) {
 }
 
 void exitSolidMode(void) {
+  if (display_mode >= 2) {
+    micPowerOff();
+  }
   jolt_skip = 1;
   display_mode = 0;
+}
+
+// ---- PDM microphone over SPI1 ----
+// The xlMic board routes the PDM mic onto SPI1's natural pins: PDM_CLK is
+// PB5 (SPI1_SCK) and PDM_DTA is PB7 (SPI1_MISO). Running SPI1 as a master
+// in receive-only mode turns SCK into a free-running 1 MHz PDM clock
+// (16 MHz / 16, within the mic's 1.0-3.25 MHz spec) while the mic's 1-bit
+// sigma-delta stream arrives in DR a byte at a time. Receive-only mode
+// never drives MOSI, so PB6 (charlieplex line CPX-4) is untouched.
+// No decimation filter fits this MCU comfortably; instead each burst is
+// reduced to ones-density statistics: silence sits near 50 percent density,
+// a stuck data line reads 0 or 100 percent, and audio shows up as density
+// variation between sub-blocks inside one 2 ms burst.
+
+static const uint8_t popcount_lut[256] = {
+  0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
+  1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+  1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+  2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+  1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+  2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+  2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+  3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+  1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
+  2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+  2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+  3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+  2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6,
+  3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+  3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
+  4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
+};
+
+#define MIC_SUB_BLOCK_BYTES 30  // 240 PDM bits per sub-block
+#define MIC_SUB_BLOCKS 8        // 8 sub-blocks = 1920 bits = 1.92 ms at 1 MHz
+
+void micPowerOn(void) {
+  sfr_PORTD.ODR.byte |= PIN4;   // PWR_MIC on
+  sfr_PORTB.DDR.byte &= ~PIN7;  // PDM_DTA -> MISO input, mic drives it
+  sfr_PORTB.CR1.byte &= ~PIN7;
+  sfr_PORTB.ODR.byte &= ~PIN5;  // PDM_CLK -> SCK push-pull, fast slope
+  sfr_PORTB.CR1.byte |= PIN5;
+  sfr_PORTB.CR2.byte |= PIN5;
+  sfr_PORTB.DDR.byte |= PIN5;
+
+  sfr_CLK.PCKENR1.PCKEN14 = 1;  // SPI1 clock
+  sfr_SPI1.CR1.byte = 0;
+  sfr_SPI1.CR2.byte = 0;
+  sfr_SPI1.CR2.SSM = 1;         // no NSS pin: PB4 stays a charlieplex line
+  sfr_SPI1.CR2.SSI = 1;
+  sfr_SPI1.CR2.RXONLY = 1;      // clock runs while SPE=1; MOSI never driven
+  sfr_SPI1.CR1.BR = 3;          // 16 MHz / 16 = 1 MHz
+  sfr_SPI1.CR1.MSTR = 1;
+  // Free-run the clock from power-on: PDM mics shut their modulator down
+  // whenever the clock stops and need ~ms of clocking to produce valid
+  // data again, so a gated clock reads as all-zeros. Nobody reads DR
+  // between bursts; each burst drains the overrun state first.
+  sfr_SPI1.CR1.SPE = 1;
+}
+
+void micPowerOff(void) {
+  sfr_SPI1.CR1.SPE = 0;
+  sfr_CLK.PCKENR1.PCKEN14 = 0;
+  sfr_PORTD.ODR.byte &= ~PIN4;  // PWR_MIC off
+  // Park both PDM lines driven low again (unpowered mic never contends)
+  sfr_PORTB.CR2.byte &= ~PIN5;
+  sfr_PORTB.ODR.byte &= ~(PIN5 | PIN7);
+  sfr_PORTB.CR1.byte |= (PIN5 | PIN7);
+  sfr_PORTB.DDR.byte |= (PIN5 | PIN7);
+}
+
+// One 1.92 ms PDM burst. Returns 1 on success; density_out is the mean
+// ones-count per 240-bit sub-block (silence ~120), spread_out the max-min
+// across the 8 sub-blocks (audio activity). Pauses the render ISR: bytes
+// arrive every 8 us and the 128 us render interrupt would force overruns.
+uint8_t micBurst(uint8_t *density_out, uint8_t *spread_out) {
+  uint8_t sub_ones[MIC_SUB_BLOCKS];
+  uint16_t total = 0;
+  uint16_t t;
+  uint8_t render_paused = 0;
+
+  if (sfr_TIM2.IER.UIE) {
+    render_paused = 1;
+    sfr_TIM2.IER.UIE = 0;
+    cpxAllHiZ();
+  }
+
+  // The clock has been free-running with nobody reading: clear the overrun
+  // (read DR then SR) and discard the stale byte so the stream is fresh.
+  (void)sfr_SPI1.DR.byte;
+  (void)sfr_SPI1.SR.byte;
+  (void)sfr_SPI1.DR.byte;
+
+  for (uint8_t blk = 0; blk < MIC_SUB_BLOCKS; blk++) {
+    uint16_t ones = 0;
+    for (uint8_t i = 0; i < MIC_SUB_BLOCK_BYTES; i++) {
+      t = 2000; while (!sfr_SPI1.SR.RXNE && --t);
+      if (!t) {
+        if (render_paused) { sfr_TIM2.SR1.UIF = 0; sfr_TIM2.IER.UIE = 1; }
+        return 0; // SPI never delivered: report failure, don't hang
+      }
+      ones += popcount_lut[sfr_SPI1.DR.byte];
+    }
+    sub_ones[blk] = (uint8_t)ones;
+    total += ones;
+  }
+
+  if (render_paused) {
+    sfr_TIM2.SR1.UIF = 0;
+    sfr_TIM2.IER.UIE = 1;
+  }
+
+  uint8_t mn = 255, mx = 0;
+  for (uint8_t blk = 0; blk < MIC_SUB_BLOCKS; blk++) {
+    if (sub_ones[blk] < mn) mn = sub_ones[blk];
+    if (sub_ones[blk] > mx) mx = sub_ones[blk];
+  }
+  *density_out = (uint8_t)(total / MIC_SUB_BLOCKS);
+  *spread_out = mx - mn;
+  return 1;
+}
+
+// Circular oscilloscope, replicating the master-branch analog-mic effect
+// (its ADC ISR did setLed(offset + sample) per conversion): each 192-bit
+// PDM window is one amplitude sample, drawn directly as a ring position.
+// 96 windows = ~18 ms per frame with the render ISR paused; persistence
+// of vision fuses the dots into a waveform arc whose width is loudness.
+// Returns the frame's peak deviation for diagnostics.
+uint8_t micScopeFrame(void) {
+  static uint16_t dc_q4 = 96 << 4; // slow DC tracker (~50 ms), Q4
+  uint8_t render_was_on = 0;
+  uint8_t peak = 0;
+  uint16_t t;
+
+  if (sfr_TIM2.IER.UIE) {
+    render_was_on = 1;
+    sfr_TIM2.IER.UIE = 0;
+  }
+
+  (void)sfr_SPI1.DR.byte; // drain overrun from the free-running clock
+  (void)sfr_SPI1.SR.byte;
+  (void)sfr_SPI1.DR.byte;
+
+  for (uint8_t w = 0; w < 96; w++) {
+    uint8_t ones = 0;
+    for (uint8_t i = 0; i < 24; i++) {
+      t = 2000; while (!sfr_SPI1.SR.RXNE && --t);
+      if (!t) {
+        if (render_was_on) { sfr_TIM2.SR1.UIF = 0; sfr_TIM2.IER.UIE = 1; }
+        return 0xFF; // SPI dead marker
+      }
+      ones += popcount_lut[sfr_SPI1.DR.byte];
+    }
+    dc_q4 += (uint16_t)(((int16_t)((uint16_t)ones << 4) - (int16_t)dc_q4) >> 8);
+    int16_t dev = (int16_t)ones - (int16_t)(dc_q4 >> 4);
+    if (dev > peak) peak = (uint8_t)dev;
+    else if (-dev > peak) peak = (uint8_t)(-dev);
+    if (mic_warmup == 0) {
+      int16_t led = 45 + (dev * 2); // x2 gain: full swing wraps like master's mod 90
+      while (led < 0) led += 90;
+      while (led >= 90) led -= 90;
+      setLed((uint8_t)led);
+    }
+  }
+
+  if (render_was_on) {
+    sfr_TIM2.SR1.UIF = 0;
+    sfr_TIM2.IER.UIE = 1;
+  }
+  return peak;
 }
 
 // ---- Live tuning shell ----
@@ -1540,6 +1777,49 @@ void pollUartCmd(void) {
       enterSolidMode();
     }
     printf("mode=%u\r\n", display_mode);
+  } else if (buf[0] == 'v' && len == 1) {
+    if (display_mode == 2) {
+      exitSolidMode();
+    } else {
+      if (display_mode) {
+        exitSolidMode();
+      }
+      micPowerOn();
+      solid_frames = 0;
+      solid_breath = 1;
+      mic_warmup = 24; // ~0.5 s of clocked settling before levels count
+      display_mode = 2;
+    }
+    printf("mode=%u\r\n", display_mode);
+  } else if (buf[0] == 'o' && len == 1) {
+    if (display_mode == 3) {
+      exitSolidMode();
+    } else {
+      if (display_mode) {
+        exitSolidMode();
+      }
+      micPowerOn();
+      mic_warmup = 24;
+      display_mode = 3;
+    }
+    printf("mode=%u\r\n", display_mode);
+  } else if (buf[0] == 'a' && len == 1) {
+    // One-shot mic liveness test: healthy silence sits near dens=120/240
+    // with a small spread; a stuck data line reads dens=0 or dens=240.
+    uint8_t was_on = (display_mode == 2);
+    uint8_t dens = 0, spread = 0, ok = 0;
+    if (!was_on) {
+      micPowerOn();
+    }
+    for (uint8_t i = 0; i < 25; i++) {
+      ok = micBurst(&dens, &spread); // ~50 ms of clocked warmup
+    }
+    printf(ok ? "MIC alive dens=%u/240 spread=%u\r\n"
+              : "MIC dead (SPI timeout) dens=%u spread=%u\r\n",
+           dens, spread);
+    if (!was_on) {
+      micPowerOff();
+    }
   } else if (buf[0] == 'w' && len == 1) {
     cfgSave();
     printCfg();
@@ -1567,7 +1847,7 @@ void pollUartCmd(void) {
     if (ok) {
       printCfg();
     } else {
-      printf("? d/s/t/b<0-255> g m p w\r\n");
+      printf("? d/s/t/b<0-255> g m v o a p w\r\n");
     }
   }
   len = 0;
