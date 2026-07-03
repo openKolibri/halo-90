@@ -91,6 +91,7 @@ void micPowerOn(void);
 void micPowerOff(void);
 uint8_t micBurst(uint8_t *density_out, uint8_t *spread_out);
 uint8_t micScopeFrame(void);
+uint8_t micEnvFrame(uint16_t *spread_out);
 
 void initUart(void);
 int putchar(int c);
@@ -833,6 +834,52 @@ void main(void) {
         }
 #endif
         accel_tick = ACCEL_SAMPLE_TICKS;
+      }
+
+      if (!sleep && display_mode == 4) {
+        // Bass envelope mode: per 48 Hz frame, one 8 ms capture. A slow
+        // noise-floor tracker keeps silence dark; the envelope attacks
+        // instantly and releases exponentially (~0.2 s) so beats punch
+        // and decays glide instead of flickering.
+        if (solid_frames > 0) {
+          solid_frames--;
+          uint16_t spread = 0;
+          uint8_t ok = micEnvFrame(&spread);
+          static uint16_t env_floor = 8;
+          static uint16_t envelope = 0;
+          static uint8_t floor_tick = 0;
+          if (mic_warmup > 0) {
+            mic_warmup--;
+            solid_breath = 1;
+          } else if (ok) {
+            if (spread < env_floor) {
+              env_floor = spread;       // snap down to quieter floor
+            } else if (++floor_tick >= 64) {
+              floor_tick = 0;
+              env_floor++;              // creep up slowly (~0.75/s): sustained
+                                        // music must not get eaten as "noise"
+            }
+            uint16_t sig = (spread > env_floor) ? (spread - env_floor) : 0;
+            if (sig > envelope) {
+              envelope = sig;                       // instant attack
+            } else {
+              envelope -= (envelope >> 3);          // exponential release
+              if (envelope > 0) envelope--;
+            }
+            uint16_t br = 1 + envelope; // measured: desk-distance music
+                                        // gives envelope 8-25, mapping to a
+                                        // clearly visible 9-26 of 32
+            solid_breath = (br > 32) ? 32 : (uint8_t)br;
+          }
+#if ACCEL_DIAGNOSTICS
+          static uint8_t env_diag = 0;
+          if (++env_diag >= 48) {
+            env_diag = 0;
+            printf("ENV spread=%u floor=%u env=%u br=%u\r\n",
+                   spread, env_floor, envelope, solid_breath);
+          }
+#endif
+        }
       }
 
       if (!sleep && display_mode == 1) {
@@ -1684,6 +1731,49 @@ uint8_t micScopeFrame(void) {
   return peak;
 }
 
+// Bass envelope frame: eight contiguous 1 ms sub-windows (1000 bits each).
+// The long sub-window is a strong low-pass: sigma-delta noise averages out
+// (idle spread is a few counts vs ~12 for 192-bit windows) and the 1 kHz
+// sub-window rate makes the density trace sensitive to roughly 60-500 Hz -
+// the bass/low-mid band the VU mode's 240-bit blocks are blind to. Returns
+// the peak-to-peak density spread across the 8 ms.
+uint8_t micEnvFrame(uint16_t *spread_out) {
+  uint16_t mn = 0xFFFF, mx = 0;
+  uint16_t t;
+  uint8_t render_paused = 0;
+
+  if (sfr_TIM2.IER.UIE) {
+    render_paused = 1;
+    sfr_TIM2.IER.UIE = 0;
+    cpxAllHiZ();
+  }
+
+  (void)sfr_SPI1.DR.byte; // drain overrun from the free-running clock
+  (void)sfr_SPI1.SR.byte;
+  (void)sfr_SPI1.DR.byte;
+
+  for (uint8_t w = 0; w < 8; w++) {
+    uint16_t ones = 0;
+    for (uint8_t i = 0; i < 125; i++) {
+      t = 2000; while (!sfr_SPI1.SR.RXNE && --t);
+      if (!t) {
+        if (render_paused) { sfr_TIM2.SR1.UIF = 0; sfr_TIM2.IER.UIE = 1; }
+        return 0;
+      }
+      ones += popcount_lut[sfr_SPI1.DR.byte];
+    }
+    if (ones < mn) mn = ones;
+    if (ones > mx) mx = ones;
+  }
+
+  if (render_paused) {
+    sfr_TIM2.SR1.UIF = 0;
+    sfr_TIM2.IER.UIE = 1;
+  }
+  *spread_out = mx - mn;
+  return 1;
+}
+
 // ---- Live tuning shell ----
 // Newline-terminated single-letter commands over the UART:
 //   d<n>  jolt deadzone      s<n>  charge scale divisor
@@ -1803,6 +1893,20 @@ void pollUartCmd(void) {
       display_mode = 3;
     }
     printf("mode=%u\r\n", display_mode);
+  } else if (buf[0] == 'b' && len == 1) {
+    if (display_mode == 4) {
+      exitSolidMode();
+    } else {
+      if (display_mode) {
+        exitSolidMode();
+      }
+      micPowerOn();
+      mic_warmup = 24;
+      solid_frames = 0;
+      solid_breath = 1;
+      display_mode = 4;
+    }
+    printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'a' && len == 1) {
     // One-shot mic liveness test: healthy silence sits near dens=120/240
     // with a small spread; a stuck data line reads dens=0 or dens=240.
@@ -1847,7 +1951,7 @@ void pollUartCmd(void) {
     if (ok) {
       printCfg();
     } else {
-      printf("? d/s/t/b<0-255> g m v o a p w\r\n");
+      printf("? d/s/t/b<0-255> g m v o b a p w\r\n");
     }
   }
   len = 0;
