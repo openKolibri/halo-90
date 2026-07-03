@@ -3,6 +3,8 @@
 cad*
 desktop.ini
 pcb/halo-90-backups
+pcb/.history
+pcb/.history/
 pcb/_autosave*
 firmware/build
 tools/
