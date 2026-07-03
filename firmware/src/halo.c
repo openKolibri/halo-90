@@ -40,7 +40,7 @@
 // spike; two spikes inside the window with no sustained motion toggle the
 // display mode. These values are from commit 1914966, which matched the
 // hardware timing better than the SC7A20 hardware click engine on this board.
-#define TAP_JOLT_MIN 150
+#define TAP_JOLT_MIN 110
 #define TAP_WINDOW_SAMPLES 24   // ~0.5 s to land the second tap
 #define TAP_GAP_SAMPLES 4       // ~80 ms refractory; one tap spans 1-2 samples
 #define ACCEL_SAMPLE_TICKS 163
@@ -129,6 +129,7 @@ volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down a
 volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = breathing solid ring
 volatile uint8_t solid_breath = 1;        // Ring level in mode 1, driven by the breath curve
 volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
+volatile uint8_t solid_wake_hold = 0;     // Frames of full darkness after waking in breathing mode
 volatile uint8_t isr_frames = 0;          // Free-running 48 Hz frame counter
 volatile uint8_t jolt_skip = 0;           // Hide the mode-exit tap from the motion pattern
 
@@ -712,8 +713,21 @@ void main(void) {
       solid_group_slot = 0;
       burst_life = 0;
 
+      // Waking in breathing mode: come up from true darkness. Hold the
+      // ring fully dark for ~0.5 s, then let the breath swell from the
+      // trough of the curve instead of popping in mid-cycle.
+      if (display_mode) {
+        solid_breath_phase_q4 = 0;
+        solid_breath_tick = 0;
+        solid_breath = 0;
+        solid_frames = 0;
+        solid_wake_hold = 24;
+      }
+
       enableTim2();
-      setLed(prevLed);
+      if (!display_mode) {
+        setLed(prevLed); // prime the motion display; breathing wakes from dark
+      }
       sleep = 0; 
 
     } else {
@@ -726,7 +740,13 @@ void main(void) {
       if (!sleep && display_mode) {
         // Solid breathing mode: the ISR renders the ring, while the main loop
         // keeps polling the accelerometer so software double-tap can exit.
-        if (solid_frames > 0) {
+        if (solid_frames > 0 && solid_wake_hold > 0) {
+          // Post-wake dark hold: consume frames at 0 brightness before the
+          // first breath swells up from the trough.
+          solid_frames--;
+          solid_wake_hold--;
+          solid_breath = 0;
+        } else if (solid_frames > 0) {
           uint8_t breath_rate_q4 = SOLID_BREATH_BASE_RATE_Q4 +
               (uint8_t)(((uint16_t)energy * SOLID_BREATH_ENERGY_RATE_Q4) / 255);
           uint16_t breath_cycle_q4 = (uint16_t)SOLID_BREATH_CYCLE_TICKS << 4;
@@ -879,10 +899,29 @@ accel_read_ok:
         still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= cfg_charge_start);
 
         static uint8_t tap_window = 0;
-        static uint8_t tap_refractory = 0;
+        // Starts armed-off for ~1 s: the first accelerometer reads after
+        // boot are transient garbage and can fake a double-tap.
+        static uint8_t tap_refractory = 48;
+        // A tap must rise out of quiet: continuous handling and train rumble
+        // hold active_jolt elevated across consecutive samples (calibration
+        // recording 2026-07-03: noise streams of 40-124 with the sample
+        // before also elevated), while a real tap's preceding sample is
+        // near-zero. This isolation gate is what lets the threshold sit
+        // low enough (110) to catch soft taps, which measured 124-141.
+        static int16_t prev_active_jolt = 0;
+        uint8_t rose_from_quiet = (prev_active_jolt < 30);
+#if ACCEL_DIAGNOSTICS
+        // Calibration trace: log every candidate spike, not just fires, so
+        // a serial recording shows near-misses and their timing.
+        if (active_jolt > 40) {
+          printf("TAPCAL a=%d p=%d ch=%u w=%u r=%u\r\n",
+                 (int)active_jolt, (int)prev_active_jolt, motion_charge,
+                 tap_window, tap_refractory);
+        }
+#endif
         if (tap_refractory > 0) {
           tap_refractory--;
-        } else if (active_jolt > TAP_JOLT_MIN && motion_charge < 12) {
+        } else if (active_jolt > TAP_JOLT_MIN && motion_charge < 12 && rose_from_quiet) {
           if (tap_window > 0) {
             if (display_mode) {
               exitSolidMode();
@@ -905,6 +944,7 @@ accel_read_ok:
         if (tap_window > 0) {
           tap_window--;
         }
+        prev_active_jolt = active_jolt;
 
         // Precompute the ISR's render parameters here at 48 Hz so the
         // 7.8 kHz ISR does table lookups and shifts only, no division.
@@ -1354,6 +1394,7 @@ void enterSolidMode(void) {
   solid_breath_tick = 0;   // every entry starts at the dim floor
   solid_breath_phase_q4 = 0;
   solid_frames = 0;
+  solid_wake_hold = 0;     // dark hold is only for waking from sleep
   solid_breath = 1;
   solid_group_source = 0;
   solid_group_slot = 0;
