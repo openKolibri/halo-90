@@ -14,23 +14,22 @@
 #include "STM8L151G6.h"
 
 #define LED_COUNT 90
-#define BRIGHTNESS_STEPS 16
+#define BRIGHTNESS_STEPS 32
 #define FULL_BRIGHTNESS BRIGHTNESS_STEPS
 #define SPARK_COUNT 4
 #define SCAN_STRIDE 10
 #define SCAN_BANKS 10
 #define BUBBLE_LEVEL_OFFSET 68
 #define TILT_DEADZONE 3
-#define JOLT_DEADZONE 5
+#define JOLT_DEADZONE 10
 #define STILL_ENERGY_THRESHOLD 10
 #define MOTION_CHARGE_START 18
 #define MOTION_CHARGE_BURST 70
 #define MOTION_CHARGE_DECAY 204
 #define MOTION_CHARGE_SCALE_DIVISOR 25
 #define MOTION_CHARGE_INPUT_MAX 120
-#define LED_REFRESH_TIMEOUT 2
-#define ACCEL_SAMPLE_TICKS 870
-#define SERIAL_DIAGNOSTICS 0
+#define ACCEL_SAMPLE_TICKS 163
+#define SERIAL_DIAGNOSTICS 1
 #define ACCEL_DIAGNOSTICS SERIAL_DIAGNOSTICS
 #define ACCEL_DIAG_PRINT_SAMPLES 48
 
@@ -55,6 +54,7 @@ uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
 uint8_t accel_read_reg(uint8_t reg);
 void accel_write_reg(uint8_t reg, uint8_t val);
 void printAccelConfig(const char *label);
+void resetAccelBus(void);
 
 void initUart(void);
 int putchar(int c);
@@ -117,7 +117,7 @@ uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
                      PIN2, PIN1, PIN4, PIN6, PIN5};
 
 // Global loop rate-limiting tick
-volatile uint16_t accel_tick = 0;
+volatile uint8_t accel_tick = 0;
 
 uint8_t nextPwmScanLed(void) {
   uint8_t led = pwm_scan_led;
@@ -186,7 +186,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
 
     if (ringDistance(led_to_light, burst_forward) <= 1 || ringDistance(led_to_light, burst_back) <= 1) {
-      brightness = 1;
+      brightness = FULL_BRIGHTNESS;
     }
   }
 
@@ -194,23 +194,17 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     if (spark_life[j] > 0) {
       uint8_t spark_dist = ringDistance(led_to_light, spark_pos[j]);
       if (spark_dist == 0) {
-        brightness = 1;
-      } else if (spark_dist == 1 && brightness > 2) {
-        brightness = 2;
+        brightness = FULL_BRIGHTNESS;
+      } else if (spark_dist == 1 && brightness < 24) {
+        brightness = 24;
       }
     }
   }
 
-  uint8_t glow_width = 16 - (((uint16_t)energy * 9) >> 8);
+  uint8_t glow_width = 16 - ((uint16_t)energy * 9) / 255;
   if (!still_mode && glow_dist <= glow_width) {
-    uint8_t glow_peak = 18 - (((uint16_t)energy * 14) >> 8);
-    uint8_t glow = glow_peak;
-    if (glow_dist > (glow_width >> 1)) {
-      glow >>= 1;
-    }
-    if (glow_dist > (glow_width - (glow_width >> 2))) {
-      glow >>= 1;
-    }
+    uint8_t glow_peak = 18 + (energy >> 4);
+    uint8_t glow = ((uint16_t)(glow_width - glow_dist) * glow_peak) / glow_width;
     brightness += glow;
     if (brightness > FULL_BRIGHTNESS) {
       brightness = FULL_BRIGHTNESS;
@@ -221,25 +215,17 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     uint16_t r = fast_rand();
     if ((uint8_t)r < energy) {
       uint8_t shimmer = ((r >> 8) & 0x07) + (energy >> 6);
-      if (brightness > shimmer) {
-        brightness -= shimmer;
-      } else {
-        brightness = 0;
+      brightness += shimmer;
+      if (brightness > FULL_BRIGHTNESS) {
+        brightness = FULL_BRIGHTNESS;
       }
-    }
-  }
-
-  if (!still_mode && energy > 0) {
-    uint8_t movement_cap = FULL_BRIGHTNESS - (((uint16_t)energy * (FULL_BRIGHTNESS - 1)) >> 8);
-    if (brightness > movement_cap) {
-      brightness = movement_cap;
     }
   }
 
   // Fragmentation breaks the ring as movement energy rises, while preserving the bubble core.
   if (!still_mode && energy > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
     uint8_t mask_pos = ((led_to_light * 5) + time_ticks + (energy >> 3)) & 0x1F;
-    uint8_t threshold = 28 - (((uint16_t)(energy - 36) * 23) >> 8);
+    uint8_t threshold = 28 - ((uint16_t)(energy - 36) * 20) / 219;
     if (mask_pos >= threshold) {
       brightness = 0;
     }
@@ -311,14 +297,12 @@ void main(void) {
 
   initHall();
   initAccel();
-#if SERIAL_DIAGNOSTICS
   initUart();
 
   // Add a small delay for serial console attachment
   for(uint32_t d=0; d<300000; d++) NOP();
 
   printf("\r\n--- HALO-90 Booting ---\r\n");
-#endif
 
   uint8_t found_addr = 0x00;
   for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
@@ -340,15 +324,11 @@ void main(void) {
     sfr_I2C1.SR2.byte &= ~0x04; // clear AF
     sfr_I2C1.CR2.STOP = 1;
   }
-#if SERIAL_DIAGNOSTICS
   printf("I2C Scan found: 0x%02X\r\n", found_addr);
-#endif
   if (found_addr != 0) {
       sc7a20_addr = (found_addr << 1);
   } else {
-#if SERIAL_DIAGNOSTICS
       printf("ACCEL WARN: no I2C ACK found, using default 8-bit addr 0x%02X\r\n", sc7a20_addr);
-#endif
   }
 
   // Reload the initialization since it might have failed previously with the old address
@@ -365,7 +345,7 @@ void main(void) {
   int8_t rx_prev = 0, ry_prev = 0, rz_prev = 0;
 
   // Boot timer logic explicitly to ensure consistent sequence
-  initTim2(LED_REFRESH_TIMEOUT);
+  initTim2(15);
   disableTim2();
 
   // Check initial state
@@ -401,7 +381,6 @@ void main(void) {
         CPX_PORT[k]->DDR.byte |= CPX_PIN[k];
       }
 
-#if SERIAL_DIAGNOSTICS
       // Disable UART explicitly to prevent back-powering any connected serial bridges!
       // PC3 = TX. We must disable transmitter and set pin to Output LOW or Floating to kill the 1.2mA leak.
       sfr_USART1.CR2.TEN = 0;
@@ -409,7 +388,6 @@ void main(void) {
       sfr_PORTC.ODR.byte &= ~(1<<3);
       sfr_PORTC.CR1.byte |= (1<<3);
       sfr_PORTC.DDR.byte |= (1<<3);
-#endif
 
       // Ensure EXTI flags are clear before entering halt loop
       sfr_ITC_EXTI.SR1.P0F = 1;
@@ -429,13 +407,11 @@ void main(void) {
         CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
       }
       
-#if SERIAL_DIAGNOSTICS
       // Re-enable UART TX/RX
       sfr_PORTC.DDR.byte |= (1<<3); 
       sfr_PORTC.CR1.byte |= (1<<3);
       sfr_USART1.CR2.TEN = 1;
       sfr_USART1.CR2.REN = 1;
-#endif
 
       // Ensure initAccel is called to refresh configuration if I2C was disrupted
       initAccel();
@@ -468,6 +444,10 @@ void main(void) {
         int8_t ry = ry_prev;
         int8_t rz = rz_prev;
         if (!readAccelRaw(&rx, &ry, &rz)) {
+          resetAccelBus();
+          if (readAccelRaw(&rx, &ry, &rz)) {
+            goto accel_read_ok;
+          }
 #if ACCEL_DIAGNOSTICS
           accel_fail_count++;
           accel_diag_tick++;
@@ -480,6 +460,7 @@ void main(void) {
           angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
           continue;
         }
+accel_read_ok:
 #if ACCEL_DIAGNOSTICS
         accel_ok_count++;
 #endif
@@ -533,7 +514,7 @@ void main(void) {
             else if (error < -720) error += 1440;
 
             // Spring inertia: calm motion is heavy; charged motion is tighter.
-            uint8_t spring_shift = 4 - (((uint16_t)energy * 2) >> 8);
+            uint8_t spring_shift = 4 - ((uint16_t)energy * 2) / 255;
             int16_t spring_impulse = error >> spring_shift;
             if (spring_impulse == 0 && error != 0) {
               spring_impulse = (error > 0) ? 1 : -1;
@@ -544,7 +525,7 @@ void main(void) {
             else if (angular_velocity_q4 < -120) angular_velocity_q4 = -120;
 
             // Damping moves from about 0.92 at rest to about 0.82 when charged.
-            uint8_t damping = 238 - (((uint16_t)energy * 30) >> 8);
+            uint8_t damping = 238 - ((uint16_t)energy * 30) / 255;
             angular_velocity_q4 = ((int16_t)angular_velocity_q4 * (int16_t)damping) >> 8;
         } else {
             angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
@@ -622,14 +603,11 @@ void main(void) {
         uint8_t breath_idx = (uint8_t)((uint16_t)breath_tick * 32 / 500);
         uint8_t target_br = breath_lut[breath_idx];
 
-        // Use the full 16-step PWM range when still; movement pulls this back down.
-        target_br = 4 + ((uint16_t)target_br * 12 >> 4);
+        // Keep a low base so the bubble and motion chaos are obvious.
+        target_br = 2 + (target_br >> 1);
 
-        // Scale down toward barely-on as energy rises.
-        uint16_t current_br = target_br - (((uint16_t)energy * target_br) >> 8);
-        if (!still_mode && current_br == 0) {
-          current_br = 1;
-        }
+        // Scale up toward full brightness (32/32) as energy rises.
+        uint16_t current_br = target_br + (((uint16_t)energy * (32 - target_br)) / 255);
         breathing_brightness = (uint8_t)current_br;
 
 #if ACCEL_DIAGNOSTICS
@@ -825,6 +803,18 @@ void printAccelConfig(const char *label) {
 #else
   (void)label;
 #endif
+}
+
+void resetAccelBus(void) {
+  sfr_I2C1.CR1.PE = 0;
+  sfr_I2C1.CR2.SWRST = 1;
+  for(uint16_t i=0; i<1000; i++) NOP();
+  sfr_I2C1.CR2.SWRST = 0;
+  for(uint16_t i=0; i<1000; i++) NOP();
+
+  initAccel();
+  accel_write_reg(0x20, 0x47);
+  accel_write_reg(0x23, 0x80);
 }
 
 uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {

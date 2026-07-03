@@ -3,7 +3,7 @@ BUILDDIR = build
 INCLUDEDIR = include
 
 # Use local SDCC if available, otherwise fall back to system sdcc
-LOCAL_SDCC := $(wildcard ../tools/sdcc-4.4.0/bin/sdcc)
+LOCAL_SDCC := $(firstword $(wildcard ../tools/sdcc-*/bin/sdcc))
 ifneq ($(LOCAL_SDCC),)
 LDCC ?= $(LOCAL_SDCC)
 else
@@ -26,7 +26,7 @@ clean:
 	rm -rf $(BUILDDIR)
 
 # Use local stm8flash if available
-LOCAL_STM8FLASH := $(wildcard ../tools/stm8flash/stm8flash)
+LOCAL_STM8FLASH := $(firstword $(wildcard ../tools/stm8flash/stm8flash ../tools/stm8flash-master/stm8flash))
 LOCAL_LIBUSB_DIR := $(firstword $(wildcard $(HOME)/homebrew/lib /opt/homebrew/lib /usr/local/lib))
 
 flash: $(FIRMWARE_IMAGE)
