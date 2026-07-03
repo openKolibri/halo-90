@@ -23,8 +23,8 @@
 #define TILT_DEADZONE 3
 #define JOLT_DEADZONE 10
 #define STILL_ENERGY_THRESHOLD 10
-#define MOTION_CHARGE_START 18
-#define MOTION_CHARGE_BURST 70
+#define MOTION_CHARGE_START 8
+#define MOTION_CHARGE_BURST 20
 #define MOTION_CHARGE_DECAY 204
 #define MOTION_CHARGE_SCALE_DIVISOR 25
 #define MOTION_CHARGE_INPUT_MAX 120
@@ -493,7 +493,7 @@ accel_read_ok:
         // Decays by ~0.9725 per frame (approx. (energy * 249) >> 8).
         uint16_t next_energy = ((uint16_t)energy * 249) >> 8;
         if (motion_charge > MOTION_CHARGE_START) {
-          next_energy += (motion_charge - MOTION_CHARGE_START) >> 1;
+          next_energy += motion_charge - MOTION_CHARGE_START;
         }
         if (next_energy > 255) next_energy = 255;
         energy = (uint8_t)next_energy;
