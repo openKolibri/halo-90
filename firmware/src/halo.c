@@ -181,17 +181,21 @@ volatile uint8_t spark_pos[SPARK_COUNT] = {0, 0, 0, 0};
 volatile int8_t spark_vel[SPARK_COUNT] = {0, 0, 0, 0};
 volatile uint8_t spark_life[SPARK_COUNT] = {0, 0, 0, 0};
 
-// Accelerometer SC7A20HTR (I2C)
-// SDA: PC0, SCL: PC1, INT1: PD4, INT2: PB7
+// xlMic (0v9) board pinout, extracted from pcb/halo-90.kicad_pcb:
+//   Accelerometer SC7A20HTR (I2C): SDA PC0, SCL PC1.
+//     INT1/INT2 are NOT routed to the MCU on this revision.
+//   Hall HAL2041S: OUT on PA2 (EXTI2 wake), VCC power-gated by PA3.
+//   ALR (ambient light): sense on PA5, power-gated by PA4. Unused for now.
+//   PDM microphone: CLK PB5, DATA PB7, power-gated by PD4. Unused for now.
+//   UART: TX PC3, RX PC2. SWIM pin 28. PC4-PC6 unconnected.
 
-// Hall Sensor HAL2041S
-// HALL: PD0
-
-PORT_t *CPX_PORT[] = {&sfr_PORTA, &sfr_PORTA, &sfr_PORTB, &sfr_PORTA,
-                      &sfr_PORTD, &sfr_PORTD, &sfr_PORTD, &sfr_PORTA,
-                      &sfr_PORTB, &sfr_PORTB};
-uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
-                     PIN2, PIN1, PIN4, PIN6, PIN5};
+// Charlieplex lines CPX-0..CPX-9 (net names in the PCB):
+//   0=PB2 1=PD2 2=PD1 3=PD0 4=PB6 5=PB1 6=PB0 7=PB4 8=PD3 9=PB3
+PORT_t *CPX_PORT[] = {&sfr_PORTB, &sfr_PORTD, &sfr_PORTD, &sfr_PORTD,
+                      &sfr_PORTB, &sfr_PORTB, &sfr_PORTB, &sfr_PORTB,
+                      &sfr_PORTD, &sfr_PORTB};
+uint8_t CPX_PIN[] = {PIN2, PIN2, PIN1, PIN0, PIN6,
+                     PIN1, PIN0, PIN4, PIN3, PIN3};
 
 // Global loop rate-limiting tick
 volatile uint8_t accel_tick = 0;
@@ -520,11 +524,11 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
 }
 
 // Hall Sensor ISR
-ISR_HANDLER(HALL_ISR, _EXTI0_VECTOR_) {
-  if (!(sfr_PORTD.IDR.byte & PIN0)) {
+ISR_HANDLER(HALL_ISR, _EXTI2_VECTOR_) {
+  if (!(sfr_PORTA.IDR.byte & PIN2)) {
     sleep = 1; // Trigger main loop to sequence a safe shutdown
   }
-  sfr_ITC_EXTI.SR1.P0F = 1; // Clear interrupt flag
+  sfr_ITC_EXTI.SR1.P2F = 1; // Clear interrupt flag
   return;
 }
 
@@ -574,6 +578,17 @@ void main(void) {
     CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
   }
   cpx_group_enabled = cpxLayoutSafe();
+
+  // Unused xlMic peripherals held off and quiet (awake and asleep):
+  // mic power gate PD4 low, PDM_CLK PB5 / PDM_DTA PB7 driven low (the
+  // unpowered mic never contends), ALR power gate PA4 low and its sense
+  // node PA5 driven low while unpowered. No pin is left floating.
+  sfr_PORTD.ODR.byte &= ~PIN4;
+  sfr_PORTD.DDR.byte |= PIN4;
+  sfr_PORTB.ODR.byte &= ~(PIN5 | PIN7);
+  sfr_PORTB.DDR.byte |= (PIN5 | PIN7);
+  sfr_PORTA.ODR.byte &= ~(PIN4 | PIN5);
+  sfr_PORTA.DDR.byte |= (PIN4 | PIN5);
 
   initHall();
   initAccel();
@@ -631,7 +646,7 @@ void main(void) {
   disableTim2();
 
   // Check initial state
-  if (!(sfr_PORTD.IDR.byte & PIN0)) {
+  if (!(sfr_PORTA.IDR.byte & PIN2)) {
     sleep = 1;
   } else {
     enableTim2();
@@ -671,38 +686,32 @@ void main(void) {
       sfr_PORTC.CR1.byte |= (1<<3);
       sfr_PORTC.DDR.byte |= (1<<3);
 
-      // Accel interrupt pins PD4 (INT1) and PB7 (INT2) are floating inputs:
-      // the powered-down sensor leaves its INT pads undriven, and a floating
-      // input's Schmitt stage draws crossbar current at intermediate levels,
-      // easily microamps - more than the entire halt budget. Drive them low
-      // for the duration of the halt (CTRL3 = 0x00, so the sensor never
-      // contends); restored to inputs on wake.
-      sfr_PORTD.ODR.byte &= ~PIN4;
-      sfr_PORTD.CR1.byte |= PIN4;
-      sfr_PORTD.DDR.byte |= PIN4;
-      sfr_PORTB.ODR.byte &= ~PIN7;
-      sfr_PORTB.CR1.byte |= PIN7;
-      sfr_PORTB.DDR.byte |= PIN7;
+      // On this board the accel INT pins are not routed to the MCU. The
+      // mic (PWR_MIC PD4, PDM PB5/PB7) and ALR (ALR_PWR PA4, sense PA5)
+      // rails are held off / driven low permanently from boot, so nothing
+      // floats here. HALL_PWR (PA3) stays high through HALT - the hall
+      // sensor is the wake source and GPIO state is retained in halt.
 
       // Sleep power budget with this configuration (typical, 25 C, 3.0 V):
       //   STM8L151 HALT, ULP=1 (internal ref off), Flash/EEPROM power-down:
       //     ~0.35 uA
       //   SC7A20 power-down (CTRL1 = 0x00):              ~0.5 uA
-      //   Hall switch (always on - it is the wake source): ~1-2 uA class
+      //   Hall switch (powered via PA3 - the wake source): ~1-2 uA class
+      //   Mic and ALR power-gated off:                     ~0 uA
       //   GPIO leakage with every pin driven or pulled:   <0.1 uA
       //   => ~0.9 uA for MCU + accel; ~2-3 uA system with the hall sensor.
       // I2C pull-ups (PC0/PC1) stay enabled: both lines idle high against
       // the sensor's high-Z pads, so they carry no static current. UART RX
       // (PC2) keeps its pull-up for a defined level with no bridge attached.
-      // Wake is the PD0 EXTI edge from the hall output; no clocks run in HALT.
+      // Wake is the PA2 EXTI2 edge from the hall output; no clocks run in HALT.
 
       // Ensure EXTI flags are clear before entering halt loop
-      sfr_ITC_EXTI.SR1.P0F = 1;
+      sfr_ITC_EXTI.SR1.P2F = 1;
 
       // Enter ultra-low power HALT tightly while magnetic field is present (debounce-loop)
-      while (!(sfr_PORTD.IDR.byte & PIN0)) {
-        sfr_ITC_EXTI.SR1.P0F = 1; 
-        ENTER_HALT(); 
+      while (!(sfr_PORTA.IDR.byte & PIN2)) {
+        sfr_ITC_EXTI.SR1.P2F = 1;
+        ENTER_HALT();
       }
       
       // -- WE WAKE UP HERE AFTER EXTI AND PADDING (Magnet Removed) --
@@ -714,12 +723,6 @@ void main(void) {
         CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
       }
       
-      // Restore the accel interrupt pins to floating inputs
-      sfr_PORTD.DDR.byte &= ~PIN4;
-      sfr_PORTD.CR1.byte &= ~PIN4;
-      sfr_PORTB.DDR.byte &= ~PIN7;
-      sfr_PORTB.CR1.byte &= ~PIN7;
-
       // Re-enable UART TX/RX
       sfr_PORTC.DDR.byte |= (1<<3);
       sfr_PORTC.CR1.byte |= (1<<3);
@@ -1164,12 +1167,19 @@ void disableTim2(void){
 }
 
 void initHall(void){
-  // Hall sensor on PD0
-  sfr_PORTD.DDR.byte &= ~PIN0; // Input
-  sfr_PORTD.CR1.byte |= PIN0;  // Pull-up
-  sfr_PORTD.CR2.byte |= PIN0;  // Interrupt enabled
-  
-  sfr_ITC_EXTI.CR1.P0IS = 3;   // Rising and falling edges
+  // HALL_PWR (PA3) high: the hall sensor is GPIO power-gated on this board
+  // and must stay powered through HALT - it is the wake source. GPIO state
+  // is retained in halt, so this costs only the sensor's own current.
+  sfr_PORTA.ODR.byte |= PIN3;
+  sfr_PORTA.CR1.byte |= PIN3;
+  sfr_PORTA.DDR.byte |= PIN3;
+
+  // Hall output on PA2
+  sfr_PORTA.DDR.byte &= ~PIN2; // Input
+  sfr_PORTA.CR1.byte |= PIN2;  // Pull-up
+  sfr_PORTA.CR2.byte |= PIN2;  // Interrupt enabled
+
+  sfr_ITC_EXTI.CR1.P2IS = 3;   // Rising and falling edges
 }
 
 // The previous LED *MUST* be tuned off before lighting another
