@@ -19,7 +19,10 @@
 #define SPARK_COUNT 4
 #define SCAN_STRIDE 10
 #define SCAN_BANKS 10
-#define BUBBLE_LEVEL_OFFSET 68
+// Rotates the atan2 gravity vector onto the earring's lowest LED, so the
+// comet rests at the bottom of the hoop (was 68 = topmost, bubble-style).
+#define BUBBLE_LEVEL_OFFSET 23
+#define COMET_TAIL 8
 #define TILT_DEADZONE 3
 #define JOLT_DEADZONE 10
 #define STILL_ENERGY_THRESHOLD 10
@@ -91,6 +94,8 @@ volatile int16_t halo_angle_q4 = 0;       // Q4 angular position (0 to 1439)
 volatile int16_t angular_velocity_q4 = 0; // Q4 angular velocity
 volatile uint8_t time_ticks = 0;          // Dynamic mask reference counter
 volatile uint8_t breathing_brightness = 2; // PWM duty cycle (0 to 32)
+volatile int8_t comet_dir = 1;            // Last direction of travel; tail trails behind it
+volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the comet on settle
 volatile uint8_t still_mode = 1;
 volatile uint8_t pwm_scan_led = 0;
 volatile uint8_t pwm_scan_bank = 0;
@@ -168,8 +173,36 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   time_ticks++;
 
   uint8_t led_to_light = nextPwmScanLed();
-  uint8_t brightness = breathing_brightness;
+  uint8_t brightness;
   uint8_t glow_dist = ringDistance(led_to_light, base_led);
+
+  if (still_mode) {
+    // Comet resting at the low point: steady bright head (no breathing),
+    // tail fading behind the direction of travel.
+    brightness = 0;
+    if (glow_dist == 0) {
+      brightness = FULL_BRIGHTNESS;
+    } else if (glow_dist <= COMET_TAIL) {
+      uint8_t fwd = (led_to_light >= base_led)
+                        ? (led_to_light - base_led)
+                        : (led_to_light + LED_COUNT - base_led);
+      uint8_t on_tail = (comet_dir > 0) ? (fwd >= LED_COUNT - COMET_TAIL)
+                                        : (fwd <= COMET_TAIL);
+      if (on_tail) {
+        brightness = ((uint16_t)FULL_BRIGHTNESS * (COMET_TAIL + 1 - glow_dist)) / (COMET_TAIL + 1);
+      } else if (glow_dist == 1) {
+        brightness = FULL_BRIGHTNESS >> 2; // faint nose on the leading side
+      }
+    }
+    // Settling drain: the LEDs that were lit when motion stopped stay on and
+    // the arc boundary slides down both sides into the comet, one LED per
+    // sample, so the mode hand-off is a continuous collapse instead of a cut.
+    if (brightness == 0 && glow_dist <= settle_extent) {
+      brightness = 2;
+    }
+  } else {
+    brightness = breathing_brightness;
+  }
 
   if (!still_mode && burst_life > 0) {
     uint8_t burst_forward = burst_pos + burst_radius;
@@ -190,7 +223,9 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
   }
 
-  for (uint8_t j = 0; !still_mode && j < SPARK_COUNT; j++) {
+  // Sparks render in both modes: orbiting embers when charged, falling
+  // points and jolt dust when still.
+  for (uint8_t j = 0; j < SPARK_COUNT; j++) {
     if (spark_life[j] > 0) {
       uint8_t spark_dist = ringDistance(led_to_light, spark_pos[j]);
       if (spark_dist == 0) {
@@ -537,6 +572,10 @@ accel_read_ok:
 
         base_led = (uint8_t)(halo_angle_q4 >> 4);
 
+        // Track travel direction so the comet tail trails behind the motion.
+        if (angular_velocity_q4 > 4) comet_dir = 1;
+        else if (angular_velocity_q4 < -4) comet_dir = -1;
+
         // 4. Update Burst and Orbiting Sparks Positions
         if (burst_life > 0) {
           burst_life--;
@@ -560,55 +599,56 @@ accel_read_ok:
           }
         }
 
-        if (energy > 32) {
-          for (uint8_t j = 0; j < SPARK_COUNT; j++) {
-            if (spark_life[j] > 0) {
-              if (spark_vel[j] > 0) {
-                spark_pos[j]++;
-                if (spark_pos[j] >= LED_COUNT) {
-                  spark_pos[j] = 0;
-                }
-              } else if (spark_pos[j] == 0) {
-                spark_pos[j] = LED_COUNT - 1;
-              } else {
-                spark_pos[j]--;
+        for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+          if (spark_life[j] > 0) {
+            if (spark_vel[j] > 0) {
+              spark_pos[j]++;
+              if (spark_pos[j] >= LED_COUNT) {
+                spark_pos[j] = 0;
               }
-              spark_life[j]--;
-            } else if (energy > 96) {
-              uint16_t sr = safe_rand();
-              if ((sr & 0x0F) == 0) {
-                spark_pos[j] = base_led;
-                spark_vel[j] = (sr & 1) ? 1 : -1;
-                spark_life[j] = 10 + ((sr >> 8) & 15); // lifetime in 20ms steps
-              }
+            } else if (spark_pos[j] == 0) {
+              spark_pos[j] = LED_COUNT - 1;
+            } else {
+              spark_pos[j]--;
+            }
+            spark_life[j]--;
+          } else if (energy > 96) {
+            uint16_t sr = safe_rand();
+            if ((sr & 0x0F) == 0) {
+              spark_pos[j] = base_led;
+              spark_vel[j] = (sr & 1) ? 1 : -1;
+              spark_life[j] = 10 + ((sr >> 8) & 15); // lifetime in 20ms steps
             }
           }
         }
 
-        // 5. Update Breathing - cosine LUT sine wave, 5-second period.
-        // The derivative is 0 at both extremes, so it lingers at dim and bright.
-        static const uint8_t breath_lut[32] = {
-          // (1-cos(2*pi*i/32))/2 * 16, i=0..31
-           0,  0,  1,  1,  2,  4,  5,  6,
-           8, 10, 11, 12, 14, 15, 15, 16,
-          16, 16, 15, 15, 14, 12, 11, 10,
-           8,  6,  5,  4,  2,  1,  1,  0
-        };
+        // 4b. Settling into stillness: the ring that was lit when motion
+        // stopped drains into the low point. The lit arc starts at the full
+        // half-ring and its boundary falls one LED per sample down both
+        // sides until only the comet remains.
+        if (!still_mode) {
+          settle_extent = LED_COUNT / 2;
+        } else if (settle_extent > 0) {
+          settle_extent--;
+        }
 
-        static uint16_t breath_tick = 0;
-        breath_tick++;
-        if (breath_tick >= 500) breath_tick = 0;
+        // Spark dust: a sharp jolt while settled kicks a short-lived ember
+        // off the comet, trailing behind its direction of travel.
+        if (still_mode && active_jolt > 8) {
+          for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+            if (spark_life[j] == 0) {
+              spark_pos[j] = base_led;
+              spark_vel[j] = -comet_dir;
+              spark_life[j] = 4 + ((uint8_t)active_jolt & 7);
+              break;
+            }
+          }
+        }
 
-        // Map 0-499 to 0-31 LUT index
-        uint8_t breath_idx = (uint8_t)((uint16_t)breath_tick * 32 / 500);
-        uint8_t target_br = breath_lut[breath_idx];
-
-        // Keep a low base so the bubble and motion chaos are obvious.
-        target_br = 2 + (target_br >> 1);
-
-        // Scale up toward full brightness (32/32) as energy rises.
-        uint16_t current_br = target_br + (((uint16_t)energy * (32 - target_br)) / 255);
-        breathing_brightness = (uint8_t)current_br;
+        // 5. Base ring brightness follows energy directly: a dim floor when
+        // barely moving, scaling smoothly to full (32/32) at the solid-ring
+        // maximum. No oscillating modulation.
+        breathing_brightness = 2 + (uint8_t)(((uint16_t)energy * 30) / 255);
 
 #if ACCEL_DIAGNOSTICS
         accel_diag_tick++;
