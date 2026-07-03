@@ -19,6 +19,10 @@
 #define SPARK_COUNT 4
 #define SCAN_STRIDE 10
 #define SCAN_BANKS 10
+#define CPX_LINE_COUNT 10
+#define GROUP_MAX_SINKS 3
+#define GROUP_SLOTS 3
+#define GROUP_BRIGHTNESS_MAX BRIGHTNESS_STEPS
 // Rotates the atan2 gravity vector onto the earring's lowest LED, so the
 // comet rests at the bottom of the hoop (was 68 = topmost, bubble-style).
 #define BUBBLE_LEVEL_OFFSET 23
@@ -47,6 +51,11 @@
 void setLed(uint8_t led);
 void ledHigh(uint8_t led);
 void ledLow(uint8_t led);
+void cpxAllHiZ(void);
+uint8_t cpxLayoutSafe(void);
+uint8_t cpxGroupSafe(uint8_t high, uint16_t low_mask);
+uint8_t driveCpxGroup(uint8_t high, uint16_t low_mask);
+void renderSolidGroup(uint8_t brightness);
 uint16_t fast_rand(void);
 uint16_t safe_rand(void);
 uint8_t nextPwmScanLed(void);
@@ -153,6 +162,10 @@ volatile uint8_t still_mode = 1;
 volatile uint8_t pwm_scan_led = 0;
 volatile uint8_t pwm_scan_bank = 0;
 volatile uint8_t pwm_phase = 0;
+volatile uint8_t solid_group_source = 0;
+volatile uint8_t solid_group_slot = 0;
+volatile uint8_t cpx_group_enabled = 1;
+volatile uint16_t cpx_unsafe_group_blocks = 0;
 volatile uint8_t burst_pos = 0;
 volatile uint8_t burst_radius = 0;
 volatile uint8_t burst_life = 0;
@@ -176,6 +189,126 @@ uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
 
 // Global loop rate-limiting tick
 volatile uint8_t accel_tick = 0;
+
+void cpxAllHiZ(void) {
+  for (uint8_t k = 0; k < CPX_LINE_COUNT; k++) {
+    CPX_PORT[k]->DDR.byte &= ~CPX_PIN[k];
+    CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
+  }
+}
+
+uint8_t cpxLayoutSafe(void) {
+  for (uint8_t a = 0; a < CPX_LINE_COUNT; a++) {
+    if (CPX_PIN[a] == 0) {
+      return 0;
+    }
+    for (uint8_t b = a + 1; b < CPX_LINE_COUNT; b++) {
+      if (CPX_PORT[a] == CPX_PORT[b] && CPX_PIN[a] == CPX_PIN[b]) {
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
+
+uint8_t cpxGroupSafe(uint8_t high, uint16_t low_mask) {
+  uint8_t sinks = 0;
+
+  if (!cpx_group_enabled || high >= CPX_LINE_COUNT || low_mask == 0) {
+    return 0;
+  }
+  if (low_mask & (uint16_t)~((1u << CPX_LINE_COUNT) - 1u)) {
+    return 0;
+  }
+  if (low_mask & (uint16_t)(1u << high)) {
+    return 0;
+  }
+
+  for (uint8_t low = 0; low < CPX_LINE_COUNT; low++) {
+    if (low_mask & (uint16_t)(1u << low)) {
+      sinks++;
+      if (sinks > GROUP_MAX_SINKS) {
+        return 0;
+      }
+      if (CPX_PORT[high] == CPX_PORT[low] && CPX_PIN[high] == CPX_PIN[low]) {
+        return 0;
+      }
+    }
+  }
+
+  return sinks > 0;
+}
+
+uint8_t driveCpxGroup(uint8_t high, uint16_t low_mask) {
+  if (!cpxGroupSafe(high, low_mask)) {
+    cpx_unsafe_group_blocks++;
+    cpxAllHiZ();
+    return 0;
+  }
+
+  cpxAllHiZ();
+
+  for (uint8_t low = 0; low < CPX_LINE_COUNT; low++) {
+    if (low_mask & (uint16_t)(1u << low)) {
+      CPX_PORT[low]->ODR.byte &= ~CPX_PIN[low];
+      CPX_PORT[low]->CR1.byte |= CPX_PIN[low];
+      CPX_PORT[low]->DDR.byte |= CPX_PIN[low];
+    }
+  }
+
+  CPX_PORT[high]->ODR.byte |= CPX_PIN[high];
+  CPX_PORT[high]->CR1.byte |= CPX_PIN[high];
+  CPX_PORT[high]->DDR.byte |= CPX_PIN[high];
+  return 1;
+}
+
+void renderSolidGroup(uint8_t brightness) {
+  // One source line fans out to up to three sinks. Every LED is revisited
+  // every 30 ISR slots; full-scale uses most of the slot for a brighter peak,
+  // while the safety checks below still prevent any source/sink short state.
+  static const uint8_t pulse_lut[GROUP_BRIGHTNESS_MAX + 1] = {
+      0,  5,  7, 10, 13, 17, 21, 25,
+     30, 35, 40, 45, 50, 55, 60, 65,
+     70, 75, 80, 85, 90, 95,100,104,
+    108,112,116,119,122,125,128,131,
+    134
+  };
+  uint16_t low_mask = 0;
+  uint8_t skipped = 0;
+  uint8_t added = 0;
+  uint8_t start = solid_group_slot * GROUP_MAX_SINKS;
+
+  if (brightness > GROUP_BRIGHTNESS_MAX) {
+    brightness = GROUP_BRIGHTNESS_MAX;
+  }
+
+  for (uint8_t low = 0; low < CPX_LINE_COUNT && added < GROUP_MAX_SINKS; low++) {
+    if (low == solid_group_source) {
+      continue;
+    }
+    if (skipped >= start) {
+      low_mask |= (uint16_t)(1u << low);
+      added++;
+    }
+    skipped++;
+  }
+
+  if (brightness > 0 && driveCpxGroup(solid_group_source, low_mask)) {
+    for (uint8_t i = 0; i < pulse_lut[brightness]; i++) {
+      NOP(); NOP(); NOP(); NOP();
+    }
+  }
+  cpxAllHiZ();
+
+  solid_group_slot++;
+  if (solid_group_slot >= GROUP_SLOTS) {
+    solid_group_slot = 0;
+    solid_group_source++;
+    if (solid_group_source >= CPX_LINE_COUNT) {
+      solid_group_source = 0;
+    }
+  }
+}
 
 uint8_t nextPwmScanLed(void) {
   uint8_t led = pwm_scan_led;
@@ -268,7 +401,9 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   // Solid ring mode: the whole ring at one level, breathing on the sleep
   // curve. Nothing else (comet, sparks, glow, fragmentation) renders.
   if (display_mode) {
-    if (pwmAllows(led_to_light, gamma_lut[solid_breath])) {
+    if (cpx_group_enabled) {
+      renderSolidGroup(solid_breath);
+    } else if (pwmAllows(led_to_light, gamma_lut[solid_breath])) {
       setLed(led_to_light);
     } else {
       ledLow(prevLed);
@@ -432,6 +567,7 @@ void main(void) {
     CPX_PORT[k]->DDR.byte &= ~CPX_PIN[k];
     CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
   }
+  cpx_group_enabled = cpxLayoutSafe();
 
   initHall();
   initAccel();
@@ -567,6 +703,8 @@ void main(void) {
       pwm_scan_led = 0;
       pwm_scan_bank = 0;
       pwm_phase = 0;
+      solid_group_source = 0;
+      solid_group_slot = 0;
       burst_life = 0;
 
       enableTim2();
@@ -1157,6 +1295,8 @@ void enterSolidMode(void) {
   solid_breath_tick = 0;   // every entry starts at the dim floor
   solid_frames = 0;
   solid_breath = 1;
+  solid_group_source = 0;
+  solid_group_slot = 0;
   display_mode = 1;
 }
 
@@ -1169,6 +1309,7 @@ void exitSolidMode(void) {
 // Newline-terminated single-letter commands over the UART:
 //   d<n>  jolt deadzone      s<n>  charge scale divisor
 //   t<n>  charge start       b<n>  burst threshold
+//   g     toggle grouped solid rendering
 //   p     print config       w     persist config to data EEPROM
 #define CFG_EEPROM ((volatile uint8_t *)EEPROM_ADDR_START)
 #define CFG_MAGIC 0xA5
@@ -1176,6 +1317,8 @@ void exitSolidMode(void) {
 void printCfg(void) {
   printf("cfg d=%u s=%u t=%u b=%u c=%u\r\n", cfg_jolt_deadzone, cfg_charge_divisor,
          cfg_charge_start, cfg_charge_burst, cfg_click_ths);
+  printf("cpx group=%u max_sinks=%u blocked=%u\r\n",
+         cpx_group_enabled, GROUP_MAX_SINKS, cpx_unsafe_group_blocks);
   // Readback of the click-engine registers: a clone that doesn't implement
   // them typically reads back 0x00 regardless of what was written.
   printf("clickregs ctrl3=0x%02X cfg=0x%02X ths=0x%02X lim=0x%02X src=0x%02X\r\n",
@@ -1252,6 +1395,10 @@ void pollUartCmd(void) {
   }
   if (buf[0] == 'p' && len == 1) {
     printCfg();
+  } else if (buf[0] == 'g' && len == 1) {
+    cpx_group_enabled = cpx_group_enabled ? 0 : cpxLayoutSafe();
+    cpxAllHiZ();
+    printCfg();
   } else if (buf[0] == 'm' && len == 1) {
     if (display_mode) {
       exitSolidMode();
@@ -1290,7 +1437,7 @@ void pollUartCmd(void) {
     if (ok) {
       printCfg();
     } else {
-      printf("? d/s/t/b/c<0-255> m p w\r\n");
+      printf("? d/s/t/b/c<0-255> g m p w\r\n");
     }
   }
   len = 0;
