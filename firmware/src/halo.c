@@ -671,6 +671,31 @@ void main(void) {
       sfr_PORTC.CR1.byte |= (1<<3);
       sfr_PORTC.DDR.byte |= (1<<3);
 
+      // Accel interrupt pins PD4 (INT1) and PB7 (INT2) are floating inputs:
+      // the powered-down sensor leaves its INT pads undriven, and a floating
+      // input's Schmitt stage draws crossbar current at intermediate levels,
+      // easily microamps - more than the entire halt budget. Drive them low
+      // for the duration of the halt (CTRL3 = 0x00, so the sensor never
+      // contends); restored to inputs on wake.
+      sfr_PORTD.ODR.byte &= ~PIN4;
+      sfr_PORTD.CR1.byte |= PIN4;
+      sfr_PORTD.DDR.byte |= PIN4;
+      sfr_PORTB.ODR.byte &= ~PIN7;
+      sfr_PORTB.CR1.byte |= PIN7;
+      sfr_PORTB.DDR.byte |= PIN7;
+
+      // Sleep power budget with this configuration (typical, 25 C, 3.0 V):
+      //   STM8L151 HALT, ULP=1 (internal ref off), Flash/EEPROM power-down:
+      //     ~0.35 uA
+      //   SC7A20 power-down (CTRL1 = 0x00):              ~0.5 uA
+      //   Hall switch (always on - it is the wake source): ~1-2 uA class
+      //   GPIO leakage with every pin driven or pulled:   <0.1 uA
+      //   => ~0.9 uA for MCU + accel; ~2-3 uA system with the hall sensor.
+      // I2C pull-ups (PC0/PC1) stay enabled: both lines idle high against
+      // the sensor's high-Z pads, so they carry no static current. UART RX
+      // (PC2) keeps its pull-up for a defined level with no bridge attached.
+      // Wake is the PD0 EXTI edge from the hall output; no clocks run in HALT.
+
       // Ensure EXTI flags are clear before entering halt loop
       sfr_ITC_EXTI.SR1.P0F = 1;
 
@@ -689,8 +714,14 @@ void main(void) {
         CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
       }
       
+      // Restore the accel interrupt pins to floating inputs
+      sfr_PORTD.DDR.byte &= ~PIN4;
+      sfr_PORTD.CR1.byte &= ~PIN4;
+      sfr_PORTB.DDR.byte &= ~PIN7;
+      sfr_PORTB.CR1.byte &= ~PIN7;
+
       // Re-enable UART TX/RX
-      sfr_PORTC.DDR.byte |= (1<<3); 
+      sfr_PORTC.DDR.byte |= (1<<3);
       sfr_PORTC.CR1.byte |= (1<<3);
       sfr_USART1.CR2.TEN = 1;
       sfr_USART1.CR2.REN = 1;
