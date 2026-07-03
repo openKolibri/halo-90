@@ -13,10 +13,59 @@
 // #define __SDCC
 #include "STM8L151G6.h"
 
+#define LED_COUNT 90
+#define BRIGHTNESS_STEPS 32
+#define FULL_BRIGHTNESS BRIGHTNESS_STEPS
+#define SPARK_COUNT 4
+#define SCAN_STRIDE 10
+#define SCAN_BANKS 10
+#define CPX_LINE_COUNT 10
+#define GROUP_MAX_SINKS 3
+#define GROUP_SLOTS 3
+#define GROUP_BRIGHTNESS_MAX BRIGHTNESS_STEPS
+// Rotates the atan2 gravity vector onto the earring's lowest LED, so the
+// comet rests at the bottom of the hoop (was 68 = topmost, bubble-style).
+#define BUBBLE_LEVEL_OFFSET 23
+#define COMET_TAIL 8
+#define TILT_DEADZONE 3
+#define JOLT_DEADZONE 10
+#define STILL_ENERGY_THRESHOLD 10
+#define MOTION_CHARGE_START 8
+#define MOTION_CHARGE_BURST 20
+#define MOTION_CHARGE_DECAY 204
+#define ENERGY_DECAY_DIVISOR 183
+#define MOTION_CHARGE_SCALE_DIVISOR 25
+#define MOTION_CHARGE_INPUT_MAX 120
+// Double-tap detection on the 48 Hz jolt stream: a tap is an isolated jolt
+// spike; two spikes inside the window with no sustained motion toggle the
+// display mode. These values are from commit 1914966, which matched the
+// hardware timing better than the SC7A20 hardware click engine on this board.
+#define TAP_JOLT_MIN 110
+#define TAP_WINDOW_SAMPLES 24   // ~0.5 s to land the second tap
+#define TAP_GAP_SAMPLES 4       // ~80 ms refractory; one tap spans 1-2 samples
+#define ACCEL_SAMPLE_TICKS 163
+#define SOLID_BREATH_CYCLE_TICKS 240
+#define SOLID_BREATH_LUT_SIZE 64
+#define SOLID_BREATH_BASE_RATE_Q4 16
+#define SOLID_BREATH_ENERGY_RATE_Q4 32
+#define SERIAL_DIAGNOSTICS 1
+#define ACCEL_DIAGNOSTICS SERIAL_DIAGNOSTICS
+#define ACCEL_DIAG_PRINT_SAMPLES 48
+
 // Prototypes
 void setLed(uint8_t led);
 void ledHigh(uint8_t led);
 void ledLow(uint8_t led);
+void cpxAllHiZ(void);
+uint8_t cpxLayoutSafe(void);
+uint8_t cpxGroupSafe(uint8_t high, uint16_t low_mask);
+uint8_t driveCpxGroup(uint8_t high, uint16_t low_mask);
+void renderSolidGroup(uint8_t brightness);
+uint16_t fast_rand(void);
+uint16_t safe_rand(void);
+uint8_t nextPwmScanLed(void);
+uint8_t ringDistance(uint8_t a, uint8_t b);
+uint8_t pwmAllows(uint8_t led, uint8_t brightness);
 
 void initHall(void);
 void initTim2(uint16_t timeout);
@@ -25,23 +74,112 @@ void disableTim2(void);
 
 // Accelerometer & I2C Prototypes
 void initAccel(void);
-void readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
+uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
 uint8_t accel_read_reg(uint8_t reg);
+uint8_t accel_read_status(void);
 void accel_write_reg(uint8_t reg, uint8_t val);
+void printAccelConfig(const char *label);
+void resetAccelBus(void);
+void cfgLoad(void);
+void cfgSave(void);
+void printCfg(void);
+void pollUartCmd(void);
+void enterSolidMode(void);
+void exitSolidMode(void);
+void accelConfig(void);
 
 void initUart(void);
 int putchar(int c);
 
+// Galois LFSR for fast PRNG
+volatile uint16_t lfsr_state = 0xACE1u;
+uint16_t fast_rand(void) {
+  uint16_t lsb = lfsr_state & 1;
+  lfsr_state >>= 1;
+  if (lsb) {
+    lfsr_state ^= 0xB400u;
+  }
+  return lfsr_state;
+}
+
+uint16_t safe_rand(void) {
+  uint16_t r;
+  DISABLE_INTERRUPTS();
+  r = fast_rand();
+  ENABLE_INTERRUPTS();
+  return r;
+}
+
 // Global previousLed and POV visualizer engine
 volatile uint8_t prevLed = 0;
 volatile uint8_t sleep = 0;
-volatile int8_t led_offset = 0;
-volatile int8_t led_dir = 1;
 volatile uint8_t base_led = 0;
-volatile uint8_t led_width = 0;
-volatile uint8_t effect_mode = 0; // 0 = ARC, 1 = FLAT RING
-volatile uint8_t flat_led_idx = 0;
 volatile uint8_t sc7a20_addr = 0x30;
+
+// Balance Halo visual state variables
+volatile uint8_t energy = 0;             // Q8 energy (0 to 255)
+volatile uint8_t motion_charge = 0;      // Smoothed motion input (0 to 255)
+volatile int16_t halo_angle_q4 = 0;       // Q4 angular position (0 to 1439)
+volatile int16_t angular_velocity_q4 = 0; // Q4 angular velocity
+volatile uint8_t time_ticks = 0;          // Dynamic mask reference counter
+volatile uint8_t breathing_brightness = 2; // PWM duty cycle (0 to 32)
+volatile int8_t comet_dir = 1;            // Last direction of travel; tail trails behind it
+volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the comet on settle
+volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down after long stillness
+volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = breathing solid ring
+volatile uint8_t solid_breath = 1;        // Ring level in mode 1, driven by the breath curve
+volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
+volatile uint8_t solid_wake_hold = 0;     // Frames of full darkness after waking in breathing mode
+volatile uint8_t isr_frames = 0;          // Free-running 48 Hz frame counter
+volatile uint8_t jolt_skip = 0;           // Hide the mode-exit tap from the motion pattern
+
+// Sleep breathing curve for the solid ring, Apple-indicator style: cosine
+// ease up over ~1.9 s, near-imperceptible hold at the peak, slower ~2.9 s
+// ease back down, lingering at a dim floor of 1 (never off, never a blink -
+// zero slope at both extremes). Stepped at 48 Hz: 240 steps = 5.0 s/cycle,
+// 12 breaths per minute. Values are perceptual 1-32; the ISR's gamma LUT
+// makes the fade eye-linear and the dithered PWM keeps it flicker-free.
+static const uint8_t sleep_breath_lut[SOLID_BREATH_LUT_SIZE] = {
+   1,  1,  1,  2,  3,  4,  5,  6,
+   8, 10, 11, 13, 15, 17, 19, 21,
+  22, 24, 26, 27, 28, 30, 31, 31,
+  32, 32, 32, 32, 32, 31, 31, 31,
+  30, 29, 28, 28, 27, 26, 25, 24,
+  22, 21, 20, 19, 18, 16, 15, 14,
+  12, 11, 10,  9,  8,  7,  6,  5,
+   4,  3,  3,  2,  2,  1,  1,  1
+};
+static uint8_t solid_breath_tick = 0;     // 0-239 position in the cycle
+static uint16_t solid_breath_phase_q4 = 0; // 0-3839, allows energy-scaled speed
+
+// Render parameters precomputed at the 48 Hz sample rate so the 7.8 kHz
+// render ISR never performs a (software) division.
+volatile uint8_t glow_width_v = 16;
+volatile uint16_t glow_scale_v = (18 << 8) / 16;
+volatile uint8_t frag_threshold_v = 28;
+
+// Live-tunable motion parameters: adjustable over the UART shell and
+// persisted in data EEPROM (see pollUartCmd/cfgSave).
+uint8_t cfg_jolt_deadzone = JOLT_DEADZONE;
+uint8_t cfg_charge_divisor = MOTION_CHARGE_SCALE_DIVISOR;
+uint8_t cfg_charge_start = MOTION_CHARGE_START;
+uint8_t cfg_charge_burst = MOTION_CHARGE_BURST;
+volatile uint8_t still_mode = 1;
+volatile uint8_t pwm_scan_led = 0;
+volatile uint8_t pwm_scan_bank = 0;
+volatile uint8_t pwm_phase = 0;
+volatile uint8_t solid_group_source = 0;
+volatile uint8_t solid_group_slot = 0;
+volatile uint8_t cpx_group_enabled = 1;
+volatile uint16_t cpx_unsafe_group_blocks = 0;
+volatile uint8_t burst_pos = 0;
+volatile uint8_t burst_radius = 0;
+volatile uint8_t burst_life = 0;
+
+// Orbiting spark particles
+volatile uint8_t spark_pos[SPARK_COUNT] = {0, 0, 0, 0};
+volatile int8_t spark_vel[SPARK_COUNT] = {0, 0, 0, 0};
+volatile uint8_t spark_life[SPARK_COUNT] = {0, 0, 0, 0};
 
 // Accelerometer SC7A20HTR (I2C)
 // SDA: PC0, SCL: PC1, INT1: PD4, INT2: PB7
@@ -58,36 +196,327 @@ uint8_t CPX_PIN[] = {PIN2, PIN3, PIN3, PIN5, PIN3,
 // Global loop rate-limiting tick
 volatile uint8_t accel_tick = 0;
 
+void cpxAllHiZ(void) {
+  for (uint8_t k = 0; k < CPX_LINE_COUNT; k++) {
+    CPX_PORT[k]->DDR.byte &= ~CPX_PIN[k];
+    CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
+  }
+}
+
+uint8_t cpxLayoutSafe(void) {
+  for (uint8_t a = 0; a < CPX_LINE_COUNT; a++) {
+    if (CPX_PIN[a] == 0) {
+      return 0;
+    }
+    for (uint8_t b = a + 1; b < CPX_LINE_COUNT; b++) {
+      if (CPX_PORT[a] == CPX_PORT[b] && CPX_PIN[a] == CPX_PIN[b]) {
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
+
+uint8_t cpxGroupSafe(uint8_t high, uint16_t low_mask) {
+  uint8_t sinks = 0;
+
+  if (!cpx_group_enabled || high >= CPX_LINE_COUNT || low_mask == 0) {
+    return 0;
+  }
+  if (low_mask & (uint16_t)~((1u << CPX_LINE_COUNT) - 1u)) {
+    return 0;
+  }
+  if (low_mask & (uint16_t)(1u << high)) {
+    return 0;
+  }
+
+  for (uint8_t low = 0; low < CPX_LINE_COUNT; low++) {
+    if (low_mask & (uint16_t)(1u << low)) {
+      sinks++;
+      if (sinks > GROUP_MAX_SINKS) {
+        return 0;
+      }
+      if (CPX_PORT[high] == CPX_PORT[low] && CPX_PIN[high] == CPX_PIN[low]) {
+        return 0;
+      }
+    }
+  }
+
+  return sinks > 0;
+}
+
+uint8_t driveCpxGroup(uint8_t high, uint16_t low_mask) {
+  if (!cpxGroupSafe(high, low_mask)) {
+    cpx_unsafe_group_blocks++;
+    cpxAllHiZ();
+    return 0;
+  }
+
+  cpxAllHiZ();
+
+  for (uint8_t low = 0; low < CPX_LINE_COUNT; low++) {
+    if (low_mask & (uint16_t)(1u << low)) {
+      CPX_PORT[low]->ODR.byte &= ~CPX_PIN[low];
+      CPX_PORT[low]->CR1.byte |= CPX_PIN[low];
+      CPX_PORT[low]->DDR.byte |= CPX_PIN[low];
+    }
+  }
+
+  CPX_PORT[high]->ODR.byte |= CPX_PIN[high];
+  CPX_PORT[high]->CR1.byte |= CPX_PIN[high];
+  CPX_PORT[high]->DDR.byte |= CPX_PIN[high];
+  return 1;
+}
+
+void renderSolidGroup(uint8_t brightness) {
+  // One source line fans out to up to three sinks. Every LED is revisited
+  // every 30 ISR slots; full-scale uses most of the slot for a brighter peak,
+  // while the safety checks below still prevent any source/sink short state.
+  static const uint8_t pulse_lut[GROUP_BRIGHTNESS_MAX + 1] = {
+      0,  5,  7, 10, 13, 17, 21, 25,
+     30, 35, 40, 45, 50, 55, 60, 65,
+     70, 75, 80, 85, 90, 95,100,104,
+    108,112,116,119,122,125,128,131,
+    134
+  };
+  uint16_t low_mask = 0;
+  uint8_t skipped = 0;
+  uint8_t added = 0;
+  uint8_t start = solid_group_slot * GROUP_MAX_SINKS;
+
+  if (brightness > GROUP_BRIGHTNESS_MAX) {
+    brightness = GROUP_BRIGHTNESS_MAX;
+  }
+
+  for (uint8_t low = 0; low < CPX_LINE_COUNT && added < GROUP_MAX_SINKS; low++) {
+    if (low == solid_group_source) {
+      continue;
+    }
+    if (skipped >= start) {
+      low_mask |= (uint16_t)(1u << low);
+      added++;
+    }
+    skipped++;
+  }
+
+  if (brightness > 0 && driveCpxGroup(solid_group_source, low_mask)) {
+    for (uint8_t i = 0; i < pulse_lut[brightness]; i++) {
+      NOP(); NOP(); NOP(); NOP();
+    }
+  }
+  cpxAllHiZ();
+
+  solid_group_slot++;
+  if (solid_group_slot >= GROUP_SLOTS) {
+    solid_group_slot = 0;
+    solid_group_source++;
+    if (solid_group_source >= CPX_LINE_COUNT) {
+      solid_group_source = 0;
+    }
+  }
+}
+
+uint8_t nextPwmScanLed(void) {
+  uint8_t led = pwm_scan_led;
+
+  pwm_scan_led += SCAN_STRIDE;
+  if (pwm_scan_led >= LED_COUNT) {
+    pwm_scan_bank++;
+    if (pwm_scan_bank >= SCAN_BANKS) {
+      pwm_scan_bank = 0;
+      pwm_phase++;
+      if (pwm_phase >= BRIGHTNESS_STEPS) {
+        pwm_phase = 0;
+      }
+    }
+    pwm_scan_led = pwm_scan_bank;
+  }
+
+  return led;
+}
+
+uint8_t ringDistance(uint8_t a, uint8_t b) {
+  uint8_t diff = (a > b) ? (a - b) : (b - a);
+  if (diff > (LED_COUNT / 2)) {
+    diff = LED_COUNT - diff;
+  }
+  return diff;
+}
+
+// Bit-reversed 5-bit counter for dithered PWM. Comparing brightness against
+// the reversed phase spreads an LED's on-sweeps evenly across the 32-sweep
+// cycle instead of bunching them: half brightness becomes an 87/2 = 43 Hz
+// square wave rather than a visible 2.7 Hz blink, and every intermediate
+// level flickers at 43 Hz or faster.
+// NOTE: do not shorten the TIM2 period to raise these rates. The main loop
+// paces the 48 Hz accelerometer sampling by counting its own iterations
+// (ACCEL_SAMPLE_TICKS), and a faster ISR starves/retimes that loop - tried
+// at 48 us on 2026-07-03 and tap + motion response broke on hardware.
+static const uint8_t dither_phase[BRIGHTNESS_STEPS] = {
+   0, 16,  8, 24,  4, 20, 12, 28,
+   2, 18, 10, 26,  6, 22, 14, 30,
+   1, 17,  9, 25,  5, 21, 13, 29,
+   3, 19, 11, 27,  7, 23, 15, 31
+};
+
+// Gamma 2.2: pattern math stays perceptually linear (0-32); this LUT maps
+// it to duty so fades look even instead of crushing the bright end.
+// Nonzero inputs floor at 1 so faint tail pixels never vanish outright.
+static const uint8_t gamma_lut[BRIGHTNESS_STEPS + 1] = {
+   0,  1,  1,  1,  1,  1,  1,  1,
+   2,  2,  2,  3,  4,  4,  5,  6,
+   7,  8,  9, 10, 11, 13, 14, 15,
+  17, 19, 20, 22, 24, 26, 28, 30,
+  32
+};
+
+uint8_t pwmAllows(uint8_t led, uint8_t brightness) {
+  if (brightness >= FULL_BRIGHTNESS) {
+    return 1;
+  }
+  if (brightness == 0) {
+    return 0;
+  }
+
+  // Per-LED phase offsets keep equally bright LEDs from blinking in lockstep.
+  uint8_t phase = (pwm_phase + ((led * 13) & (BRIGHTNESS_STEPS - 1))) & (BRIGHTNESS_STEPS - 1);
+  return dither_phase[phase] < brightness;
+}
+
 ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
-  // Persistence of Vision Sweep Engine
-  if (effect_mode == 1) {
-    setLed(flat_led_idx);
-    flat_led_idx += 9;
-    if (flat_led_idx >= 90) {
-      flat_led_idx -= 89;
-      if (flat_led_idx >= 9) flat_led_idx = 0;
+  if (sleep) {
+    sfr_TIM2.SR1.UIF = 0;  // clear timer 2 interrupt flag
+    return;
+  }
+
+  time_ticks++;
+
+  // 48 Hz frame clock, independent of the main loop: paces the solid-mode
+  // breathing and the accelerometer polling cadence.
+  static uint16_t frame_div = 0;
+  if (++frame_div >= ACCEL_SAMPLE_TICKS) {
+    frame_div = 0;
+    isr_frames++;
+    if (display_mode) {
+      solid_frames++;
     }
-  } else if (led_width == 0) {
-    setLed(base_led);
-    led_offset = 0;
-    led_dir = 1;
+  }
+
+  uint8_t led_to_light = nextPwmScanLed();
+
+  // Solid ring mode: the whole ring at one level, breathing on the sleep
+  // curve. Nothing else (comet, sparks, glow, fragmentation) renders.
+  if (display_mode) {
+    if (cpx_group_enabled) {
+      renderSolidGroup(solid_breath);
+    } else if (pwmAllows(led_to_light, gamma_lut[solid_breath])) {
+      setLed(led_to_light);
+    } else {
+      ledLow(prevLed);
+    }
+    sfr_TIM2.SR1.UIF = 0;
+    return;
+  }
+
+  uint8_t brightness;
+  uint8_t glow_dist = ringDistance(led_to_light, base_led);
+
+  if (still_mode) {
+    // Comet resting at the low point: steady bright head (no breathing),
+    // tail fading behind the direction of travel.
+    // Tail falloff at full peak (32 * (9 - d) / 9), scaled by comet_peak.
+    static const uint8_t tail_lut[COMET_TAIL + 1] = {32, 28, 25, 21, 18, 14, 11, 7, 4};
+    brightness = 0;
+    if (glow_dist == 0) {
+      brightness = comet_peak;
+    } else if (glow_dist <= COMET_TAIL) {
+      uint8_t fwd = (led_to_light >= base_led)
+                        ? (led_to_light - base_led)
+                        : (led_to_light + LED_COUNT - base_led);
+      uint8_t on_tail = (comet_dir > 0) ? (fwd >= LED_COUNT - COMET_TAIL)
+                                        : (fwd <= COMET_TAIL);
+      if (on_tail) {
+        brightness = ((uint16_t)tail_lut[glow_dist] * comet_peak) >> 5;
+      } else if (glow_dist == 1) {
+        brightness = comet_peak >> 2; // faint nose on the leading side
+      }
+    }
+    // Settling drain: the LEDs that were lit when motion stopped stay on and
+    // the arc boundary slides down both sides into the comet, one LED per
+    // sample, so the mode hand-off is a continuous collapse instead of a cut.
+    if (brightness == 0 && glow_dist <= settle_extent) {
+      brightness = 2;
+    }
   } else {
-    led_offset += led_dir;
-    if (led_offset >= (int8_t)led_width) {
-      led_offset = (int8_t)led_width;
-      led_dir = -1;
-    } else if (led_offset <= -(int8_t)led_width) {
-      led_offset = -(int8_t)led_width;
-      led_dir = 1;
+    brightness = breathing_brightness;
+  }
+
+  if (!still_mode && burst_life > 0) {
+    uint8_t burst_forward = burst_pos + burst_radius;
+    uint8_t burst_back;
+
+    while (burst_forward >= LED_COUNT) {
+      burst_forward -= LED_COUNT;
     }
-    int16_t target_led = (int16_t)base_led + led_offset;
-    while (target_led < 0) target_led += 90;
-    while (target_led >= 90) target_led -= 90;
-    setLed((uint8_t)target_led);
+
+    if (burst_radius > burst_pos) {
+      burst_back = (burst_pos + LED_COUNT) - burst_radius;
+    } else {
+      burst_back = burst_pos - burst_radius;
+    }
+
+    if (ringDistance(led_to_light, burst_forward) <= 1 || ringDistance(led_to_light, burst_back) <= 1) {
+      brightness = FULL_BRIGHTNESS;
+    }
+  }
+
+  // Sparks render in both modes: orbiting embers when charged, falling
+  // points and jolt dust when still.
+  for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+    if (spark_life[j] > 0) {
+      uint8_t spark_dist = ringDistance(led_to_light, spark_pos[j]);
+      if (spark_dist == 0) {
+        brightness = FULL_BRIGHTNESS;
+      } else if (spark_dist == 1 && brightness < 24) {
+        brightness = 24;
+      }
+    }
+  }
+
+  if (!still_mode && glow_dist <= glow_width_v) {
+    uint8_t glow = (uint8_t)(((uint16_t)(glow_width_v - glow_dist) * glow_scale_v) >> 8);
+    brightness += glow;
+    if (brightness > FULL_BRIGHTNESS) {
+      brightness = FULL_BRIGHTNESS;
+    }
+  }
+
+  if (!still_mode && energy > 12) {
+    uint16_t r = fast_rand();
+    if ((uint8_t)r < energy) {
+      uint8_t shimmer = ((r >> 8) & 0x07) + (energy >> 6);
+      brightness += shimmer;
+      if (brightness > FULL_BRIGHTNESS) {
+        brightness = FULL_BRIGHTNESS;
+      }
+    }
+  }
+
+  // Fragmentation breaks the ring as movement energy rises, while preserving the bubble core.
+  if (!still_mode && energy > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
+    uint8_t mask_pos = ((led_to_light * 5) + time_ticks + (energy >> 3)) & 0x1F;
+    if (mask_pos >= frag_threshold_v) {
+      brightness = 0;
+    }
+  }
+
+  if (pwmAllows(led_to_light, gamma_lut[brightness])) {
+    setLed(led_to_light);
+  } else {
+    ledLow(prevLed);
   }
 
   sfr_TIM2.SR1.UIF = 0;  // clear timer 2 interrupt flag
-  return;
 }
 
 // Hall Sensor ISR
@@ -119,7 +548,10 @@ uint8_t fast_atan2_to_led(int8_t y, int8_t x) {
     if (y < 0) {
         a = 90 - a;
     }
-    return (uint8_t)(a % 90);
+    if (a >= LED_COUNT) {
+      a -= LED_COUNT;
+    }
+    return (uint8_t)a;
 }
 
 void main(void) {
@@ -141,6 +573,7 @@ void main(void) {
     CPX_PORT[k]->DDR.byte &= ~CPX_PIN[k];
     CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
   }
+  cpx_group_enabled = cpxLayoutSafe();
 
   initHall();
   initAccel();
@@ -150,6 +583,9 @@ void main(void) {
   for(uint32_t d=0; d<300000; d++) NOP();
 
   printf("\r\n--- HALO-90 Booting ---\r\n");
+
+  cfgLoad();
+  printCfg();
 
   uint8_t found_addr = 0x00;
   for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
@@ -174,11 +610,13 @@ void main(void) {
   printf("I2C Scan found: 0x%02X\r\n", found_addr);
   if (found_addr != 0) {
       sc7a20_addr = (found_addr << 1);
+  } else {
+      printf("ACCEL WARN: no I2C ACK found, using default 8-bit addr 0x%02X\r\n", sc7a20_addr);
   }
 
   // Reload the initialization since it might have failed previously with the old address
-  accel_write_reg(0x20, 0x47); 
-  accel_write_reg(0x23, 0x80);
+  accelConfig();
+  printAccelConfig("boot");
 
   // Enable Ultra-Low Power (disables internal references when halted)
   // Enable Flash/EEPROM power-down during HALT (Fixes the 1.2mA standby leak!)
@@ -186,12 +624,10 @@ void main(void) {
   sfr_PWR.CSR2.FWU = 1;
   sfr_FLASH.CR1.EEPM = 1;
 
-  // LPF state variables
-  static int16_t smooth_base_q4 = 0;
-  static int16_t smooth_width_q4 = 0;
+  int8_t rx_prev = 0, ry_prev = 0, rz_prev = 0;
 
   // Boot timer logic explicitly to ensure consistent sequence
-  initTim2(25);
+  initTim2(15);
   disableTim2();
 
   // Check initial state
@@ -204,10 +640,17 @@ void main(void) {
 
   ENABLE_INTERRUPTS();
 
+#if ACCEL_DIAGNOSTICS
+  uint16_t accel_ok_count = 0;
+  uint16_t accel_fail_count = 0;
+  uint8_t accel_diag_tick = 0;
+#endif
+
   while(1){
     if (sleep) {
       // -- SAFE SLEEP SHUTDOWN SEQUENCE --
       disableTim2();
+      ledLow(prevLed);
       
       // Remove PE toggle as it ruins I2C clock configuration registers!
       // Simply power down the accelerometer.
@@ -228,6 +671,31 @@ void main(void) {
       sfr_PORTC.CR1.byte |= (1<<3);
       sfr_PORTC.DDR.byte |= (1<<3);
 
+      // Accel interrupt pins PD4 (INT1) and PB7 (INT2) are floating inputs:
+      // the powered-down sensor leaves its INT pads undriven, and a floating
+      // input's Schmitt stage draws crossbar current at intermediate levels,
+      // easily microamps - more than the entire halt budget. Drive them low
+      // for the duration of the halt (CTRL3 = 0x00, so the sensor never
+      // contends); restored to inputs on wake.
+      sfr_PORTD.ODR.byte &= ~PIN4;
+      sfr_PORTD.CR1.byte |= PIN4;
+      sfr_PORTD.DDR.byte |= PIN4;
+      sfr_PORTB.ODR.byte &= ~PIN7;
+      sfr_PORTB.CR1.byte |= PIN7;
+      sfr_PORTB.DDR.byte |= PIN7;
+
+      // Sleep power budget with this configuration (typical, 25 C, 3.0 V):
+      //   STM8L151 HALT, ULP=1 (internal ref off), Flash/EEPROM power-down:
+      //     ~0.35 uA
+      //   SC7A20 power-down (CTRL1 = 0x00):              ~0.5 uA
+      //   Hall switch (always on - it is the wake source): ~1-2 uA class
+      //   GPIO leakage with every pin driven or pulled:   <0.1 uA
+      //   => ~0.9 uA for MCU + accel; ~2-3 uA system with the hall sensor.
+      // I2C pull-ups (PC0/PC1) stay enabled: both lines idle high against
+      // the sensor's high-Z pads, so they carry no static current. UART RX
+      // (PC2) keeps its pull-up for a defined level with no bridge attached.
+      // Wake is the PD0 EXTI edge from the hall output; no clocks run in HALT.
+
       // Ensure EXTI flags are clear before entering halt loop
       sfr_ITC_EXTI.SR1.P0F = 1;
 
@@ -246,69 +714,420 @@ void main(void) {
         CPX_PORT[k]->CR1.byte &= ~CPX_PIN[k];
       }
       
+      // Restore the accel interrupt pins to floating inputs
+      sfr_PORTD.DDR.byte &= ~PIN4;
+      sfr_PORTD.CR1.byte &= ~PIN4;
+      sfr_PORTB.DDR.byte &= ~PIN7;
+      sfr_PORTB.CR1.byte &= ~PIN7;
+
       // Re-enable UART TX/RX
-      sfr_PORTC.DDR.byte |= (1<<3); 
+      sfr_PORTC.DDR.byte |= (1<<3);
       sfr_PORTC.CR1.byte |= (1<<3);
       sfr_USART1.CR2.TEN = 1;
       sfr_USART1.CR2.REN = 1;
 
       // Ensure initAccel is called to refresh configuration if I2C was disrupted
       initAccel();
-      accel_write_reg(0x20, 0x47);
+      accelConfig();
+      printAccelConfig("wake");
       
+      energy = 0;
+      motion_charge = 0;
+      halo_angle_q4 = (int16_t)prevLed << 4;
+      angular_velocity_q4 = 0;
+      breathing_brightness = 2;
+      still_mode = 1;
+      pwm_scan_led = 0;
+      pwm_scan_bank = 0;
+      pwm_phase = 0;
+      solid_group_source = 0;
+      solid_group_slot = 0;
+      burst_life = 0;
+
+      // Waking in breathing mode: come up from true darkness. Hold the
+      // ring fully dark for ~0.5 s, then let the breath swell from the
+      // trough of the curve instead of popping in mid-cycle.
+      if (display_mode) {
+        solid_breath_phase_q4 = 0;
+        solid_breath_tick = 0;
+        solid_breath = 0;
+        solid_frames = 0;
+        solid_wake_hold = 24;
+      }
+
       enableTim2();
-      setLed(prevLed);
+      if (!display_mode) {
+        setLed(prevLed); // prime the motion display; breathing wakes from dark
+      }
       sleep = 0; 
 
     } else {
       WAIT_FOR_INTERRUPT();
-      
-      if (!sleep && (++accel_tick >= 100)) {
-        accel_tick = 0;
-        
-        int8_t rx, ry, rz;
-        readAccelRaw(&rx, &ry, &rz);
-        
-        uint16_t mag = abs((int16_t)rx) + abs((int16_t)ry) + abs((int16_t)rz);
-        
-        // If X and Y are low, the earring is lying flat (gravity is mostly on Z)
-        if (abs((int16_t)rx) < 15 && abs((int16_t)ry) < 15) {
-            effect_mode = 1;
-        } else {
-            effect_mode = 0;
-            
-            // Map 0 -> 2pi radially directly array mapped
-            uint8_t new_base = fast_atan2_to_led(ry, rx);
-            
-            // 180 degree shift from previous -22 offset pointing TOP, now correctly +23 to point DOWN
-            uint8_t rotated_base = (new_base + 23) % 90; 
-            
-            // Distribute visual dynamic width against violent shaking vectors
-            int16_t shake = (int16_t)mag - 64; 
-            if (shake < 0) shake = 0;
-            uint8_t new_width = shake / 3;
-            if (new_width > 20) new_width = 20; // Cap width constraints symmetrically 
 
-            // Organic Earring Smoothing Filter (Fixed Point Low-Pass LPF)
-            int16_t target_q4 = (int16_t)rotated_base << 4;
-            int16_t diff = target_q4 - smooth_base_q4;
-            
-            // Shortest path around 90-LED circle (90 * 16 = 1440)
-            if (diff > 720) diff -= 1440;
-            else if (diff < -720) diff += 1440;
-            
-            smooth_base_q4 += diff / 4; // alpha = 0.25 smooth glide
-            
-            if (smooth_base_q4 < 0) smooth_base_q4 += 1440;
-            else if (smooth_base_q4 >= 1440) smooth_base_q4 -= 1440;
-            
-            int16_t width_target_q4 = (int16_t)new_width << 4;
-            smooth_width_q4 += (width_target_q4 - smooth_width_q4) / 4;
+      if (!sleep) {
+        pollUartCmd();
+      }
 
-            // Push asynchronous execution hooks
-            base_led = (uint8_t)(smooth_base_q4 >> 4);
-            led_width = (uint8_t)(smooth_width_q4 >> 4);
+      if (!sleep && display_mode) {
+        // Solid breathing mode: the ISR renders the ring, while the main loop
+        // keeps polling the accelerometer so software double-tap can exit.
+        if (solid_frames > 0 && solid_wake_hold > 0) {
+          // Post-wake dark hold: consume frames at 0 brightness before the
+          // first breath swells up from the trough.
+          solid_frames--;
+          solid_wake_hold--;
+          solid_breath = 0;
+        } else if (solid_frames > 0) {
+          uint8_t breath_rate_q4 = SOLID_BREATH_BASE_RATE_Q4 +
+              (uint8_t)(((uint16_t)energy * SOLID_BREATH_ENERGY_RATE_Q4) / 255);
+          uint16_t breath_cycle_q4 = (uint16_t)SOLID_BREATH_CYCLE_TICKS << 4;
+          solid_frames--;
+          solid_breath_phase_q4 += breath_rate_q4;
+          while (solid_breath_phase_q4 >= breath_cycle_q4) {
+            solid_breath_phase_q4 -= breath_cycle_q4;
+          }
+          solid_breath_tick = (uint8_t)(solid_breath_phase_q4 >> 4);
+          solid_breath = sleep_breath_lut[(uint8_t)(((uint16_t)solid_breath_tick * SOLID_BREATH_LUT_SIZE) /
+                                                    SOLID_BREATH_CYCLE_TICKS)];
+#if ACCEL_DIAGNOSTICS
+          static uint8_t solid_diag = 0;
+          if (++solid_diag >= 48) {
+            solid_diag = 0;
+            printf("SOLID breath=%u tick=%u energy=%u rate=%u\r\n",
+                   solid_breath, solid_breath_tick, energy, breath_rate_q4);
+          }
+#endif
         }
+      }
+
+      if (!sleep && (++accel_tick >= ACCEL_SAMPLE_TICKS)) {
+        accel_tick = 0;
+
+        int8_t rx = rx_prev;
+        int8_t ry = ry_prev;
+        int8_t rz = rz_prev;
+        uint8_t render_paused = 0;
+        if (display_mode && sfr_TIM2.IER.UIE) {
+          render_paused = 1;
+          sfr_TIM2.IER.UIE = 0;
+          cpxAllHiZ();
+        }
+        if (!readAccelRaw(&rx, &ry, &rz)) {
+          resetAccelBus();
+          if (readAccelRaw(&rx, &ry, &rz)) {
+            goto accel_read_ok;
+          }
+          if (render_paused) {
+            sfr_TIM2.SR1.UIF = 0;
+            sfr_TIM2.IER.UIE = 1;
+          }
+#if ACCEL_DIAGNOSTICS
+          accel_fail_count++;
+          accel_diag_tick++;
+          if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
+            accel_diag_tick = 0;
+            printf("ACCEL read_fail ok=%u fail=%u addr8=0x%02X status=0x%02X\r\n",
+                   accel_ok_count, accel_fail_count, sc7a20_addr, accel_read_status());
+          }
+#endif
+          angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
+          continue;
+        }
+accel_read_ok:
+        if (render_paused) {
+          sfr_TIM2.SR1.UIF = 0;
+          sfr_TIM2.IER.UIE = 1;
+        }
+#if ACCEL_DIAGNOSTICS
+        accel_ok_count++;
+#endif
+        static uint8_t zero_sample_count = 0;
+        if (rx == 0 && ry == 0 && rz == 0) {
+          if (zero_sample_count < 0xFF) {
+            zero_sample_count++;
+          }
+          if (zero_sample_count >= 8) {
+            uint8_t reset_paused = 0;
+            if (display_mode && sfr_TIM2.IER.UIE) {
+              reset_paused = 1;
+              sfr_TIM2.IER.UIE = 0;
+              cpxAllHiZ();
+            }
+            resetAccelBus();
+            if (reset_paused) {
+              sfr_TIM2.SR1.UIF = 0;
+              sfr_TIM2.IER.UIE = 1;
+            }
+            zero_sample_count = 0;
+#if ACCEL_DIAGNOSTICS
+            printf("ACCEL zero_stall reset\r\n");
+#endif
+            continue;
+          }
+        } else {
+          zero_sample_count = 0;
+        }
+
+        // 1. Compute Jolt Energy
+        int16_t jolt = abs((int16_t)rx - rx_prev) + abs((int16_t)ry - ry_prev) + abs((int16_t)rz - rz_prev);
+        rx_prev = rx;
+        ry_prev = ry;
+        rz_prev = rz;
+
+        // The tap that exits solid mode should not immediately kick the
+        // motion pattern into a burst.
+        if (jolt_skip) {
+          jolt_skip = 0;
+          jolt = 0;
+        }
+
+        // Apply a deadzone to filter sensor noise when still.
+        int16_t active_jolt = 0;
+        if (jolt > cfg_jolt_deadzone) {
+          active_jolt = jolt - cfg_jolt_deadzone;
+        }
+
+        // 2. Build motion charge, then let charge feed visual energy.
+        // Isolated jolts decay away; repeated steps build enough charge to wake the pattern.
+        uint16_t next_charge = ((uint16_t)motion_charge * MOTION_CHARGE_DECAY) >> 8;
+        if (active_jolt > 0) {
+          uint8_t charge_input = active_jolt;
+          if (charge_input > MOTION_CHARGE_INPUT_MAX) {
+            charge_input = MOTION_CHARGE_INPUT_MAX;
+          }
+          charge_input = (charge_input + (cfg_charge_divisor - 1)) / cfg_charge_divisor;
+          next_charge += charge_input;
+        }
+        motion_charge = (uint8_t)next_charge;
+
+        // Decay by about energy/183 per 48 Hz sample: roughly 5x longer
+        // than the old energy/37 decay, but still proportional to energy.
+        static uint16_t energy_decay_accum = 0;
+        uint16_t next_energy = energy;
+        energy_decay_accum += energy;
+        while (energy_decay_accum >= ENERGY_DECAY_DIVISOR && next_energy > 0) {
+          next_energy--;
+          energy_decay_accum -= ENERGY_DECAY_DIVISOR;
+        }
+        if (next_energy == 0) {
+          energy_decay_accum = 0;
+        }
+        if (motion_charge > cfg_charge_start) {
+          next_energy += motion_charge - cfg_charge_start;
+        }
+        if (display_mode && active_jolt > 0) {
+          // In breathing mode, make the speed react to motion directly.
+          // The normal motion display keeps the charge gate so isolated taps
+          // do not overdrive the visual pattern.
+          uint8_t breath_input = active_jolt;
+          if (breath_input > MOTION_CHARGE_INPUT_MAX) {
+            breath_input = MOTION_CHARGE_INPUT_MAX;
+          }
+          next_energy += breath_input;
+        }
+        if (next_energy > 255) next_energy = 255;
+        energy = (uint8_t)next_energy;
+        still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= cfg_charge_start);
+
+        static uint8_t tap_window = 0;
+        // Starts armed-off for ~1 s: the first accelerometer reads after
+        // boot are transient garbage and can fake a double-tap.
+        static uint8_t tap_refractory = 48;
+        // A tap must rise out of quiet: continuous handling and train rumble
+        // hold active_jolt elevated across consecutive samples (calibration
+        // recording 2026-07-03: noise streams of 40-124 with the sample
+        // before also elevated), while a real tap's preceding sample is
+        // near-zero. This isolation gate is what lets the threshold sit
+        // low enough (110) to catch soft taps, which measured 124-141.
+        static int16_t prev_active_jolt = 0;
+        uint8_t rose_from_quiet = (prev_active_jolt < 30);
+#if ACCEL_DIAGNOSTICS
+        // Calibration trace: log every candidate spike, not just fires, so
+        // a serial recording shows near-misses and their timing.
+        if (active_jolt > 40) {
+          printf("TAPCAL a=%d p=%d ch=%u w=%u r=%u\r\n",
+                 (int)active_jolt, (int)prev_active_jolt, motion_charge,
+                 tap_window, tap_refractory);
+        }
+#endif
+        if (tap_refractory > 0) {
+          tap_refractory--;
+        } else if (active_jolt > TAP_JOLT_MIN && motion_charge < 12 && rose_from_quiet) {
+          if (tap_window > 0) {
+            if (display_mode) {
+              exitSolidMode();
+            } else {
+              enterSolidMode();
+            }
+            tap_window = 0;
+            motion_charge = 0;
+            energy = 0;
+            still_mode = 1;
+#if ACCEL_DIAGNOSTICS
+            printf("TAP mode=%u active=%d charge=%u\r\n",
+                   display_mode, (int)active_jolt, motion_charge);
+#endif
+          } else {
+            tap_window = TAP_WINDOW_SAMPLES;
+          }
+          tap_refractory = TAP_GAP_SAMPLES;
+        }
+        if (tap_window > 0) {
+          tap_window--;
+        }
+        prev_active_jolt = active_jolt;
+
+        // Precompute the ISR's render parameters here at 48 Hz so the
+        // 7.8 kHz ISR does table lookups and shifts only, no division.
+        glow_width_v = 16 - (uint8_t)(((uint16_t)energy * 9) / 255);
+        glow_scale_v = ((uint16_t)(18 + (energy >> 4)) << 8) / glow_width_v;
+        if (energy > 36) {
+          frag_threshold_v = 28 - (uint8_t)(((uint16_t)(energy - 36) * 20) / 219);
+        }
+
+        // 3. Physical Inertia System: bubble rides opposite the gravity projection.
+        int16_t planar_tilt = abs((int16_t)rx) + abs((int16_t)ry);
+        if (planar_tilt > TILT_DEADZONE) {
+            uint8_t new_base = fast_atan2_to_led(ry, rx);
+            uint8_t rotated_base = new_base + BUBBLE_LEVEL_OFFSET;
+            if (rotated_base >= LED_COUNT) {
+              rotated_base -= LED_COUNT;
+            }
+
+            int16_t target_q4 = (int16_t)rotated_base << 4;
+            int16_t error = target_q4 - halo_angle_q4;
+            if (error > 720) error -= 1440;
+            else if (error < -720) error += 1440;
+
+            // Spring inertia: calm motion is heavy; charged motion is tighter.
+            uint8_t spring_shift = 4 - ((uint16_t)energy * 2) / 255;
+            int16_t spring_impulse = error >> spring_shift;
+            if (spring_impulse == 0 && error != 0) {
+              spring_impulse = (error > 0) ? 1 : -1;
+            }
+
+            angular_velocity_q4 += spring_impulse;
+            if (angular_velocity_q4 > 120) angular_velocity_q4 = 120;
+            else if (angular_velocity_q4 < -120) angular_velocity_q4 = -120;
+
+            // Damping moves from about 0.92 at rest to about 0.82 when charged.
+            uint8_t damping = 238 - ((uint16_t)energy * 30) / 255;
+            angular_velocity_q4 = ((int16_t)angular_velocity_q4 * (int16_t)damping) >> 8;
+        } else {
+            angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
+        }
+
+        halo_angle_q4 += angular_velocity_q4;
+        while (halo_angle_q4 < 0) halo_angle_q4 += 1440;
+        while (halo_angle_q4 >= 1440) halo_angle_q4 -= 1440;
+
+        base_led = (uint8_t)(halo_angle_q4 >> 4);
+
+        // Track travel direction so the comet tail trails behind the motion.
+        if (angular_velocity_q4 > 4) comet_dir = 1;
+        else if (angular_velocity_q4 < -4) comet_dir = -1;
+
+        // 4. Update Burst and Orbiting Sparks Positions
+        if (burst_life > 0) {
+          burst_life--;
+          burst_radius += 3;
+          while (burst_radius >= LED_COUNT) {
+            burst_radius -= LED_COUNT;
+          }
+        }
+
+        if (motion_charge > cfg_charge_burst && active_jolt > 3) {
+          uint8_t burst_duration = 6 + (motion_charge >> 4);
+
+          burst_pos = base_led;
+          burst_radius = 0;
+          burst_life = burst_duration;
+
+          for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+            spark_pos[j] = base_led;
+            spark_vel[j] = (j & 1) ? 1 : -1;
+            spark_life[j] = 8 + ((motion_charge + (j * 3)) & 0x0F);
+          }
+        }
+
+        for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+          if (spark_life[j] > 0) {
+            if (spark_vel[j] > 0) {
+              spark_pos[j]++;
+              if (spark_pos[j] >= LED_COUNT) {
+                spark_pos[j] = 0;
+              }
+            } else if (spark_pos[j] == 0) {
+              spark_pos[j] = LED_COUNT - 1;
+            } else {
+              spark_pos[j]--;
+            }
+            spark_life[j]--;
+          } else if (energy > 96) {
+            uint16_t sr = safe_rand();
+            if ((sr & 0x0F) == 0) {
+              spark_pos[j] = base_led;
+              spark_vel[j] = (sr & 1) ? 1 : -1;
+              spark_life[j] = 10 + ((sr >> 8) & 15); // lifetime in 20ms steps
+            }
+          }
+        }
+
+        // 4b. Settling into stillness: the ring that was lit when motion
+        // stopped drains into the low point. The lit arc starts at the full
+        // half-ring and its boundary falls one LED per sample down both
+        // sides until only the comet remains.
+        if (!still_mode) {
+          settle_extent = LED_COUNT / 2;
+        } else if (settle_extent > 0) {
+          settle_extent--;
+        }
+
+        // 4c. Resting power: after ~60 s of stillness, ease the comet head
+        // down to a dim glow (one step per 8 samples, ~3 s fade). Any
+        // motion snaps it straight back to full brightness.
+        static uint16_t still_samples = 0;
+        if (still_mode) {
+          if (still_samples < 0xFFFF) still_samples++;
+          if (still_samples > 2880 && (still_samples & 0x07) == 0 && comet_peak > 12) {
+            comet_peak--;
+          }
+        } else {
+          still_samples = 0;
+          comet_peak = FULL_BRIGHTNESS;
+        }
+
+        // Spark dust: a sharp jolt while settled kicks a short-lived ember
+        // off the comet, trailing behind its direction of travel.
+        if (still_mode && active_jolt > 8) {
+          for (uint8_t j = 0; j < SPARK_COUNT; j++) {
+            if (spark_life[j] == 0) {
+              spark_pos[j] = base_led;
+              spark_vel[j] = -comet_dir;
+              spark_life[j] = 4 + ((uint8_t)active_jolt & 7);
+              break;
+            }
+          }
+        }
+
+        // 5. Base ring brightness follows energy directly: a dim floor when
+        // barely moving, scaling smoothly to full (32/32) at the solid-ring
+        // maximum. No oscillating modulation.
+        breathing_brightness = 2 + (uint8_t)(((uint16_t)energy * 30) / 255);
+
+
+#if ACCEL_DIAGNOSTICS
+        accel_diag_tick++;
+        if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
+          accel_diag_tick = 0;
+          printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d charge=%u tilt=%d energy=%u base=%u vel=%d br=%u mode=%u status=0x%02X\r\n",
+                 accel_ok_count, accel_fail_count,
+                 (int)rx, (int)ry, (int)rz,
+                 (int)jolt, (int)active_jolt, motion_charge, (int)planar_tilt,
+                 energy, base_led, (int)angular_velocity_q4,
+                 breathing_brightness, display_mode, accel_read_status());
+        }
+#endif
       }
     }
   }
@@ -323,24 +1142,25 @@ void initTim2(uint16_t timeout){
   sfr_TIM2.CNTRL.byte = 0x00;                    // LSB clear counter
   sfr_TIM2.EGR.byte = 0x00;                      // clear pending events
   sfr_TIM2.PSCR.PSC = 7;                         // set clock to 16Mhz/2^7 = 125khz -> 8us period
-  sfr_TIM2.ARRH.byte = (uint8_t)(timeout >> 8);  // set autoreload value for 50.176ms (=49*1.024ms)
-  sfr_TIM2.ARRL.byte = (uint8_t)timeout;         // set autoreload value for 50.176ms (=49*1.024ms)
-  sfr_TIM2.IER.UIE = 1;                          // enable timer 4 interrupt
+  sfr_TIM2.ARRH.byte = (uint8_t)(timeout >> 8);  // set autoreload value
+  sfr_TIM2.ARRL.byte = (uint8_t)timeout;         // period ~= (timeout + 1) * 8us
+  sfr_TIM2.IER.UIE = 1;                          // enable timer 2 interrupt
   enableTim2();
 }
 
 void enableTim2(void){
-  sfr_CLK.PCKENR1.PCKEN10 = 1;  // activate tim4 clock gate
+  sfr_CLK.PCKENR1.PCKEN10 = 1;  // activate tim2 clock gate
   sfr_TIM2.CNTRH.byte = 0x00;   // MSB clear counter
   sfr_TIM2.CNTRL.byte = 0x00;   // LSB clear counter
-  sfr_TIM2.IER.UIE = 1;         // enable timer 4 interrupt
+  sfr_TIM2.IER.UIE = 1;         // enable timer 2 interrupt
   sfr_TIM2.CR1.CEN = 1;         // start the timer
 }
 
 void disableTim2(void){
   sfr_TIM2.IER.UIE = 0;         // disable interrupt
+  sfr_TIM2.SR1.UIF = 0;         // clear pending interrupt flag
   sfr_TIM2.CR1.CEN = 0;         // disable timer
-  sfr_CLK.PCKENR1.PCKEN10 = 0;  // disable tim4 clock gate
+  sfr_CLK.PCKENR1.PCKEN10 = 0;  // disable tim2 clock gate
 }
 
 void initHall(void){
@@ -435,6 +1255,17 @@ uint8_t accel_read_reg(uint8_t reg) {
   return val;
 }
 
+// STATUS_REG reads of 0xF0+ are either our own I2C error codes (0xF1-0xF6)
+// or 0xFF, which is what a floating bus reads as; both have shown up as
+// one-sample glitches in bench telemetry. Retry once before believing it.
+uint8_t accel_read_status(void) {
+  uint8_t s = accel_read_reg(0x27);
+  if (s >= 0xF0) {
+    s = accel_read_reg(0x27);
+  }
+  return s;
+}
+
 void accel_write_reg(uint8_t reg, uint8_t val) {
   uint16_t t;
   
@@ -464,29 +1295,67 @@ void accel_write_reg(uint8_t reg, uint8_t val) {
   t = 10000; while ((sfr_I2C1.CR2.byte & 0x02) && --t);
 }
 
-void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
+void printAccelConfig(const char *label) {
+#if ACCEL_DIAGNOSTICS
+  uint8_t who = accel_read_reg(0x0F);
+  uint8_t ctrl1 = accel_read_reg(0x20);
+  uint8_t ctrl4 = accel_read_reg(0x23);
+  uint8_t status = accel_read_status();
+
+  printf("ACCEL %s addr8=0x%02X who=0x%02X ctrl1=0x%02X ctrl4=0x%02X status=0x%02X\r\n",
+         label, sc7a20_addr, who, ctrl1, ctrl4, status);
+
+  if ((who & 0xF0) == 0xF0) {
+    printf("ACCEL WARN: WHO_AM_I read looks like I2C timeout code\r\n");
+  }
+  if ((ctrl1 & 0x07) != 0x07) {
+    printf("ACCEL WARN: XYZ axis enable bits are not all set\r\n");
+  }
+  if ((ctrl1 & 0xF0) == 0x00) {
+    printf("ACCEL WARN: ODR bits show power-down\r\n");
+  }
+  if ((ctrl4 & 0x80) == 0x00) {
+    printf("ACCEL WARN: BDU bit is not set\r\n");
+  }
+#else
+  (void)label;
+#endif
+}
+
+void resetAccelBus(void) {
+  sfr_I2C1.CR1.PE = 0;
+  sfr_I2C1.CR2.SWRST = 1;
+  for(uint16_t i=0; i<1000; i++) NOP();
+  sfr_I2C1.CR2.SWRST = 0;
+  for(uint16_t i=0; i<1000; i++) NOP();
+
+  initAccel();
+  accelConfig();
+}
+
+uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
   uint16_t t;
   
   sfr_I2C1.CR2.START = 1;
-  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return;
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) return 0;
   
   sfr_I2C1.DR.byte = sc7a20_addr;
   t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
-  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   (void)sfr_I2C1.SR1.byte;
   (void)sfr_I2C1.SR3.byte;
   
   // 0x28 is OUT_X_L. MSB set (0x80) -> 0xA8 for auto-increment read in LIS2DH12/SC7A20
   sfr_I2C1.DR.byte = 0xA8; 
   t = 10000; while (!sfr_I2C1.SR1.TXE && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
-  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  if (!sfr_I2C1.SR1.TXE) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   
   sfr_I2C1.CR2.START = 1;
-  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  t = 10000; while (!sfr_I2C1.SR1.SB && --t); if (!t) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   
   sfr_I2C1.DR.byte = sc7a20_addr | 0x01;
   t = 10000; while (!sfr_I2C1.SR1.ADDR && !(sfr_I2C1.SR2.byte & 0x04) && --t); 
-  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return; }
+  if (!sfr_I2C1.SR1.ADDR) { sfr_I2C1.SR2.byte &= ~0x04; sfr_I2C1.CR2.STOP = 1; return 0; }
   
   sfr_I2C1.CR2.ACK = 1; // enable ACK for multi-byte read
   (void)sfr_I2C1.SR1.byte;
@@ -500,7 +1369,11 @@ void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
     }
     t = 10000; while (!sfr_I2C1.SR1.RXNE && --t); 
     if (t) buf[i] = sfr_I2C1.DR.byte;
-    else buf[i] = 0;
+    else {
+      sfr_I2C1.CR2.ACK = 0;
+      sfr_I2C1.CR2.STOP = 1;
+      return 0;
+    }
   }
   
   // Data in SC7A20 Normal mode (10-bit) is left-justified.
@@ -508,6 +1381,7 @@ void readAccelRaw(int8_t *x, int8_t *y, int8_t *z) {
   *x = (int8_t)buf[1];
   *y = (int8_t)buf[3];
   *z = (int8_t)buf[5];
+  return 1;
 }
 
 void initAccel(void) {
@@ -530,6 +1404,163 @@ void initAccel(void) {
   sfr_I2C1.CR1.PE = 1;
   
   for(uint16_t i=0; i<10000; i++) NOP();
+}
+
+// One-stop sensor configuration, called at boot, after wake, and by the
+// bus recovery path. Keep the SC7A20 click engine disabled; mode changes use
+// the proven software tap detector on the 48 Hz jolt stream.
+void accelConfig(void) {
+  accel_write_reg(0x20, 0x47); // CTRL1: 50 Hz low-power, XYZ enabled
+  accel_write_reg(0x21, 0x00); // CTRL2: no high-pass/click filter
+  accel_write_reg(0x22, 0x00); // CTRL3: no interrupt routing
+  accel_write_reg(0x23, 0x80); // CTRL4: block data update
+  accel_write_reg(0x24, 0x00); // CTRL5: no interrupt latch
+  accel_write_reg(0x38, 0x00); // CLICK_CFG: click engine disabled
+}
+
+// ---- Solid mode transitions ----
+// Switching modes is pure display state; the sensor keeps running identically
+// in both modes and the software tap detector performs the mode change.
+void enterSolidMode(void) {
+  solid_breath_tick = 0;   // every entry starts at the dim floor
+  solid_breath_phase_q4 = 0;
+  solid_frames = 0;
+  solid_wake_hold = 0;     // dark hold is only for waking from sleep
+  solid_breath = 1;
+  solid_group_source = 0;
+  solid_group_slot = 0;
+  display_mode = 1;
+}
+
+void exitSolidMode(void) {
+  jolt_skip = 1;
+  display_mode = 0;
+}
+
+// ---- Live tuning shell ----
+// Newline-terminated single-letter commands over the UART:
+//   d<n>  jolt deadzone      s<n>  charge scale divisor
+//   t<n>  charge start       b<n>  burst threshold
+//   g     toggle grouped solid rendering
+//   p     print config       w     persist config to data EEPROM
+#define CFG_EEPROM ((volatile uint8_t *)EEPROM_ADDR_START)
+#define CFG_MAGIC 0xA5
+
+void printCfg(void) {
+  printf("cfg d=%u s=%u t=%u b=%u tap=%u/%u/%u\r\n",
+         cfg_jolt_deadzone, cfg_charge_divisor, cfg_charge_start, cfg_charge_burst,
+         TAP_JOLT_MIN, TAP_WINDOW_SAMPLES, TAP_GAP_SAMPLES);
+  printf("cpx group=%u max_sinks=%u blocked=%u\r\n",
+         cpx_group_enabled, GROUP_MAX_SINKS, cpx_unsafe_group_blocks);
+}
+
+void cfgLoad(void) {
+  if (CFG_EEPROM[0] != CFG_MAGIC) {
+    return; // nothing saved yet; keep compiled-in defaults
+  }
+  cfg_jolt_deadzone = CFG_EEPROM[1];
+  cfg_charge_divisor = CFG_EEPROM[2] ? CFG_EEPROM[2] : 1;
+  cfg_charge_start = CFG_EEPROM[3];
+  cfg_charge_burst = CFG_EEPROM[4];
+}
+
+static void cfgWriteByte(volatile uint8_t *addr, uint8_t val) {
+  uint16_t t;
+  if (*addr == val) {
+    return; // spare EEPROM wear on unchanged bytes
+  }
+  *addr = val;
+  t = 10000; while (!sfr_FLASH.IAPSR.EOP && --t);
+}
+
+void cfgSave(void) {
+  uint16_t t;
+  sfr_FLASH.DUKR.byte = 0xAE;
+  sfr_FLASH.DUKR.byte = 0x56;
+  t = 10000; while (!sfr_FLASH.IAPSR.DUL && --t);
+  if (!t) {
+    printf("eeprom unlock failed\r\n");
+    return;
+  }
+  // Values first, magic last, so a power cut mid-save can't leave a valid
+  // magic pointing at torn data.
+  cfgWriteByte(&CFG_EEPROM[1], cfg_jolt_deadzone);
+  cfgWriteByte(&CFG_EEPROM[2], cfg_charge_divisor);
+  cfgWriteByte(&CFG_EEPROM[3], cfg_charge_start);
+  cfgWriteByte(&CFG_EEPROM[4], cfg_charge_burst);
+  cfgWriteByte(&CFG_EEPROM[0], CFG_MAGIC);
+  sfr_FLASH.IAPSR.DUL = 0; // relock
+  printf("saved\r\n");
+}
+
+void pollUartCmd(void) {
+  static char buf[6];
+  static uint8_t len = 0;
+
+  if (!sfr_USART1.SR.RXNE) {
+    return;
+  }
+  char c = sfr_USART1.DR.byte;
+
+  if (c != '\r' && c != '\n') {
+    if (c < ' ' || c > '~') {
+      return; // line noise / port-open glitch bytes: ignore
+    }
+    if (len < sizeof(buf)) {
+      buf[len++] = c;
+    } else {
+      len = 0; // overlong line: discard
+    }
+    return;
+  }
+
+  if (len == 0) {
+    return;
+  }
+  if (buf[0] == 'p' && len == 1) {
+    printCfg();
+  } else if (buf[0] == 'g' && len == 1) {
+    cpx_group_enabled = cpx_group_enabled ? 0 : cpxLayoutSafe();
+    cpxAllHiZ();
+    printCfg();
+  } else if (buf[0] == 'm' && len == 1) {
+    if (display_mode) {
+      exitSolidMode();
+    } else {
+      enterSolidMode();
+    }
+    printf("mode=%u\r\n", display_mode);
+  } else if (buf[0] == 'w' && len == 1) {
+    cfgSave();
+    printCfg();
+  } else {
+    uint16_t v = 0;
+    uint8_t ok = (len > 1);
+    for (uint8_t i = 1; i < len; i++) {
+      if (buf[i] < '0' || buf[i] > '9') {
+        ok = 0;
+        break;
+      }
+      v = (v * 10) + (buf[i] - '0');
+    }
+    if (ok && v <= 255) {
+      switch (buf[0]) {
+        case 'd': cfg_jolt_deadzone = (uint8_t)v; break;
+        case 's': cfg_charge_divisor = v ? (uint8_t)v : 1; break;
+        case 't': cfg_charge_start = (uint8_t)v; break;
+        case 'b': cfg_charge_burst = (uint8_t)v; break;
+        default: ok = 0;
+      }
+    } else {
+      ok = 0;
+    }
+    if (ok) {
+      printCfg();
+    } else {
+      printf("? d/s/t/b<0-255> g m p w\r\n");
+    }
+  }
+  len = 0;
 }
 
 void initUart(void) {
