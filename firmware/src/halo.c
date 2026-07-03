@@ -43,6 +43,10 @@
 #define TAP_WINDOW_SAMPLES 24   // ~0.5 s to land the second tap
 #define TAP_GAP_SAMPLES 4       // ~80 ms refractory; one tap spans 1-2 samples
 #define ACCEL_SAMPLE_TICKS 163
+#define SOLID_BREATH_CYCLE_TICKS 240
+#define SOLID_BREATH_LUT_SIZE 64
+#define SOLID_BREATH_BASE_RATE_Q4 16
+#define SOLID_BREATH_ENERGY_RATE_Q4 32
 #define SERIAL_DIAGNOSTICS 1
 #define ACCEL_DIAGNOSTICS SERIAL_DIAGNOSTICS
 #define ACCEL_DIAG_PRINT_SAMPLES 48
@@ -133,7 +137,7 @@ volatile uint8_t jolt_skip = 0;           // Hide the mode-exit tap from the mot
 // zero slope at both extremes). Stepped at 48 Hz: 240 steps = 5.0 s/cycle,
 // 12 breaths per minute. Values are perceptual 1-32; the ISR's gamma LUT
 // makes the fade eye-linear and the dithered PWM keeps it flicker-free.
-static const uint8_t sleep_breath_lut[64] = {
+static const uint8_t sleep_breath_lut[SOLID_BREATH_LUT_SIZE] = {
    1,  1,  1,  2,  3,  4,  5,  6,
    8, 10, 11, 13, 15, 17, 19, 21,
   22, 24, 26, 27, 28, 30, 31, 31,
@@ -144,6 +148,7 @@ static const uint8_t sleep_breath_lut[64] = {
    4,  3,  3,  2,  2,  1,  1,  1
 };
 static uint8_t solid_breath_tick = 0;     // 0-239 position in the cycle
+static uint16_t solid_breath_phase_q4 = 0; // 0-3839, allows energy-scaled speed
 
 // Render parameters precomputed at the 48 Hz sample rate so the 7.8 kHz
 // render ISR never performs a (software) division.
@@ -721,17 +726,23 @@ void main(void) {
         // Solid breathing mode: the ISR renders the ring, while the main loop
         // keeps polling the accelerometer so software double-tap can exit.
         if (solid_frames > 0) {
+          uint8_t breath_rate_q4 = SOLID_BREATH_BASE_RATE_Q4 +
+              (uint8_t)(((uint16_t)energy * SOLID_BREATH_ENERGY_RATE_Q4) / 255);
+          uint16_t breath_cycle_q4 = (uint16_t)SOLID_BREATH_CYCLE_TICKS << 4;
           solid_frames--;
-          solid_breath_tick++;
-          if (solid_breath_tick >= 240) {
-            solid_breath_tick = 0;
+          solid_breath_phase_q4 += breath_rate_q4;
+          while (solid_breath_phase_q4 >= breath_cycle_q4) {
+            solid_breath_phase_q4 -= breath_cycle_q4;
           }
-          solid_breath = sleep_breath_lut[(uint8_t)(((uint16_t)solid_breath_tick * 64) / 240)];
+          solid_breath_tick = (uint8_t)(solid_breath_phase_q4 >> 4);
+          solid_breath = sleep_breath_lut[(uint8_t)(((uint16_t)solid_breath_tick * SOLID_BREATH_LUT_SIZE) /
+                                                    SOLID_BREATH_CYCLE_TICKS)];
 #if ACCEL_DIAGNOSTICS
           static uint8_t solid_diag = 0;
           if (++solid_diag >= 48) {
             solid_diag = 0;
-            printf("SOLID breath=%u tick=%u\r\n", solid_breath, solid_breath_tick);
+            printf("SOLID breath=%u tick=%u energy=%u rate=%u\r\n",
+                   solid_breath, solid_breath_tick, energy, breath_rate_q4);
           }
 #endif
         }
@@ -841,6 +852,16 @@ accel_read_ok:
         uint16_t next_energy = ((uint16_t)energy * 249) >> 8;
         if (motion_charge > cfg_charge_start) {
           next_energy += motion_charge - cfg_charge_start;
+        }
+        if (display_mode && active_jolt > 0) {
+          // In breathing mode, make the speed react to motion directly.
+          // The normal motion display keeps the charge gate so isolated taps
+          // do not overdrive the visual pattern.
+          uint8_t breath_input = active_jolt;
+          if (breath_input > MOTION_CHARGE_INPUT_MAX) {
+            breath_input = MOTION_CHARGE_INPUT_MAX;
+          }
+          next_energy += breath_input;
         }
         if (next_energy > 255) next_energy = 255;
         energy = (uint8_t)next_energy;
@@ -1320,6 +1341,7 @@ void accelConfig(void) {
 // in both modes and the software tap detector performs the mode change.
 void enterSolidMode(void) {
   solid_breath_tick = 0;   // every entry starts at the dim floor
+  solid_breath_phase_q4 = 0;
   solid_frames = 0;
   solid_breath = 1;
   solid_group_source = 0;
