@@ -151,6 +151,18 @@ uint8_t ringDistance(uint8_t a, uint8_t b) {
   return diff;
 }
 
+// Bit-reversed 5-bit counter for dithered PWM. Comparing brightness against
+// the reversed phase spreads an LED's on-sweeps evenly across the 32-sweep
+// cycle instead of bunching them: half brightness becomes an 87/2 = 43 Hz
+// square wave rather than a visible 2.7 Hz blink, and every intermediate
+// level flickers at 43 Hz or faster.
+static const uint8_t dither_phase[BRIGHTNESS_STEPS] = {
+   0, 16,  8, 24,  4, 20, 12, 28,
+   2, 18, 10, 26,  6, 22, 14, 30,
+   1, 17,  9, 25,  5, 21, 13, 29,
+   3, 19, 11, 27,  7, 23, 15, 31
+};
+
 uint8_t pwmAllows(uint8_t led, uint8_t brightness) {
   if (brightness >= FULL_BRIGHTNESS) {
     return 1;
@@ -161,7 +173,7 @@ uint8_t pwmAllows(uint8_t led, uint8_t brightness) {
 
   // Per-LED phase offsets keep equally bright LEDs from blinking in lockstep.
   uint8_t phase = (pwm_phase + ((led * 13) & (BRIGHTNESS_STEPS - 1))) & (BRIGHTNESS_STEPS - 1);
-  return phase < brightness;
+  return dither_phase[phase] < brightness;
 }
 
 ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
@@ -266,7 +278,18 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
   }
 
-  if (pwmAllows(led_to_light, brightness)) {
+  // Gamma 2.2: pattern math stays perceptually linear (0-32); the LUT maps
+  // it to duty so fades look even instead of crushing the bright end.
+  // Nonzero inputs floor at 1 so faint tail pixels never vanish outright.
+  static const uint8_t gamma_lut[BRIGHTNESS_STEPS + 1] = {
+     0,  1,  1,  1,  1,  1,  1,  1,
+     2,  2,  2,  3,  4,  4,  5,  6,
+     7,  8,  9, 10, 11, 13, 14, 15,
+    17, 19, 20, 22, 24, 26, 28, 30,
+    32
+  };
+
+  if (pwmAllows(led_to_light, gamma_lut[brightness])) {
     setLed(led_to_light);
   } else {
     ledLow(prevLed);
