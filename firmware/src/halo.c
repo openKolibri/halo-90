@@ -55,9 +55,14 @@ void disableTim2(void);
 void initAccel(void);
 uint8_t readAccelRaw(int8_t *x, int8_t *y, int8_t *z);
 uint8_t accel_read_reg(uint8_t reg);
+uint8_t accel_read_status(void);
 void accel_write_reg(uint8_t reg, uint8_t val);
 void printAccelConfig(const char *label);
 void resetAccelBus(void);
+void cfgLoad(void);
+void cfgSave(void);
+void printCfg(void);
+void pollUartCmd(void);
 
 void initUart(void);
 int putchar(int c);
@@ -96,6 +101,20 @@ volatile uint8_t time_ticks = 0;          // Dynamic mask reference counter
 volatile uint8_t breathing_brightness = 2; // PWM duty cycle (0 to 32)
 volatile int8_t comet_dir = 1;            // Last direction of travel; tail trails behind it
 volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the comet on settle
+volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down after long stillness
+
+// Render parameters precomputed at the 48 Hz sample rate so the 7.8 kHz
+// render ISR never performs a (software) division.
+volatile uint8_t glow_width_v = 16;
+volatile uint16_t glow_scale_v = (18 << 8) / 16;
+volatile uint8_t frag_threshold_v = 28;
+
+// Live-tunable motion parameters: adjustable over the UART shell and
+// persisted in data EEPROM (see pollUartCmd/cfgSave).
+uint8_t cfg_jolt_deadzone = JOLT_DEADZONE;
+uint8_t cfg_charge_divisor = MOTION_CHARGE_SCALE_DIVISOR;
+uint8_t cfg_charge_start = MOTION_CHARGE_START;
+uint8_t cfg_charge_burst = MOTION_CHARGE_BURST;
 volatile uint8_t still_mode = 1;
 volatile uint8_t pwm_scan_led = 0;
 volatile uint8_t pwm_scan_bank = 0;
@@ -191,9 +210,11 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   if (still_mode) {
     // Comet resting at the low point: steady bright head (no breathing),
     // tail fading behind the direction of travel.
+    // Tail falloff at full peak (32 * (9 - d) / 9), scaled by comet_peak.
+    static const uint8_t tail_lut[COMET_TAIL + 1] = {32, 28, 25, 21, 18, 14, 11, 7, 4};
     brightness = 0;
     if (glow_dist == 0) {
-      brightness = FULL_BRIGHTNESS;
+      brightness = comet_peak;
     } else if (glow_dist <= COMET_TAIL) {
       uint8_t fwd = (led_to_light >= base_led)
                         ? (led_to_light - base_led)
@@ -201,9 +222,9 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
       uint8_t on_tail = (comet_dir > 0) ? (fwd >= LED_COUNT - COMET_TAIL)
                                         : (fwd <= COMET_TAIL);
       if (on_tail) {
-        brightness = ((uint16_t)FULL_BRIGHTNESS * (COMET_TAIL + 1 - glow_dist)) / (COMET_TAIL + 1);
+        brightness = ((uint16_t)tail_lut[glow_dist] * comet_peak) >> 5;
       } else if (glow_dist == 1) {
-        brightness = FULL_BRIGHTNESS >> 2; // faint nose on the leading side
+        brightness = comet_peak >> 2; // faint nose on the leading side
       }
     }
     // Settling drain: the LEDs that were lit when motion stopped stay on and
@@ -248,10 +269,8 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
   }
 
-  uint8_t glow_width = 16 - ((uint16_t)energy * 9) / 255;
-  if (!still_mode && glow_dist <= glow_width) {
-    uint8_t glow_peak = 18 + (energy >> 4);
-    uint8_t glow = ((uint16_t)(glow_width - glow_dist) * glow_peak) / glow_width;
+  if (!still_mode && glow_dist <= glow_width_v) {
+    uint8_t glow = (uint8_t)(((uint16_t)(glow_width_v - glow_dist) * glow_scale_v) >> 8);
     brightness += glow;
     if (brightness > FULL_BRIGHTNESS) {
       brightness = FULL_BRIGHTNESS;
@@ -272,8 +291,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   // Fragmentation breaks the ring as movement energy rises, while preserving the bubble core.
   if (!still_mode && energy > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
     uint8_t mask_pos = ((led_to_light * 5) + time_ticks + (energy >> 3)) & 0x1F;
-    uint8_t threshold = 28 - ((uint16_t)(energy - 36) * 20) / 219;
-    if (mask_pos >= threshold) {
+    if (mask_pos >= frag_threshold_v) {
       brightness = 0;
     }
   }
@@ -361,6 +379,9 @@ void main(void) {
   for(uint32_t d=0; d<300000; d++) NOP();
 
   printf("\r\n--- HALO-90 Booting ---\r\n");
+
+  cfgLoad();
+  printCfg();
 
   uint8_t found_addr = 0x00;
   for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
@@ -495,6 +516,10 @@ void main(void) {
     } else {
       WAIT_FOR_INTERRUPT();
 
+      if (!sleep) {
+        pollUartCmd();
+      }
+
       if (!sleep && (++accel_tick >= ACCEL_SAMPLE_TICKS)) {
         accel_tick = 0;
 
@@ -512,7 +537,7 @@ void main(void) {
           if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
             accel_diag_tick = 0;
             printf("ACCEL read_fail ok=%u fail=%u addr8=0x%02X status=0x%02X\r\n",
-                   accel_ok_count, accel_fail_count, sc7a20_addr, accel_read_reg(0x27));
+                   accel_ok_count, accel_fail_count, sc7a20_addr, accel_read_status());
           }
 #endif
           angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
@@ -531,8 +556,8 @@ accel_read_ok:
 
         // Apply a deadzone to filter sensor noise when still.
         int16_t active_jolt = 0;
-        if (jolt > JOLT_DEADZONE) {
-          active_jolt = jolt - JOLT_DEADZONE;
+        if (jolt > cfg_jolt_deadzone) {
+          active_jolt = jolt - cfg_jolt_deadzone;
         }
 
         // 2. Build motion charge, then let charge feed visual energy.
@@ -543,19 +568,27 @@ accel_read_ok:
           if (charge_input > MOTION_CHARGE_INPUT_MAX) {
             charge_input = MOTION_CHARGE_INPUT_MAX;
           }
-          charge_input = (charge_input + (MOTION_CHARGE_SCALE_DIVISOR - 1)) / MOTION_CHARGE_SCALE_DIVISOR;
+          charge_input = (charge_input + (cfg_charge_divisor - 1)) / cfg_charge_divisor;
           next_charge += charge_input;
         }
         motion_charge = (uint8_t)next_charge;
 
         // Decays by ~0.9725 per frame (approx. (energy * 249) >> 8).
         uint16_t next_energy = ((uint16_t)energy * 249) >> 8;
-        if (motion_charge > MOTION_CHARGE_START) {
-          next_energy += motion_charge - MOTION_CHARGE_START;
+        if (motion_charge > cfg_charge_start) {
+          next_energy += motion_charge - cfg_charge_start;
         }
         if (next_energy > 255) next_energy = 255;
         energy = (uint8_t)next_energy;
-        still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= MOTION_CHARGE_START);
+        still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= cfg_charge_start);
+
+        // Precompute the ISR's render parameters here at 48 Hz so the
+        // 7.8 kHz ISR does table lookups and shifts only, no division.
+        glow_width_v = 16 - (uint8_t)(((uint16_t)energy * 9) / 255);
+        glow_scale_v = ((uint16_t)(18 + (energy >> 4)) << 8) / glow_width_v;
+        if (energy > 36) {
+          frag_threshold_v = 28 - (uint8_t)(((uint16_t)(energy - 36) * 20) / 219);
+        }
 
         // 3. Physical Inertia System: bubble rides opposite the gravity projection.
         int16_t planar_tilt = abs((int16_t)rx) + abs((int16_t)ry);
@@ -608,7 +641,7 @@ accel_read_ok:
           }
         }
 
-        if (motion_charge > MOTION_CHARGE_BURST && active_jolt > 3) {
+        if (motion_charge > cfg_charge_burst && active_jolt > 3) {
           uint8_t burst_duration = 6 + (motion_charge >> 4);
 
           burst_pos = base_led;
@@ -655,6 +688,20 @@ accel_read_ok:
           settle_extent--;
         }
 
+        // 4c. Resting power: after ~60 s of stillness, ease the comet head
+        // down to a dim glow (one step per 8 samples, ~3 s fade). Any
+        // motion snaps it straight back to full brightness.
+        static uint16_t still_samples = 0;
+        if (still_mode) {
+          if (still_samples < 0xFFFF) still_samples++;
+          if (still_samples > 2880 && (still_samples & 0x07) == 0 && comet_peak > 12) {
+            comet_peak--;
+          }
+        } else {
+          still_samples = 0;
+          comet_peak = FULL_BRIGHTNESS;
+        }
+
         // Spark dust: a sharp jolt while settled kicks a short-lived ember
         // off the comet, trailing behind its direction of travel.
         if (still_mode && active_jolt > 8) {
@@ -682,7 +729,7 @@ accel_read_ok:
                  (int)rx, (int)ry, (int)rz,
                  (int)jolt, (int)active_jolt, motion_charge, (int)planar_tilt,
                  energy, base_led, (int)angular_velocity_q4,
-                 breathing_brightness, accel_read_reg(0x27));
+                 breathing_brightness, accel_read_status());
         }
 #endif
       }
@@ -812,6 +859,17 @@ uint8_t accel_read_reg(uint8_t reg) {
   return val;
 }
 
+// STATUS_REG reads of 0xF0+ are either our own I2C error codes (0xF1-0xF6)
+// or 0xFF, which is what a floating bus reads as; both have shown up as
+// one-sample glitches in bench telemetry. Retry once before believing it.
+uint8_t accel_read_status(void) {
+  uint8_t s = accel_read_reg(0x27);
+  if (s >= 0xF0) {
+    s = accel_read_reg(0x27);
+  }
+  return s;
+}
+
 void accel_write_reg(uint8_t reg, uint8_t val) {
   uint16_t t;
   
@@ -846,7 +904,7 @@ void printAccelConfig(const char *label) {
   uint8_t who = accel_read_reg(0x0F);
   uint8_t ctrl1 = accel_read_reg(0x20);
   uint8_t ctrl4 = accel_read_reg(0x23);
-  uint8_t status = accel_read_reg(0x27);
+  uint8_t status = accel_read_status();
 
   printf("ACCEL %s addr8=0x%02X who=0x%02X ctrl1=0x%02X ctrl4=0x%02X status=0x%02X\r\n",
          label, sc7a20_addr, who, ctrl1, ctrl4, status);
@@ -951,6 +1009,114 @@ void initAccel(void) {
   sfr_I2C1.CR1.PE = 1;
   
   for(uint16_t i=0; i<10000; i++) NOP();
+}
+
+// ---- Live tuning shell ----
+// Newline-terminated single-letter commands over the UART:
+//   d<n>  jolt deadzone      s<n>  charge scale divisor
+//   t<n>  charge start       b<n>  burst threshold
+//   p     print config       w     persist config to data EEPROM
+#define CFG_EEPROM ((volatile uint8_t *)EEPROM_ADDR_START)
+#define CFG_MAGIC 0xA5
+
+void printCfg(void) {
+  printf("cfg d=%u s=%u t=%u b=%u\r\n", cfg_jolt_deadzone, cfg_charge_divisor,
+         cfg_charge_start, cfg_charge_burst);
+}
+
+void cfgLoad(void) {
+  if (CFG_EEPROM[0] != CFG_MAGIC) {
+    return; // nothing saved yet; keep compiled-in defaults
+  }
+  cfg_jolt_deadzone = CFG_EEPROM[1];
+  cfg_charge_divisor = CFG_EEPROM[2] ? CFG_EEPROM[2] : 1;
+  cfg_charge_start = CFG_EEPROM[3];
+  cfg_charge_burst = CFG_EEPROM[4];
+}
+
+static void cfgWriteByte(volatile uint8_t *addr, uint8_t val) {
+  uint16_t t;
+  if (*addr == val) {
+    return; // spare EEPROM wear on unchanged bytes
+  }
+  *addr = val;
+  t = 10000; while (!sfr_FLASH.IAPSR.EOP && --t);
+}
+
+void cfgSave(void) {
+  uint16_t t;
+  sfr_FLASH.DUKR.byte = 0xAE;
+  sfr_FLASH.DUKR.byte = 0x56;
+  t = 10000; while (!sfr_FLASH.IAPSR.DUL && --t);
+  if (!t) {
+    printf("eeprom unlock failed\r\n");
+    return;
+  }
+  // Values first, magic last, so a power cut mid-save can't leave a valid
+  // magic pointing at torn data.
+  cfgWriteByte(&CFG_EEPROM[1], cfg_jolt_deadzone);
+  cfgWriteByte(&CFG_EEPROM[2], cfg_charge_divisor);
+  cfgWriteByte(&CFG_EEPROM[3], cfg_charge_start);
+  cfgWriteByte(&CFG_EEPROM[4], cfg_charge_burst);
+  cfgWriteByte(&CFG_EEPROM[0], CFG_MAGIC);
+  sfr_FLASH.IAPSR.DUL = 0; // relock
+  printf("saved\r\n");
+}
+
+void pollUartCmd(void) {
+  static char buf[6];
+  static uint8_t len = 0;
+
+  if (!sfr_USART1.SR.RXNE) {
+    return;
+  }
+  char c = sfr_USART1.DR.byte;
+
+  if (c != '\r' && c != '\n') {
+    if (len < sizeof(buf)) {
+      buf[len++] = c;
+    } else {
+      len = 0; // overlong line: discard
+    }
+    return;
+  }
+
+  if (len == 0) {
+    return;
+  }
+  if (buf[0] == 'p' && len == 1) {
+    printCfg();
+  } else if (buf[0] == 'w' && len == 1) {
+    cfgSave();
+    printCfg();
+  } else {
+    uint16_t v = 0;
+    uint8_t ok = (len > 1);
+    for (uint8_t i = 1; i < len; i++) {
+      if (buf[i] < '0' || buf[i] > '9') {
+        ok = 0;
+        break;
+      }
+      v = (v * 10) + (buf[i] - '0');
+    }
+    if (ok && v <= 255) {
+      switch (buf[0]) {
+        case 'd': cfg_jolt_deadzone = (uint8_t)v; break;
+        case 's': cfg_charge_divisor = v ? (uint8_t)v : 1; break;
+        case 't': cfg_charge_start = (uint8_t)v; break;
+        case 'b': cfg_charge_burst = (uint8_t)v; break;
+        default: ok = 0;
+      }
+    } else {
+      ok = 0;
+    }
+    if (ok) {
+      printCfg();
+    } else {
+      printf("? d/s/t/b<0-255> p w\r\n");
+    }
+  }
+  len = 0;
 }
 
 void initUart(void) {
