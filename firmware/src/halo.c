@@ -114,7 +114,8 @@ volatile uint8_t breathing_brightness = 2; // PWM duty cycle (0 to 32)
 volatile int8_t comet_dir = 1;            // Last direction of travel; tail trails behind it
 volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the comet on settle
 volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down after long stillness
-volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = static solid ring
+volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = breathing solid ring
+volatile uint8_t solid_breath = FULL_BRIGHTNESS; // Ring level in mode 1, driven by the breath curve
 
 // Render parameters precomputed at the 48 Hz sample rate so the 7.8 kHz
 // render ISR never performs a (software) division.
@@ -188,11 +189,26 @@ uint8_t ringDistance(uint8_t a, uint8_t b) {
 // cycle instead of bunching them: half brightness becomes an 87/2 = 43 Hz
 // square wave rather than a visible 2.7 Hz blink, and every intermediate
 // level flickers at 43 Hz or faster.
+// NOTE: do not shorten the TIM2 period to raise these rates. The main loop
+// paces the 48 Hz accelerometer sampling by counting its own iterations
+// (ACCEL_SAMPLE_TICKS), and a faster ISR starves/retimes that loop - tried
+// at 48 us on 2026-07-03 and tap + motion response broke on hardware.
 static const uint8_t dither_phase[BRIGHTNESS_STEPS] = {
    0, 16,  8, 24,  4, 20, 12, 28,
    2, 18, 10, 26,  6, 22, 14, 30,
    1, 17,  9, 25,  5, 21, 13, 29,
    3, 19, 11, 27,  7, 23, 15, 31
+};
+
+// Gamma 2.2: pattern math stays perceptually linear (0-32); this LUT maps
+// it to duty so fades look even instead of crushing the bright end.
+// Nonzero inputs floor at 1 so faint tail pixels never vanish outright.
+static const uint8_t gamma_lut[BRIGHTNESS_STEPS + 1] = {
+   0,  1,  1,  1,  1,  1,  1,  1,
+   2,  2,  2,  3,  4,  4,  5,  6,
+   7,  8,  9, 10, 11, 13, 14, 15,
+  17, 19, 20, 22, 24, 26, 28, 30,
+  32
 };
 
 uint8_t pwmAllows(uint8_t led, uint8_t brightness) {
@@ -218,9 +234,14 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
 
   uint8_t led_to_light = nextPwmScanLed();
 
-  // Static solid mode: every LED steady at full, nothing else rendered.
+  // Solid ring mode: the whole ring at one level, breathing on the sleep
+  // curve. Nothing else (comet, sparks, glow, fragmentation) renders.
   if (display_mode) {
-    setLed(led_to_light);
+    if (pwmAllows(led_to_light, gamma_lut[solid_breath])) {
+      setLed(led_to_light);
+    } else {
+      ledLow(prevLed);
+    }
     sfr_TIM2.SR1.UIF = 0;
     return;
   }
@@ -316,17 +337,6 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
       brightness = 0;
     }
   }
-
-  // Gamma 2.2: pattern math stays perceptually linear (0-32); the LUT maps
-  // it to duty so fades look even instead of crushing the bright end.
-  // Nonzero inputs floor at 1 so faint tail pixels never vanish outright.
-  static const uint8_t gamma_lut[BRIGHTNESS_STEPS + 1] = {
-     0,  1,  1,  1,  1,  1,  1,  1,
-     2,  2,  2,  3,  4,  4,  5,  6,
-     7,  8,  9, 10, 11, 13, 14, 15,
-    17, 19, 20, 22, 24, 26, 28, 30,
-    32
-  };
 
   if (pwmAllows(led_to_light, gamma_lut[brightness])) {
     setLed(led_to_light);
@@ -764,6 +774,35 @@ accel_read_ok:
         // barely moving, scaling smoothly to full (32/32) at the solid-ring
         // maximum. No oscillating modulation.
         breathing_brightness = 2 + (uint8_t)(((uint16_t)energy * 30) / 255);
+
+        // 5b. Sleep breathing for the solid ring mode, in the style of the
+        // Apple sleep indicator: cosine ease up over ~1.9 s, a barely
+        // perceptible hold at the peak, then a slower ~2.9 s ease back
+        // down, lingering at a dim floor of 1 (never off, never a blink -
+        // zero slope at both extremes). 240 samples at 48 Hz = 5.0 s per
+        // cycle, i.e. 12 breaths per minute. Values are perceptual 1-32;
+        // the gamma LUT in the ISR makes the fade eye-linear, and the
+        // dithered PWM keeps every intermediate level flicker-free.
+        static const uint8_t sleep_breath_lut[64] = {
+           1,  1,  1,  2,  3,  4,  5,  6,
+           8, 10, 11, 13, 15, 17, 19, 21,
+          22, 24, 26, 27, 28, 30, 31, 31,
+          32, 32, 32, 32, 32, 31, 31, 31,
+          30, 29, 28, 28, 27, 26, 25, 24,
+          22, 21, 20, 19, 18, 16, 15, 14,
+          12, 11, 10,  9,  8,  7,  6,  5,
+           4,  3,  3,  2,  2,  1,  1,  1
+        };
+        static uint8_t solid_breath_tick = 0;
+        if (display_mode) {
+          solid_breath_tick++;
+          if (solid_breath_tick >= 240) {
+            solid_breath_tick = 0;
+          }
+          solid_breath = sleep_breath_lut[(uint8_t)(((uint16_t)solid_breath_tick * 64) / 240)];
+        } else {
+          solid_breath_tick = 0; // each entry into the mode starts at the dim floor
+        }
 
 #if ACCEL_DIAGNOSTICS
         accel_diag_tick++;
