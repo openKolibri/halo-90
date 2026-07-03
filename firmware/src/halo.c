@@ -31,6 +31,18 @@
 #define MOTION_CHARGE_DECAY 204
 #define MOTION_CHARGE_SCALE_DIVISOR 25
 #define MOTION_CHARGE_INPUT_MAX 120
+// Double-tap detection on the 48 Hz jolt stream: a tap is an isolated jolt
+// spike; two spikes inside the window with no sustained motion toggle the
+// display mode. (Software detection because the accel's 50 Hz ODR is too
+// slow for the hardware click engine, which wants 400 Hz.)
+// Calibrated from a wearer recording (2026-07-03): real taps sampled at
+// active_jolt 203-213, so 200 left no margin; 150 catches softer taps
+// reliably. Dance/shake spikes can exceed this, but sustained movement
+// builds charge past the <12 stillness guard below, which is what
+// actually rejects dancing - the jolt bar only filters casual movement.
+#define TAP_JOLT_MIN 150
+#define TAP_WINDOW_SAMPLES 24   // ~0.5 s to land the second tap
+#define TAP_GAP_SAMPLES 4       // ~80 ms refractory; one tap spans 1-2 samples
 #define ACCEL_SAMPLE_TICKS 163
 #define SERIAL_DIAGNOSTICS 1
 #define ACCEL_DIAGNOSTICS SERIAL_DIAGNOSTICS
@@ -102,6 +114,7 @@ volatile uint8_t breathing_brightness = 2; // PWM duty cycle (0 to 32)
 volatile int8_t comet_dir = 1;            // Last direction of travel; tail trails behind it
 volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the comet on settle
 volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down after long stillness
+volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = static solid ring
 
 // Render parameters precomputed at the 48 Hz sample rate so the 7.8 kHz
 // render ISR never performs a (software) division.
@@ -204,6 +217,14 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   time_ticks++;
 
   uint8_t led_to_light = nextPwmScanLed();
+
+  // Static solid mode: every LED steady at full, nothing else rendered.
+  if (display_mode) {
+    setLed(led_to_light);
+    sfr_TIM2.SR1.UIF = 0;
+    return;
+  }
+
   uint8_t brightness;
   uint8_t glow_dist = ringDistance(led_to_light, base_led);
 
@@ -582,6 +603,30 @@ accel_read_ok:
         energy = (uint8_t)next_energy;
         still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= cfg_charge_start);
 
+        // 2b. Double-tap: two isolated jolt spikes within the window, with
+        // no sustained motion between (charge stays low during taps but
+        // builds past 12 while shaking), toggle the display mode. The tap
+        // energy is swallowed so the switch reads as deliberate, not as a
+        // motion wake-up.
+        static uint8_t tap_window = 0;
+        static uint8_t tap_refractory = 0;
+        if (tap_refractory > 0) {
+          tap_refractory--;
+        } else if (active_jolt > TAP_JOLT_MIN && motion_charge < 12) {
+          if (tap_window > 0) {
+            display_mode ^= 1;
+            tap_window = 0;
+            motion_charge = 0;
+            energy = 0;
+          } else {
+            tap_window = TAP_WINDOW_SAMPLES;
+          }
+          tap_refractory = TAP_GAP_SAMPLES;
+        }
+        if (tap_window > 0) {
+          tap_window--;
+        }
+
         // Precompute the ISR's render parameters here at 48 Hz so the
         // 7.8 kHz ISR does table lookups and shifts only, no division.
         glow_width_v = 16 - (uint8_t)(((uint16_t)energy * 9) / 255);
@@ -724,12 +769,12 @@ accel_read_ok:
         accel_diag_tick++;
         if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
           accel_diag_tick = 0;
-          printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d charge=%u tilt=%d energy=%u base=%u vel=%d br=%u status=0x%02X\r\n",
+          printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d charge=%u tilt=%d energy=%u base=%u vel=%d br=%u mode=%u status=0x%02X\r\n",
                  accel_ok_count, accel_fail_count,
                  (int)rx, (int)ry, (int)rz,
                  (int)jolt, (int)active_jolt, motion_charge, (int)planar_tilt,
                  energy, base_led, (int)angular_velocity_q4,
-                 breathing_brightness, accel_read_status());
+                 breathing_brightness, display_mode, accel_read_status());
         }
 #endif
       }
@@ -1086,6 +1131,9 @@ void pollUartCmd(void) {
   }
   if (buf[0] == 'p' && len == 1) {
     printCfg();
+  } else if (buf[0] == 'm' && len == 1) {
+    display_mode ^= 1;
+    printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'w' && len == 1) {
     cfgSave();
     printCfg();
@@ -1113,7 +1161,7 @@ void pollUartCmd(void) {
     if (ok) {
       printCfg();
     } else {
-      printf("? d/s/t/b<0-255> p w\r\n");
+      printf("? d/s/t/b<0-255> m p w\r\n");
     }
   }
   len = 0;
