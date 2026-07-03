@@ -43,6 +43,8 @@
 #define TAP_JOLT_MIN 110
 #define TAP_WINDOW_SAMPLES 24   // ~0.5 s to land the second tap
 #define TAP_GAP_SAMPLES 4       // ~80 ms refractory; one tap spans 1-2 samples
+#define TAP_STILL_CHARGE_MAX 12
+#define DISPLAY_MODE_COUNT 5    // motion, breathing, mic VU, mic scope, mic bass
 #define ACCEL_SAMPLE_TICKS 163
 #define SOLID_BREATH_CYCLE_TICKS 240
 #define SOLID_BREATH_LUT_SIZE 64
@@ -50,6 +52,8 @@
 #define SOLID_BREATH_ENERGY_RATE_Q4 32
 #define SERIAL_DIAGNOSTICS 1
 #define ACCEL_DIAGNOSTICS SERIAL_DIAGNOSTICS
+#define TAP_CAL_DIAGNOSTICS 0
+#define MIC_MODE_DIAGNOSTICS 0
 #define ACCEL_DIAG_PRINT_SAMPLES 48
 
 // Prototypes
@@ -84,8 +88,11 @@ void cfgLoad(void);
 void cfgSave(void);
 void printCfg(void);
 void pollUartCmd(void);
+void uartStashPoll(void);
 void enterSolidMode(void);
 void exitSolidMode(void);
+void setDisplayMode(uint8_t m);
+uint8_t nextTapDisplayMode(uint8_t m);
 void accelConfig(void);
 void micPowerOn(void);
 void micPowerOff(void);
@@ -136,6 +143,14 @@ volatile uint8_t solid_breath = 1;        // Ring level in mode 1, driven by the
 volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
 volatile uint8_t solid_wake_hold = 0;     // Frames of full darkness after waking in breathing mode
 volatile uint8_t mic_warmup = 0;          // Frames until the PDM mic's modulator output is trusted
+
+// The USART has a single-byte buffer and mic captures blank the main loop
+// for up to 18 ms while shell characters arrive 1 ms apart: capture loops
+// stash incoming bytes between sub-windows so commands are not dropped.
+// 4-deep ring: a command is 2 bytes and up to two can pile up per frame.
+volatile uint8_t uart_stash[4];
+volatile uint8_t uart_stash_head = 0;
+volatile uint8_t uart_stash_tail = 0;
 volatile uint8_t isr_frames = 0;          // Free-running 48 Hz frame counter
 volatile uint8_t jolt_skip = 0;           // Hide the mode-exit tap from the motion pattern
 
@@ -678,7 +693,7 @@ void main(void) {
     if (sleep) {
       // -- SAFE SLEEP SHUTDOWN SEQUENCE --
       if (display_mode >= 2) {
-        exitSolidMode(); // mic modes are bench modes: power the mic down
+        setDisplayMode(0); // mic modes don't persist through sleep
       }
       disableTim2();
       ledLow(prevLed);
@@ -807,7 +822,7 @@ void main(void) {
               solid_breath--;
             }
           }
-#if ACCEL_DIAGNOSTICS
+#if MIC_MODE_DIAGNOSTICS
           static uint8_t mic_diag = 0;
           if (++mic_diag >= 48) {
             mic_diag = 0;
@@ -826,7 +841,7 @@ void main(void) {
         if (mic_warmup > 0) {
           mic_warmup--;
         }
-#if ACCEL_DIAGNOSTICS
+#if MIC_MODE_DIAGNOSTICS
         static uint8_t scope_diag = 0;
         if (++scope_diag >= 50) {
           scope_diag = 0;
@@ -871,7 +886,7 @@ void main(void) {
                                         // clearly visible 9-26 of 32
             solid_breath = (br > 32) ? 32 : (uint8_t)br;
           }
-#if ACCEL_DIAGNOSTICS
+#if MIC_MODE_DIAGNOSTICS
           static uint8_t env_diag = 0;
           if (++env_diag >= 48) {
             env_diag = 0;
@@ -937,11 +952,13 @@ void main(void) {
           }
 #if ACCEL_DIAGNOSTICS
           accel_fail_count++;
-          accel_diag_tick++;
-          if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
-            accel_diag_tick = 0;
-            printf("ACCEL read_fail ok=%u fail=%u addr8=0x%02X status=0x%02X\r\n",
-                   accel_ok_count, accel_fail_count, sc7a20_addr, accel_read_status());
+          if (display_mode < 2 || MIC_MODE_DIAGNOSTICS) {
+            accel_diag_tick++;
+            if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
+              accel_diag_tick = 0;
+              printf("ACCEL read_fail ok=%u fail=%u addr8=0x%02X status=0x%02X\r\n",
+                     accel_ok_count, accel_fail_count, sc7a20_addr, accel_read_status());
+            }
           }
 #endif
           angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
@@ -1003,6 +1020,7 @@ accel_read_ok:
 
         // 2. Build motion charge, then let charge feed visual energy.
         // Isolated jolts decay away; repeated steps build enough charge to wake the pattern.
+        uint8_t tap_charge = motion_charge;
         uint16_t next_charge = ((uint16_t)motion_charge * MOTION_CHARGE_DECAY) >> 8;
         if (active_jolt > 0) {
           uint8_t charge_input = active_jolt;
@@ -1047,32 +1065,20 @@ accel_read_ok:
         // Starts armed-off for ~1 s: the first accelerometer reads after
         // boot are transient garbage and can fake a double-tap.
         static uint8_t tap_refractory = 48;
-        // A tap must rise out of quiet: continuous handling and train rumble
-        // hold active_jolt elevated across consecutive samples (calibration
-        // recording 2026-07-03: noise streams of 40-124 with the sample
-        // before also elevated), while a real tap's preceding sample is
-        // near-zero. This isolation gate is what lets the threshold sit
-        // low enough (110) to catch soft taps, which measured 124-141.
-        static int16_t prev_active_jolt = 0;
-        uint8_t rose_from_quiet = (prev_active_jolt < 30);
-#if ACCEL_DIAGNOSTICS
+#if TAP_CAL_DIAGNOSTICS
         // Calibration trace: log every candidate spike, not just fires, so
         // a serial recording shows near-misses and their timing.
         if (active_jolt > 40) {
-          printf("TAPCAL a=%d p=%d ch=%u w=%u r=%u\r\n",
-                 (int)active_jolt, (int)prev_active_jolt, motion_charge,
-                 tap_window, tap_refractory);
+          printf("TAPCAL a=%d ch=%u pre=%u w=%u r=%u\r\n",
+                 (int)active_jolt, motion_charge, tap_charge, tap_window,
+                 tap_refractory);
         }
 #endif
         if (tap_refractory > 0) {
           tap_refractory--;
-        } else if (active_jolt > TAP_JOLT_MIN && motion_charge < 12 && rose_from_quiet) {
+        } else if (active_jolt > TAP_JOLT_MIN && tap_charge < TAP_STILL_CHARGE_MAX) {
           if (tap_window > 0) {
-            if (display_mode) {
-              exitSolidMode();
-            } else {
-              enterSolidMode();
-            }
+            setDisplayMode(nextTapDisplayMode(display_mode));
             tap_window = 0;
             motion_charge = 0;
             energy = 0;
@@ -1089,7 +1095,6 @@ accel_read_ok:
         if (tap_window > 0) {
           tap_window--;
         }
-        prev_active_jolt = active_jolt;
 
         // Precompute the ISR's render parameters here at 48 Hz so the
         // 7.8 kHz ISR does table lookups and shifts only, no division.
@@ -1231,15 +1236,17 @@ accel_read_ok:
 
 
 #if ACCEL_DIAGNOSTICS
-        accel_diag_tick++;
-        if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
-          accel_diag_tick = 0;
-          printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d charge=%u tilt=%d energy=%u base=%u vel=%d br=%u mode=%u status=0x%02X\r\n",
-                 accel_ok_count, accel_fail_count,
-                 (int)rx, (int)ry, (int)rz,
-                 (int)jolt, (int)active_jolt, motion_charge, (int)planar_tilt,
-                 energy, base_led, (int)angular_velocity_q4,
-                 breathing_brightness, display_mode, accel_read_status());
+        if (display_mode < 2 || MIC_MODE_DIAGNOSTICS) {
+          accel_diag_tick++;
+          if (accel_diag_tick >= ACCEL_DIAG_PRINT_SAMPLES) {
+            accel_diag_tick = 0;
+            printf("ACCEL ok=%u fail=%u raw=%d,%d,%d jolt=%d active=%d charge=%u tilt=%d energy=%u base=%u vel=%d br=%u mode=%u status=0x%02X\r\n",
+                   accel_ok_count, accel_fail_count,
+                   (int)rx, (int)ry, (int)rz,
+                   (int)jolt, (int)active_jolt, motion_charge, (int)planar_tilt,
+                   energy, base_led, (int)angular_velocity_q4,
+                   breathing_brightness, display_mode, accel_read_status());
+          }
         }
 #endif
       }
@@ -1561,6 +1568,57 @@ void exitSolidMode(void) {
   display_mode = 0;
 }
 
+uint8_t nextTapDisplayMode(uint8_t m) {
+  switch (m) {
+    case 2: return 0; // Mic VU -> motion
+    case 0: return 1; // Motion -> breathing
+    case 1: return 3; // Breathing -> mic scope
+    case 3: return 4; // Mic scope -> mic bass envelope
+    default: return 2; // Mic bass, or any unknown mode -> Mic VU
+  }
+}
+
+// One place for every mode transition (double-tap rotation, shell
+// commands, sleep): tears down the current mode - powering the mic off
+// when leaving a mic mode - and sets up the target.
+//   0 motion  1 breathing  2 mic VU  3 mic scope  4 mic bass envelope
+void setDisplayMode(uint8_t m) {
+  if (display_mode == m) {
+    return;
+  }
+  if (display_mode >= 2 && m < 2) {
+    micPowerOff();
+  }
+  if (m == 1) {
+    enterSolidMode();
+    return;
+  }
+  if (m >= 2) {
+    if (display_mode < 2) {
+      micPowerOn();
+      mic_warmup = 24;
+    }
+    solid_frames = 0;
+    solid_breath = 1;
+    display_mode = m;
+    return;
+  }
+  jolt_skip = 1; // back to motion: first polled delta is stale
+  display_mode = 0;
+}
+
+void uartStashPoll(void) {
+  if (sfr_USART1.SR.RXNE) {
+    uint8_t next = (uint8_t)((uart_stash_head + 1) & 3);
+    if (next != uart_stash_tail) {
+      uart_stash[uart_stash_head] = sfr_USART1.DR.byte;
+      uart_stash_head = next;
+    } else {
+      (void)sfr_USART1.DR.byte; // ring full: drop rather than deadlock
+    }
+  }
+}
+
 // ---- PDM microphone over SPI1 ----
 // The xlMic board routes the PDM mic onto SPI1's natural pins: PDM_CLK is
 // PB5 (SPI1_SCK) and PDM_DTA is PB7 (SPI1_MISO). Running SPI1 as a master
@@ -1664,6 +1722,7 @@ uint8_t micBurst(uint8_t *density_out, uint8_t *spread_out) {
     }
     sub_ones[blk] = (uint8_t)ones;
     total += ones;
+    uartStashPoll();
   }
 
   if (render_paused) {
@@ -1722,6 +1781,7 @@ uint8_t micScopeFrame(void) {
       while (led >= 90) led -= 90;
       setLed((uint8_t)led);
     }
+    uartStashPoll();
   }
 
   if (render_was_on) {
@@ -1764,6 +1824,7 @@ uint8_t micEnvFrame(uint16_t *spread_out) {
     }
     if (ones < mn) mn = ones;
     if (ones > mx) mx = ones;
+    uartStashPoll();
   }
 
   if (render_paused) {
@@ -1834,10 +1895,15 @@ void pollUartCmd(void) {
   static char buf[6];
   static uint8_t len = 0;
 
-  if (!sfr_USART1.SR.RXNE) {
+  char c;
+  if (uart_stash_tail != uart_stash_head) {
+    c = (char)uart_stash[uart_stash_tail];
+    uart_stash_tail = (uint8_t)((uart_stash_tail + 1) & 3);
+  } else if (sfr_USART1.SR.RXNE) {
+    c = sfr_USART1.DR.byte;
+  } else {
     return;
   }
-  char c = sfr_USART1.DR.byte;
 
   if (c != '\r' && c != '\n') {
     if (c < ' ' || c > '~') {
@@ -1861,51 +1927,16 @@ void pollUartCmd(void) {
     cpxAllHiZ();
     printCfg();
   } else if (buf[0] == 'm' && len == 1) {
-    if (display_mode) {
-      exitSolidMode();
-    } else {
-      enterSolidMode();
-    }
+    setDisplayMode((display_mode == 1) ? 0 : 1);
     printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'v' && len == 1) {
-    if (display_mode == 2) {
-      exitSolidMode();
-    } else {
-      if (display_mode) {
-        exitSolidMode();
-      }
-      micPowerOn();
-      solid_frames = 0;
-      solid_breath = 1;
-      mic_warmup = 24; // ~0.5 s of clocked settling before levels count
-      display_mode = 2;
-    }
+    setDisplayMode((display_mode == 2) ? 0 : 2);
     printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'o' && len == 1) {
-    if (display_mode == 3) {
-      exitSolidMode();
-    } else {
-      if (display_mode) {
-        exitSolidMode();
-      }
-      micPowerOn();
-      mic_warmup = 24;
-      display_mode = 3;
-    }
+    setDisplayMode((display_mode == 3) ? 0 : 3);
     printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'b' && len == 1) {
-    if (display_mode == 4) {
-      exitSolidMode();
-    } else {
-      if (display_mode) {
-        exitSolidMode();
-      }
-      micPowerOn();
-      mic_warmup = 24;
-      solid_frames = 0;
-      solid_breath = 1;
-      display_mode = 4;
-    }
+    setDisplayMode((display_mode == 4) ? 0 : 4);
     printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'a' && len == 1) {
     // One-shot mic liveness test: healthy silence sits near dens=120/240
