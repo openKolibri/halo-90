@@ -129,8 +129,11 @@ volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the co
 volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down after long stillness
 volatile uint8_t solid_breath = 1;        // Retained: audio level scratch value
 volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
-volatile uint8_t bass_extent = 0;         // Bass arc half-width in LEDs (0 = silent)
+volatile uint8_t bass_extent = 0;         // Bass arc half-width (0 silent, 45 = full ring)
 volatile uint8_t bass_glow = 0;           // Bass arc brightness, 0-32
+// Q8 reciprocal of bass_extent (256/extent), precomputed at 24 Hz so the
+// render ISR can turn glow_dist into a 0..255 radial without a divide.
+volatile uint8_t bass_inv_extent_q8 = 0;
 volatile uint8_t mic_warmup = 0;          // Frames until the PDM mic's modulator output is trusted
 
 // The USART has a single-byte buffer and mic captures blank the main loop
@@ -512,13 +515,72 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   // low point the comet rests at, so the earring answers both motion and
   // music in one picture. Brightest-wins keeps the comet head visible on
   // top of the glow instead of averaging the two into mush.
+  //
+  // Quiet arcs stay a solid swell under the comet. As volume rises the
+  // outer/top of the arc takes on the same shimmer + fragmentation the
+  // motion path uses at high energy, while the body falls off toward the
+  // bottom so loud music reads as a solid base fading into sparkle above.
+  // At full volume half-width reaches LED_COUNT/2 so the left and right
+  // extents overflow into each other and the whole ring is lit.
   if (bass_extent > 0) {
     uint8_t ab = 0;
-    if (glow_dist < bass_extent) {
+    if (bass_extent >= (LED_COUNT / 2)) {
+      // Both sides have met at the top: solid full ring.
+      ab = bass_glow;
+    } else if (glow_dist < bass_extent) {
       ab = bass_glow;
     } else if (glow_dist == bass_extent) {
-      ab = bass_glow >> 2; // soft edge
+      ab = bass_glow >> 2; // soft edge while the arc is still open
     }
+
+    if (ab > 0 && glow_dist > 0 && bass_inv_extent_q8 > 0) {
+      // 0 at the comet, ~255 at the outer tip of the arc.
+      uint16_t radial = (uint16_t)glow_dist * bass_inv_extent_q8;
+      if (radial > 255) {
+        radial = 255;
+      }
+
+      // Volume-driven falloff: at high extent the upper arc dims so the
+      // solid body "fades into the bottom", leaving the tip for sparkle.
+      if (bass_extent > 12) {
+        uint8_t fade = (uint8_t)((radial * (uint16_t)(bass_extent - 12)) >> 6);
+        if (fade >= ab) {
+          ab = ab >> 2;
+        } else {
+          ab -= fade;
+        }
+      }
+
+      // Outer-arc sparkle: same ingredients as the motion-energy shimmer
+      // (random boost + fragmentation holes), gated so only the top half
+      // of a substantial arc breaks up.
+      if (bass_extent > 10 && radial > 64) {
+        uint16_t r = fast_rand();
+        uint8_t chance = (uint8_t)(((uint16_t)bass_extent * radial) >> 6);
+        if ((uint8_t)r < chance) {
+          uint8_t shimmer = ((r >> 8) & 0x07) + (bass_extent >> 3);
+          ab += shimmer;
+          if (ab > FULL_BRIGHTNESS) {
+            ab = FULL_BRIGHTNESS;
+          }
+        }
+
+        if (bass_extent > 18 && radial > 96 && ab < FULL_BRIGHTNESS &&
+            glow_dist > 2) {
+          uint8_t mask_pos =
+              ((led_to_light * 5) + time_ticks + (bass_extent >> 2)) & 0x1F;
+          // Lower threshold higher up / louder → more holes near the tip.
+          uint8_t thresh = 30 - (uint8_t)((radial * 18) >> 8) - (bass_extent >> 3);
+          if (thresh < 10) {
+            thresh = 10;
+          }
+          if (mask_pos >= thresh) {
+            ab = 0;
+          }
+        }
+      }
+    }
+
     if (ab > brightness) {
       brightness = ab;
     }
@@ -810,6 +872,7 @@ void main(void) {
           if (mic_warmup > 0) {
             mic_warmup--;
             bass_extent = 0;
+            bass_inv_extent_q8 = 0;
           } else if (ok) {
             if (spread < env_floor) {
               env_floor = spread;       // snap down to quieter floor
@@ -829,11 +892,25 @@ void main(void) {
             }
             if (envelope < 3) {
               bass_extent = 0;          // silence: comet alone, no glow
+              bass_inv_extent_q8 = 0;
             } else {
-              uint16_t ext = 2 + ((envelope * 3) >> 2); // ~2-40 LEDs
-              bass_extent = (ext > 40) ? 40 : (uint8_t)ext;
-              uint16_t g = 6 + envelope;
-              bass_glow = (g > 26) ? 26 : (uint8_t)g; // stays under the comet
+              // Soft midrange curve that still reaches a full ring at high
+              // volume: half-width asymptote sits above LED_COUNT/2, then
+              // clamps so the left and right arcs overflow into each other
+              // (every LED has glow_dist <= 45) instead of leaving a dark
+              // gap at the top.
+              uint16_t e = envelope;
+              // e≈20 → ~27, e≈60 → ~39, e≈120 → ~44, e≥~150 → 45 (full ring)
+              uint16_t ext = 2 + ((uint16_t)e * 50) / (e + 20);
+              if (ext > (LED_COUNT / 2)) {
+                ext = LED_COUNT / 2;
+              }
+              bass_extent = (uint8_t)ext;
+              // Soft ceiling on glow so the comet head still wins at peak.
+              uint16_t g = 6 + ((uint16_t)e * 20) / (e + 20);
+              bass_glow = (g > 26) ? 26 : (uint8_t)g;
+              // 256/extent for the ISR radial; extent is always >= 2 here.
+              bass_inv_extent_q8 = (uint8_t)(256u / bass_extent);
             }
           }
 #if MIC_MODE_DIAGNOSTICS
