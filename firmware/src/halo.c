@@ -32,8 +32,11 @@
 #define STILL_ENERGY_THRESHOLD 10
 #define MOTION_CHARGE_START 8
 #define MOTION_CHARGE_BURST 20
-#define MOTION_CHARGE_DECAY 204
-#define ENERGY_DECAY_DIVISOR 183
+// Multiplicative keep-factor (Q8): 152/256 ≈ 0.59, so ~41% of charge is
+// lost each 48 Hz sample — 2x the old 204/256 (20%) decay rate.
+#define MOTION_CHARGE_DECAY 152
+// Smaller divisor = faster proportional energy drain (was 183; half ≈ 2x).
+#define ENERGY_DECAY_DIVISOR 91
 #define MOTION_CHARGE_SCALE_DIVISOR 25
 #define MOTION_CHARGE_INPUT_MAX 120
 #define DISPLAY_MODE_COUNT 2    // motion+bass (combined), mic oscilloscope
@@ -816,6 +819,8 @@ void main(void) {
                                         // must not get eaten as "noise"
             }
             uint16_t sig = (spread > env_floor) ? (spread - env_floor) : 0;
+            // 50% more mic sensitivity: amplify residual over the noise floor.
+            sig = (uint16_t)((sig * 3) >> 1);
             if (sig > envelope) {
               envelope = sig;                       // instant attack
             } else {
@@ -920,8 +925,8 @@ accel_read_ok:
         }
         motion_charge = (uint8_t)next_charge;
 
-        // Decay by about energy/183 per 48 Hz sample: roughly 5x longer
-        // than the old energy/37 decay, but still proportional to energy.
+        // Decay by about energy/91 per 48 Hz sample (2x the previous
+        // energy/183 rate), still proportional to energy.
         static uint16_t energy_decay_accum = 0;
         uint16_t next_energy = energy;
         energy_decay_accum += energy;
