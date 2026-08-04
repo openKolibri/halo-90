@@ -44,7 +44,7 @@
 #define TAP_WINDOW_SAMPLES 24   // ~0.5 s to land the second tap
 #define TAP_GAP_SAMPLES 4       // ~80 ms refractory; one tap spans 1-2 samples
 #define TAP_STILL_CHARGE_MAX 12
-#define DISPLAY_MODE_COUNT 5    // motion, breathing, mic VU, mic scope, mic bass
+#define DISPLAY_MODE_COUNT 2    // motion+bass (combined), mic oscilloscope
 #define ACCEL_SAMPLE_TICKS 163
 #define SOLID_BREATH_CYCLE_TICKS 240
 #define SOLID_BREATH_LUT_SIZE 64
@@ -142,6 +142,8 @@ volatile uint8_t display_mode = 0;        // 0 = motion pattern, 1 = breathing s
 volatile uint8_t solid_breath = 1;        // Ring level in mode 1, driven by the breath curve
 volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
 volatile uint8_t solid_wake_hold = 0;     // Frames of full darkness after waking in breathing mode
+volatile uint8_t bass_extent = 0;         // Bass arc half-width in LEDs (0 = silent)
+volatile uint8_t bass_glow = 0;           // Bass arc brightness, 0-32
 volatile uint8_t mic_warmup = 0;          // Frames until the PDM mic's modulator output is trusted
 
 // The USART has a single-byte buffer and mic captures blank the main loop
@@ -422,30 +424,14 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   if (++frame_div >= ACCEL_SAMPLE_TICKS) {
     frame_div = 0;
     isr_frames++;
-    if (display_mode) {
-      solid_frames++;
-    }
+    solid_frames++;
   }
 
   uint8_t led_to_light = nextPwmScanLed();
 
   // Scope mode: the main loop draws waveform positions directly; leaving
   // the current LED lit between windows is what gives the POV persistence.
-  if (display_mode == 3) {
-    sfr_TIM2.SR1.UIF = 0;
-    return;
-  }
-
-  // Solid ring mode: the whole ring at one level, breathing on the sleep
-  // curve. Nothing else (comet, sparks, glow, fragmentation) renders.
-  if (display_mode) {
-    if (cpx_group_enabled) {
-      renderSolidGroup(solid_breath);
-    } else if (pwmAllows(led_to_light, gamma_lut[solid_breath])) {
-      setLed(led_to_light);
-    } else {
-      ledLow(prevLed);
-    }
+  if (display_mode == 1) {
     sfr_TIM2.SR1.UIF = 0;
     return;
   }
@@ -539,6 +525,22 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     uint8_t mask_pos = ((led_to_light * 5) + time_ticks + (energy >> 3)) & 0x1F;
     if (mask_pos >= frag_threshold_v) {
       brightness = 0;
+    }
+  }
+
+  // Sound layer: the bass envelope swells an arc out of the same gravity
+  // low point the comet rests at, so the earring answers both motion and
+  // music in one picture. Brightest-wins keeps the comet head visible on
+  // top of the glow instead of averaging the two into mush.
+  if (bass_extent > 0) {
+    uint8_t ab = 0;
+    if (glow_dist < bass_extent) {
+      ab = bass_glow;
+    } else if (glow_dist == bass_extent) {
+      ab = bass_glow >> 2; // soft edge
+    }
+    if (ab > brightness) {
+      brightness = ab;
     }
   }
 
@@ -661,6 +663,8 @@ void main(void) {
   accelConfig();
   printAccelConfig("boot");
 
+
+
   // Enable Ultra-Low Power (disables internal references when halted)
   // Enable Flash/EEPROM power-down during HALT (Fixes the 1.2mA standby leak!)
   sfr_PWR.CSR2.ULP = 1;
@@ -692,9 +696,8 @@ void main(void) {
   while(1){
     if (sleep) {
       // -- SAFE SLEEP SHUTDOWN SEQUENCE --
-      if (display_mode >= 2) {
-        setDisplayMode(0); // mic modes don't persist through sleep
-      }
+      setDisplayMode(0);  // wake into the motion+bass mode
+      micPowerOff();      // mic is powered whenever awake; off for halt
       disableTim2();
       ledLow(prevLed);
       
@@ -763,6 +766,8 @@ void main(void) {
       // Ensure initAccel is called to refresh configuration if I2C was disrupted
       initAccel();
       accelConfig();
+      micPowerOn();
+      mic_warmup = 24;
       printAccelConfig("wake");
       
       energy = 0;
@@ -796,44 +801,85 @@ void main(void) {
       sleep = 0; 
 
     } else {
+      // The render ISR is the only wake source here, and the mic and I2C
+      // capture paths disable it while they own the pins. If one ever
+      // returns without restoring it, WFI would sleep forever - so make
+      // the loop self-healing rather than trusting every exit path.
+      if (!sleep && !sfr_TIM2.IER.UIE) {
+        sfr_TIM2.SR1.UIF = 0;
+        sfr_TIM2.IER.UIE = 1;
+      }
+
       WAIT_FOR_INTERRUPT();
 
       if (!sleep) {
         pollUartCmd();
       }
 
-      if (!sleep && display_mode == 2) {
-        // Mic VU mode: each 48 Hz frame captures one 2 ms PDM burst and
-        // maps the audio activity (density spread) onto ring brightness.
-        // Accelerometer polling continues below so double-tap still exits.
-        if (solid_frames > 0) {
-          solid_frames--;
-          uint8_t dens = 0, spread = 0;
-          uint8_t ok = micBurst(&dens, &spread);
+      // The mic runs whenever the device is awake (the bass layer is part
+      // of the motion mode, not a mode you switch into), but it is started
+      // from the running loop rather than during boot: enabling SPI before
+      // the render ISR and interrupts are up wedges the MCU.
+      static uint8_t mic_started = 0;
+      if (!sleep && !mic_started) {
+        mic_started = 1;
+        micPowerOn();
+        mic_warmup = 48;
+      }
+
+      if (!sleep && display_mode == 0 && solid_frames > 0) {
+        // Sound layer for the motion mode: one 8 ms capture every other
+        // frame (24 Hz). Halving the rate keeps the render blackout near
+        // 19% so the comet stays bright, while the envelope still tracks
+        // beats faster than the eye resolves.
+        solid_frames--;
+        static uint8_t bass_phase = 0;
+        if (++bass_phase >= 2) {
+          bass_phase = 0;
+          uint16_t spread = 0;
+          uint8_t ok = micEnvFrame(&spread);
+          static uint16_t env_floor = 8;
+          static uint16_t envelope = 0;
+          static uint8_t floor_tick = 0;
           if (mic_warmup > 0) {
-            mic_warmup--;      // modulator still settling: ignore output
-            solid_breath = 1;
+            mic_warmup--;
+            bass_extent = 0;
           } else if (ok) {
-            uint8_t level = (spread > 31) ? 31 : spread;
-            // Fast attack, slow release so speech reads as flicker-free
-            if ((uint8_t)(1 + level) > solid_breath) {
-              solid_breath = 1 + level;
-            } else if (solid_breath > 1) {
-              solid_breath--;
+            if (spread < env_floor) {
+              env_floor = spread;       // snap down to quieter floor
+            } else if (++floor_tick >= 32) {
+              floor_tick = 0;
+              env_floor++;              // creep up slowly: sustained music
+                                        // must not get eaten as "noise"
+            }
+            uint16_t sig = (spread > env_floor) ? (spread - env_floor) : 0;
+            if (sig > envelope) {
+              envelope = sig;                       // instant attack
+            } else {
+              envelope -= (envelope >> 3);          // exponential release
+              if (envelope > 0) envelope--;
+            }
+            if (envelope < 3) {
+              bass_extent = 0;          // silence: comet alone, no glow
+            } else {
+              uint16_t ext = 2 + ((envelope * 3) >> 2); // ~2-40 LEDs
+              bass_extent = (ext > 40) ? 40 : (uint8_t)ext;
+              uint16_t g = 6 + envelope;
+              bass_glow = (g > 26) ? 26 : (uint8_t)g; // stays under the comet
             }
           }
 #if MIC_MODE_DIAGNOSTICS
-          static uint8_t mic_diag = 0;
-          if (++mic_diag >= 48) {
-            mic_diag = 0;
-            printf("MIC ok=%u dens=%u spread=%u br=%u\r\n",
-                   ok, dens, spread, solid_breath);
+          static uint8_t env_diag = 0;
+          if (++env_diag >= 24) {
+            env_diag = 0;
+            printf("ENV spread=%u floor=%u env=%u ext=%u glow=%u\r\n",
+                   spread, env_floor, envelope, bass_extent, bass_glow);
           }
 #endif
         }
       }
 
-      if (!sleep && display_mode == 3) {
+      if (!sleep && display_mode == 1) {
         // Oscilloscope mode: one ~18 ms drawing frame per pass, then fall
         // through with the accel divider forced so motion sampling and the
         // double-tap exit keep running at ~50 Hz despite the long passes.
@@ -849,84 +895,6 @@ void main(void) {
         }
 #endif
         accel_tick = ACCEL_SAMPLE_TICKS;
-      }
-
-      if (!sleep && display_mode == 4) {
-        // Bass envelope mode: per 48 Hz frame, one 8 ms capture. A slow
-        // noise-floor tracker keeps silence dark; the envelope attacks
-        // instantly and releases exponentially (~0.2 s) so beats punch
-        // and decays glide instead of flickering.
-        if (solid_frames > 0) {
-          solid_frames--;
-          uint16_t spread = 0;
-          uint8_t ok = micEnvFrame(&spread);
-          static uint16_t env_floor = 8;
-          static uint16_t envelope = 0;
-          static uint8_t floor_tick = 0;
-          if (mic_warmup > 0) {
-            mic_warmup--;
-            solid_breath = 1;
-          } else if (ok) {
-            if (spread < env_floor) {
-              env_floor = spread;       // snap down to quieter floor
-            } else if (++floor_tick >= 64) {
-              floor_tick = 0;
-              env_floor++;              // creep up slowly (~0.75/s): sustained
-                                        // music must not get eaten as "noise"
-            }
-            uint16_t sig = (spread > env_floor) ? (spread - env_floor) : 0;
-            if (sig > envelope) {
-              envelope = sig;                       // instant attack
-            } else {
-              envelope -= (envelope >> 3);          // exponential release
-              if (envelope > 0) envelope--;
-            }
-            uint16_t br = 1 + envelope; // measured: desk-distance music
-                                        // gives envelope 8-25, mapping to a
-                                        // clearly visible 9-26 of 32
-            solid_breath = (br > 32) ? 32 : (uint8_t)br;
-          }
-#if MIC_MODE_DIAGNOSTICS
-          static uint8_t env_diag = 0;
-          if (++env_diag >= 48) {
-            env_diag = 0;
-            printf("ENV spread=%u floor=%u env=%u br=%u\r\n",
-                   spread, env_floor, envelope, solid_breath);
-          }
-#endif
-        }
-      }
-
-      if (!sleep && display_mode == 1) {
-        // Solid breathing mode: the ISR renders the ring, while the main loop
-        // keeps polling the accelerometer so software double-tap can exit.
-        if (solid_frames > 0 && solid_wake_hold > 0) {
-          // Post-wake dark hold: consume frames at 0 brightness before the
-          // first breath swells up from the trough.
-          solid_frames--;
-          solid_wake_hold--;
-          solid_breath = 0;
-        } else if (solid_frames > 0) {
-          uint8_t breath_rate_q4 = SOLID_BREATH_BASE_RATE_Q4 +
-              (uint8_t)(((uint16_t)energy * SOLID_BREATH_ENERGY_RATE_Q4) / 255);
-          uint16_t breath_cycle_q4 = (uint16_t)SOLID_BREATH_CYCLE_TICKS << 4;
-          solid_frames--;
-          solid_breath_phase_q4 += breath_rate_q4;
-          while (solid_breath_phase_q4 >= breath_cycle_q4) {
-            solid_breath_phase_q4 -= breath_cycle_q4;
-          }
-          solid_breath_tick = (uint8_t)(solid_breath_phase_q4 >> 4);
-          solid_breath = sleep_breath_lut[(uint8_t)(((uint16_t)solid_breath_tick * SOLID_BREATH_LUT_SIZE) /
-                                                    SOLID_BREATH_CYCLE_TICKS)];
-#if ACCEL_DIAGNOSTICS
-          static uint8_t solid_diag = 0;
-          if (++solid_diag >= 48) {
-            solid_diag = 0;
-            printf("SOLID breath=%u tick=%u energy=%u rate=%u\r\n",
-                   solid_breath, solid_breath_tick, energy, breath_rate_q4);
-          }
-#endif
-        }
       }
 
       if (!sleep && (++accel_tick >= ACCEL_SAMPLE_TICKS)) {
@@ -1561,45 +1529,29 @@ void enterSolidMode(void) {
 }
 
 void exitSolidMode(void) {
-  if (display_mode >= 2) {
-    micPowerOff();
-  }
   jolt_skip = 1;
   display_mode = 0;
 }
 
 uint8_t nextTapDisplayMode(uint8_t m) {
-  switch (m) {
-    case 2: return 0; // Mic VU -> motion
-    case 0: return 1; // Motion -> breathing
-    case 1: return 3; // Breathing -> mic scope
-    case 3: return 4; // Mic scope -> mic bass envelope
-    default: return 2; // Mic bass, or any unknown mode -> Mic VU
-  }
+  // motion+bass -> oscilloscope -> motion+bass
+  return (uint8_t)((m + 1) % DISPLAY_MODE_COUNT);
 }
 
 // One place for every mode transition (double-tap rotation, shell
 // commands, sleep): tears down the current mode - powering the mic off
 // when leaving a mic mode - and sets up the target.
-//   0 motion  1 breathing  2 mic VU  3 mic scope  4 mic bass envelope
+//   0 motion comet with the bass envelope layered on top
+//   1 mic oscilloscope
+// The mic is powered in both modes, so transitions are display state only.
 void setDisplayMode(uint8_t m) {
   if (display_mode == m) {
     return;
   }
-  if (display_mode >= 2 && m < 2) {
-    micPowerOff();
-  }
-  if (m == 1) {
-    enterSolidMode();
-    return;
-  }
-  if (m >= 2) {
-    if (display_mode < 2) {
-      micPowerOn();
-      mic_warmup = 24;
-    }
-    solid_frames = 0;
-    solid_breath = 1;
+  solid_frames = 0;
+  solid_breath = 1;
+  bass_extent = 0;
+  if (m >= 1) {
     display_mode = m;
     return;
   }
@@ -1657,10 +1609,14 @@ void micPowerOn(void) {
   sfr_PORTD.ODR.byte |= PIN4;   // PWR_MIC on
   sfr_PORTB.DDR.byte &= ~PIN7;  // PDM_DTA -> MISO input, mic drives it
   sfr_PORTB.CR1.byte &= ~PIN7;
-  sfr_PORTB.ODR.byte &= ~PIN5;  // PDM_CLK -> SCK push-pull, fast slope
+  // PDM_CLK -> SCK push-pull, fast slope. DDR before CR2: on an input pin
+  // CR2 is the external-interrupt enable, and PB5 has no handler - setting
+  // it even momentarily while the pin is still an input hangs the MCU on
+  // an unhandled vector.
+  sfr_PORTB.ODR.byte &= ~PIN5;
   sfr_PORTB.CR1.byte |= PIN5;
-  sfr_PORTB.CR2.byte |= PIN5;
   sfr_PORTB.DDR.byte |= PIN5;
+  sfr_PORTB.CR2.byte |= PIN5;
 
   sfr_CLK.PCKENR1.PCKEN14 = 1;  // SPI1 clock
   sfr_SPI1.CR1.byte = 0;
@@ -1682,10 +1638,10 @@ void micPowerOff(void) {
   sfr_CLK.PCKENR1.PCKEN14 = 0;
   sfr_PORTD.ODR.byte &= ~PIN4;  // PWR_MIC off
   // Park both PDM lines driven low again (unpowered mic never contends)
-  sfr_PORTB.CR2.byte &= ~PIN5;
+  sfr_PORTB.DDR.byte |= (PIN5 | PIN7); // outputs first
+  sfr_PORTB.CR2.byte &= ~PIN5;         // then drop the slope/EXTI bit
   sfr_PORTB.ODR.byte &= ~(PIN5 | PIN7);
   sfr_PORTB.CR1.byte |= (PIN5 | PIN7);
-  sfr_PORTB.DDR.byte |= (PIN5 | PIN7);
 }
 
 // One 1.92 ms PDM burst. Returns 1 on success; density_out is the mean
@@ -1776,7 +1732,8 @@ uint8_t micScopeFrame(void) {
     if (dev > peak) peak = (uint8_t)dev;
     else if (-dev > peak) peak = (uint8_t)(-dev);
     if (mic_warmup == 0) {
-      int16_t led = 45 + (dev * 2); // x2 gain: full swing wraps like master's mod 90
+      // Centered on the gravity low point, like the comet and the bass arc.
+      int16_t led = (int16_t)base_led + (dev * 2); // x2 gain, wraps mod 90
       while (led < 0) led += 90;
       while (led >= 90) led -= 90;
       setLed((uint8_t)led);
@@ -1926,22 +1883,13 @@ void pollUartCmd(void) {
     cpx_group_enabled = cpx_group_enabled ? 0 : cpxLayoutSafe();
     cpxAllHiZ();
     printCfg();
-  } else if (buf[0] == 'm' && len == 1) {
-    setDisplayMode((display_mode == 1) ? 0 : 1);
-    printf("mode=%u\r\n", display_mode);
-  } else if (buf[0] == 'v' && len == 1) {
-    setDisplayMode((display_mode == 2) ? 0 : 2);
-    printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'o' && len == 1) {
-    setDisplayMode((display_mode == 3) ? 0 : 3);
-    printf("mode=%u\r\n", display_mode);
-  } else if (buf[0] == 'b' && len == 1) {
-    setDisplayMode((display_mode == 4) ? 0 : 4);
+    setDisplayMode((display_mode == 1) ? 0 : 1);
     printf("mode=%u\r\n", display_mode);
   } else if (buf[0] == 'a' && len == 1) {
     // One-shot mic liveness test: healthy silence sits near dens=120/240
     // with a small spread; a stuck data line reads dens=0 or dens=240.
-    uint8_t was_on = (display_mode == 2);
+    uint8_t was_on = (display_mode >= 1);
     uint8_t dens = 0, spread = 0, ok = 0;
     if (!was_on) {
       micPowerOn();
@@ -1982,7 +1930,7 @@ void pollUartCmd(void) {
     if (ok) {
       printCfg();
     } else {
-      printf("? d/s/t/b<0-255> g m v o b a p w\r\n");
+      printf("? d/s/t/b<0-255> g o l a p w\r\n");
     }
   }
   len = 0;
