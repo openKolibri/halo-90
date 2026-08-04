@@ -20,9 +20,6 @@
 #define SCAN_STRIDE 10
 #define SCAN_BANKS 10
 #define CPX_LINE_COUNT 10
-#define GROUP_MAX_SINKS 3
-#define GROUP_SLOTS 3
-#define GROUP_BRIGHTNESS_MAX BRIGHTNESS_STEPS
 // Rotates the atan2 gravity vector onto the earring's lowest LED, so the
 // comet rests at the bottom of the hoop (was 68 = topmost, bubble-style).
 #define BUBBLE_LEVEL_OFFSET 23
@@ -39,16 +36,12 @@
 #define ENERGY_DECAY_DIVISOR 91
 #define MOTION_CHARGE_SCALE_DIVISOR 25
 #define MOTION_CHARGE_INPUT_MAX 120
-#define DISPLAY_MODE_COUNT 2    // motion+bass (combined), mic oscilloscope
 #define ACCEL_SAMPLE_TICKS 163
-#define SOLID_BREATH_CYCLE_TICKS 240
-#define SOLID_BREATH_LUT_SIZE 64
-#define SOLID_BREATH_BASE_RATE_Q4 16
-#define SOLID_BREATH_ENERGY_RATE_Q4 32
 #define SERIAL_DIAGNOSTICS 1
 #define ACCEL_DIAGNOSTICS SERIAL_DIAGNOSTICS
 #define MIC_MODE_DIAGNOSTICS 0
 #define ACCEL_DIAG_PRINT_SAMPLES 48
+#define BASS_EXTENT_MAX (LED_COUNT / 2)  // 45: left/right arcs meet → full ring
 
 // Prototypes
 void setLed(uint8_t led);
@@ -56,9 +49,6 @@ void ledHigh(uint8_t led);
 void ledLow(uint8_t led);
 void cpxAllHiZ(void);
 uint8_t cpxLayoutSafe(void);
-uint8_t cpxGroupSafe(uint8_t high, uint16_t low_mask);
-uint8_t driveCpxGroup(uint8_t high, uint16_t low_mask);
-void renderSolidGroup(uint8_t brightness);
 uint16_t fast_rand(void);
 uint16_t safe_rand(void);
 uint8_t nextPwmScanLed(void);
@@ -126,9 +116,7 @@ volatile uint8_t time_ticks = 0;          // Dynamic mask reference counter
 volatile uint8_t breathing_brightness = 2; // PWM duty cycle (0 to 32)
 volatile int8_t comet_dir = 1;            // Last direction of travel; tail trails behind it
 volatile uint8_t settle_extent = 0;       // Lit arc radius draining into the comet on settle
-volatile uint8_t comet_peak = FULL_BRIGHTNESS; // Comet head level; eases down after long stillness
-volatile uint8_t solid_breath = 1;        // Retained: audio level scratch value
-volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR while in mode 1
+volatile uint8_t solid_frames = 0;        // 48 Hz frame pulses from the ISR
 volatile uint8_t bass_extent = 0;         // Bass arc half-width (0 silent, 45 = full ring)
 volatile uint8_t bass_glow = 0;           // Bass arc brightness, 0-32
 // Q8 reciprocal of bass_extent (256/extent), precomputed at 24 Hz so the
@@ -144,26 +132,6 @@ volatile uint8_t uart_stash[4];
 volatile uint8_t uart_stash_head = 0;
 volatile uint8_t uart_stash_tail = 0;
 volatile uint8_t isr_frames = 0;          // Free-running 48 Hz frame counter
-volatile uint8_t jolt_skip = 0;           // Hide the mode-exit tap from the motion pattern
-
-// Sleep breathing curve for the solid ring, Apple-indicator style: cosine
-// ease up over ~1.9 s, near-imperceptible hold at the peak, slower ~2.9 s
-// ease back down, lingering at a dim floor of 1 (never off, never a blink -
-// zero slope at both extremes). Stepped at 48 Hz: 240 steps = 5.0 s/cycle,
-// 12 breaths per minute. Values are perceptual 1-32; the ISR's gamma LUT
-// makes the fade eye-linear and the dithered PWM keeps it flicker-free.
-static const uint8_t sleep_breath_lut[SOLID_BREATH_LUT_SIZE] = {
-   1,  1,  1,  2,  3,  4,  5,  6,
-   8, 10, 11, 13, 15, 17, 19, 21,
-  22, 24, 26, 27, 28, 30, 31, 31,
-  32, 32, 32, 32, 32, 31, 31, 31,
-  30, 29, 28, 28, 27, 26, 25, 24,
-  22, 21, 20, 19, 18, 16, 15, 14,
-  12, 11, 10,  9,  8,  7,  6,  5,
-   4,  3,  3,  2,  2,  1,  1,  1
-};
-static uint8_t solid_breath_tick = 0;     // 0-239 position in the cycle
-static uint16_t solid_breath_phase_q4 = 0; // 0-3839, allows energy-scaled speed
 
 // Render parameters precomputed at the 48 Hz sample rate so the 7.8 kHz
 // render ISR never performs a (software) division.
@@ -181,13 +149,16 @@ volatile uint8_t still_mode = 1;
 volatile uint8_t pwm_scan_led = 0;
 volatile uint8_t pwm_scan_bank = 0;
 volatile uint8_t pwm_phase = 0;
-volatile uint8_t solid_group_source = 0;
-volatile uint8_t solid_group_slot = 0;
 volatile uint8_t cpx_group_enabled = 1;
-volatile uint16_t cpx_unsafe_group_blocks = 0;
 volatile uint8_t burst_pos = 0;
 volatile uint8_t burst_radius = 0;
 volatile uint8_t burst_life = 0;
+
+// Comet tail falloff (full peak 32 * (9-d)/9). File-scope so the ISR
+// does not re-materialize the table on every entry.
+static const uint8_t comet_tail_lut[COMET_TAIL + 1] = {
+  32, 28, 25, 21, 18, 14, 11, 7, 4
+};
 
 // Orbiting spark particles
 volatile uint8_t spark_pos[SPARK_COUNT] = {0, 0, 0, 0};
@@ -232,105 +203,6 @@ uint8_t cpxLayoutSafe(void) {
     }
   }
   return 1;
-}
-
-uint8_t cpxGroupSafe(uint8_t high, uint16_t low_mask) {
-  uint8_t sinks = 0;
-
-  if (!cpx_group_enabled || high >= CPX_LINE_COUNT || low_mask == 0) {
-    return 0;
-  }
-  if (low_mask & (uint16_t)~((1u << CPX_LINE_COUNT) - 1u)) {
-    return 0;
-  }
-  if (low_mask & (uint16_t)(1u << high)) {
-    return 0;
-  }
-
-  for (uint8_t low = 0; low < CPX_LINE_COUNT; low++) {
-    if (low_mask & (uint16_t)(1u << low)) {
-      sinks++;
-      if (sinks > GROUP_MAX_SINKS) {
-        return 0;
-      }
-      if (CPX_PORT[high] == CPX_PORT[low] && CPX_PIN[high] == CPX_PIN[low]) {
-        return 0;
-      }
-    }
-  }
-
-  return sinks > 0;
-}
-
-uint8_t driveCpxGroup(uint8_t high, uint16_t low_mask) {
-  if (!cpxGroupSafe(high, low_mask)) {
-    cpx_unsafe_group_blocks++;
-    cpxAllHiZ();
-    return 0;
-  }
-
-  cpxAllHiZ();
-
-  for (uint8_t low = 0; low < CPX_LINE_COUNT; low++) {
-    if (low_mask & (uint16_t)(1u << low)) {
-      CPX_PORT[low]->ODR.byte &= ~CPX_PIN[low];
-      CPX_PORT[low]->CR1.byte |= CPX_PIN[low];
-      CPX_PORT[low]->DDR.byte |= CPX_PIN[low];
-    }
-  }
-
-  CPX_PORT[high]->ODR.byte |= CPX_PIN[high];
-  CPX_PORT[high]->CR1.byte |= CPX_PIN[high];
-  CPX_PORT[high]->DDR.byte |= CPX_PIN[high];
-  return 1;
-}
-
-void renderSolidGroup(uint8_t brightness) {
-  // One source line fans out to up to three sinks. Every LED is revisited
-  // every 30 ISR slots; full-scale uses most of the slot for a brighter peak,
-  // while the safety checks below still prevent any source/sink short state.
-  static const uint8_t pulse_lut[GROUP_BRIGHTNESS_MAX + 1] = {
-      0,  5,  7, 10, 13, 17, 21, 25,
-     30, 35, 40, 45, 50, 55, 60, 65,
-     70, 75, 80, 85, 90, 95,100,104,
-    108,112,116,119,122,125,128,131,
-    134
-  };
-  uint16_t low_mask = 0;
-  uint8_t skipped = 0;
-  uint8_t added = 0;
-  uint8_t start = solid_group_slot * GROUP_MAX_SINKS;
-
-  if (brightness > GROUP_BRIGHTNESS_MAX) {
-    brightness = GROUP_BRIGHTNESS_MAX;
-  }
-
-  for (uint8_t low = 0; low < CPX_LINE_COUNT && added < GROUP_MAX_SINKS; low++) {
-    if (low == solid_group_source) {
-      continue;
-    }
-    if (skipped >= start) {
-      low_mask |= (uint16_t)(1u << low);
-      added++;
-    }
-    skipped++;
-  }
-
-  if (brightness > 0 && driveCpxGroup(solid_group_source, low_mask)) {
-    for (uint8_t i = 0; i < pulse_lut[brightness]; i++) {
-      NOP(); NOP(); NOP(); NOP();
-    }
-  }
-  cpxAllHiZ();
-
-  solid_group_slot++;
-  if (solid_group_slot >= GROUP_SLOTS) {
-    solid_group_slot = 0;
-    solid_group_source++;
-    if (solid_group_source >= CPX_LINE_COUNT) {
-      solid_group_source = 0;
-    }
-  }
 }
 
 uint8_t nextPwmScanLed(void) {
@@ -402,14 +274,13 @@ uint8_t pwmAllows(uint8_t led, uint8_t brightness) {
 
 ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
   if (sleep) {
-    sfr_TIM2.SR1.UIF = 0;  // clear timer 2 interrupt flag
+    sfr_TIM2.SR1.UIF = 0;
     return;
   }
 
   time_ticks++;
 
-  // 48 Hz frame clock, independent of the main loop: paces the solid-mode
-  // breathing and the accelerometer polling cadence.
+  // 48 Hz frame clock: paces mic envelope and accelerometer work.
   static uint16_t frame_div = 0;
   if (++frame_div >= ACCEL_SAMPLE_TICKS) {
     frame_div = 0;
@@ -417,62 +288,64 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     solid_frames++;
   }
 
+  // Snapshot volatiles once — the ISR used to re-read them on every branch.
   uint8_t led_to_light = nextPwmScanLed();
+  uint8_t base = base_led;
+  uint8_t still = still_mode;
+  uint8_t e = energy;
+  uint8_t bext = bass_extent;
+  uint8_t bglow = bass_glow;
+  uint8_t binv = bass_inv_extent_q8;
+  uint8_t gwidth = glow_width_v;
+  uint16_t gscale = glow_scale_v;
+  uint8_t fthresh = frag_threshold_v;
+  uint8_t sett = settle_extent;
+  int8_t cdir = comet_dir;
+  uint8_t ticks = time_ticks;
 
   uint8_t brightness;
-  uint8_t glow_dist = ringDistance(led_to_light, base_led);
+  uint8_t glow_dist = ringDistance(led_to_light, base);
 
-  if (still_mode) {
-    // Comet resting at the low point: steady bright head (no breathing),
-    // tail fading behind the direction of travel.
-    // Tail falloff at full peak (32 * (9 - d) / 9), scaled by comet_peak.
-    static const uint8_t tail_lut[COMET_TAIL + 1] = {32, 28, 25, 21, 18, 14, 11, 7, 4};
+  if (still) {
+    // Comet at the gravity low point: full-bright head, directional tail.
     brightness = 0;
     if (glow_dist == 0) {
-      brightness = comet_peak;
+      brightness = FULL_BRIGHTNESS;
     } else if (glow_dist <= COMET_TAIL) {
-      uint8_t fwd = (led_to_light >= base_led)
-                        ? (led_to_light - base_led)
-                        : (led_to_light + LED_COUNT - base_led);
-      uint8_t on_tail = (comet_dir > 0) ? (fwd >= LED_COUNT - COMET_TAIL)
-                                        : (fwd <= COMET_TAIL);
+      uint8_t fwd = (led_to_light >= base)
+                        ? (led_to_light - base)
+                        : (led_to_light + LED_COUNT - base);
+      uint8_t on_tail = (cdir > 0) ? (fwd >= LED_COUNT - COMET_TAIL)
+                                   : (fwd <= COMET_TAIL);
       if (on_tail) {
-        brightness = ((uint16_t)tail_lut[glow_dist] * comet_peak) >> 5;
+        brightness = comet_tail_lut[glow_dist];
       } else if (glow_dist == 1) {
-        brightness = comet_peak >> 2; // faint nose on the leading side
+        brightness = FULL_BRIGHTNESS >> 2; // faint leading nose
       }
     }
-    // Settling drain: the LEDs that were lit when motion stopped stay on and
-    // the arc boundary slides down both sides into the comet, one LED per
-    // sample, so the mode hand-off is a continuous collapse instead of a cut.
-    if (brightness == 0 && glow_dist <= settle_extent) {
+    // Settling drain: former motion arc collapses into the comet.
+    if (brightness == 0 && glow_dist <= sett) {
       brightness = 2;
     }
   } else {
     brightness = breathing_brightness;
   }
 
-  if (!still_mode && burst_life > 0) {
+  if (!still && burst_life > 0) {
     uint8_t burst_forward = burst_pos + burst_radius;
-    uint8_t burst_back;
-
-    while (burst_forward >= LED_COUNT) {
-      burst_forward -= LED_COUNT;
+    if (burst_forward >= LED_COUNT) {
+      burst_forward -= LED_COUNT; // radius steps by 3; one subtract is enough
     }
-
-    if (burst_radius > burst_pos) {
-      burst_back = (burst_pos + LED_COUNT) - burst_radius;
-    } else {
-      burst_back = burst_pos - burst_radius;
-    }
-
-    if (ringDistance(led_to_light, burst_forward) <= 1 || ringDistance(led_to_light, burst_back) <= 1) {
+    uint8_t burst_back = (burst_radius > burst_pos)
+                             ? (uint8_t)(burst_pos + LED_COUNT - burst_radius)
+                             : (uint8_t)(burst_pos - burst_radius);
+    if (ringDistance(led_to_light, burst_forward) <= 1 ||
+        ringDistance(led_to_light, burst_back) <= 1) {
       brightness = FULL_BRIGHTNESS;
     }
   }
 
-  // Sparks render in both modes: orbiting embers when charged, falling
-  // points and jolt dust when still.
+  // Sparks: orbiting embers when charged, jolt dust when still.
   for (uint8_t j = 0; j < SPARK_COUNT; j++) {
     if (spark_life[j] > 0) {
       uint8_t spark_dist = ringDistance(led_to_light, spark_pos[j]);
@@ -484,98 +357,79 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     }
   }
 
-  if (!still_mode && glow_dist <= glow_width_v) {
-    uint8_t glow = (uint8_t)(((uint16_t)(glow_width_v - glow_dist) * glow_scale_v) >> 8);
-    brightness += glow;
+  if (!still && glow_dist <= gwidth) {
+    brightness += (uint8_t)(((uint16_t)(gwidth - glow_dist) * gscale) >> 8);
     if (brightness > FULL_BRIGHTNESS) {
       brightness = FULL_BRIGHTNESS;
     }
   }
 
-  if (!still_mode && energy > 12) {
-    uint16_t r = fast_rand();
-    if ((uint8_t)r < energy) {
-      uint8_t shimmer = ((r >> 8) & 0x07) + (energy >> 6);
-      brightness += shimmer;
+  // Cheap temporal hash instead of LFSR: same visual noise, far less ISR work.
+  uint8_t hash = (uint8_t)(led_to_light * 37u + ticks);
+
+  if (!still && e > 12) {
+    if (hash < e) {
+      brightness += (hash & 0x07) + (e >> 6);
       if (brightness > FULL_BRIGHTNESS) {
         brightness = FULL_BRIGHTNESS;
       }
     }
   }
 
-  // Fragmentation breaks the ring as movement energy rises, while preserving the bubble core.
-  if (!still_mode && energy > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
-    uint8_t mask_pos = ((led_to_light * 5) + time_ticks + (energy >> 3)) & 0x1F;
-    if (mask_pos >= frag_threshold_v) {
+  // Fragmentation breaks the ring as movement energy rises.
+  if (!still && e > 36 && brightness < FULL_BRIGHTNESS && glow_dist > 2) {
+    uint8_t mask_pos = ((led_to_light * 5) + ticks + (e >> 3)) & 0x1F;
+    if (mask_pos >= fthresh) {
       brightness = 0;
     }
   }
 
-  // Sound layer: the bass envelope swells an arc out of the same gravity
-  // low point the comet rests at, so the earring answers both motion and
-  // music in one picture. Brightest-wins keeps the comet head visible on
-  // top of the glow instead of averaging the two into mush.
-  //
-  // Quiet arcs stay a solid swell under the comet. As volume rises the
-  // outer/top of the arc takes on the same shimmer + fragmentation the
-  // motion path uses at high energy, while the body falls off toward the
-  // bottom so loud music reads as a solid base fading into sparkle above.
-  // At full volume half-width reaches LED_COUNT/2 so the left and right
-  // extents overflow into each other and the whole ring is lit.
-  if (bass_extent > 0) {
+  // Sound layer: bass arc from the gravity low point. Lower ~50% solid;
+  // upper half fades + sparkles. Full volume → half-width 45 → full ring.
+  if (bext > 0) {
     uint8_t ab = 0;
-    if (bass_extent >= (LED_COUNT / 2)) {
-      // Both sides have met at the top: solid full ring.
-      ab = bass_glow;
-    } else if (glow_dist < bass_extent) {
-      ab = bass_glow;
-    } else if (glow_dist == bass_extent) {
-      ab = bass_glow >> 2; // soft edge while the arc is still open
+    if (bext >= BASS_EXTENT_MAX || glow_dist < bext) {
+      ab = bglow;
+    } else if (glow_dist == bext) {
+      ab = bglow >> 2;
     }
 
-    if (ab > 0 && glow_dist > 0 && bass_inv_extent_q8 > 0) {
-      // 0 at the comet, ~255 at the outer tip of the arc.
-      uint16_t radial = (uint16_t)glow_dist * bass_inv_extent_q8;
+    if (ab > 0 && glow_dist > 0 && binv > 0) {
+      uint16_t radial = (uint16_t)glow_dist * binv;
       if (radial > 255) {
         radial = 255;
       }
 
-      // Volume-driven falloff: at high extent the upper arc dims so the
-      // solid body "fades into the bottom", leaving the tip for sparkle.
-      if (bass_extent > 12) {
-        uint8_t fade = (uint8_t)((radial * (uint16_t)(bass_extent - 12)) >> 6);
-        if (fade >= ab) {
-          ab = ab >> 2;
-        } else {
-          ab -= fade;
-        }
-      }
-
-      // Outer-arc sparkle: same ingredients as the motion-energy shimmer
-      // (random boost + fragmentation holes), gated so only the top half
-      // of a substantial arc breaks up.
-      if (bass_extent > 10 && radial > 64) {
-        uint16_t r = fast_rand();
-        uint8_t chance = (uint8_t)(((uint16_t)bass_extent * radial) >> 6);
-        if ((uint8_t)r < chance) {
-          uint8_t shimmer = ((r >> 8) & 0x07) + (bass_extent >> 3);
-          ab += shimmer;
-          if (ab > FULL_BRIGHTNESS) {
-            ab = FULL_BRIGHTNESS;
+      // Upper half only: fade, shimmer, fragmentation.
+      if (radial > 128) {
+        uint8_t upper = (uint8_t)(radial - 128);
+        if (bext > 12) {
+          uint8_t fade = (uint8_t)(((uint16_t)upper * (bext - 12)) >> 5);
+          if (fade >= ab) {
+            ab = ab >> 2;
+          } else {
+            ab -= fade;
           }
         }
 
-        if (bass_extent > 18 && radial > 96 && ab < FULL_BRIGHTNESS &&
-            glow_dist > 2) {
-          uint8_t mask_pos =
-              ((led_to_light * 5) + time_ticks + (bass_extent >> 2)) & 0x1F;
-          // Lower threshold higher up / louder → more holes near the tip.
-          uint8_t thresh = 30 - (uint8_t)((radial * 18) >> 8) - (bass_extent >> 3);
-          if (thresh < 10) {
-            thresh = 10;
+        if (bext > 10) {
+          uint8_t chance = (uint8_t)(((uint16_t)bext * upper) >> 5);
+          if (hash < chance) {
+            ab += (hash & 0x07) + (bext >> 3);
+            if (ab > FULL_BRIGHTNESS) {
+              ab = FULL_BRIGHTNESS;
+            }
           }
-          if (mask_pos >= thresh) {
-            ab = 0;
+
+          if (bext > 18 && ab < FULL_BRIGHTNESS && glow_dist > 2) {
+            uint8_t mask_pos = ((led_to_light * 5) + ticks + (bext >> 2)) & 0x1F;
+            uint8_t thresh = 30 - (uint8_t)(((uint16_t)upper * 18) >> 7) - (bext >> 3);
+            if (thresh < 10) {
+              thresh = 10;
+            }
+            if (mask_pos >= thresh) {
+              ab = 0;
+            }
           }
         }
       }
@@ -592,7 +446,7 @@ ISR_HANDLER(TIM2_UPD_ISR, _TIM2_OVR_UIF_VECTOR_) {
     ledLow(prevLed);
   }
 
-  sfr_TIM2.SR1.UIF = 0;  // clear timer 2 interrupt flag
+  sfr_TIM2.SR1.UIF = 0;
 }
 
 // Hall Sensor ISR
@@ -820,9 +674,10 @@ void main(void) {
       pwm_scan_led = 0;
       pwm_scan_bank = 0;
       pwm_phase = 0;
-      solid_group_source = 0;
-      solid_group_slot = 0;
       burst_life = 0;
+      bass_extent = 0;
+      bass_glow = 0;
+      bass_inv_extent_q8 = 0;
 
       enableTim2();
       setLed(prevLed);
@@ -872,6 +727,7 @@ void main(void) {
           if (mic_warmup > 0) {
             mic_warmup--;
             bass_extent = 0;
+            bass_glow = 0;
             bass_inv_extent_q8 = 0;
           } else if (ok) {
             if (spread < env_floor) {
@@ -890,28 +746,37 @@ void main(void) {
               envelope -= (envelope >> 3);          // exponential release
               if (envelope > 0) envelope--;
             }
-            if (envelope < 3) {
-              bass_extent = 0;          // silence: comet alone, no glow
-              bass_inv_extent_q8 = 0;
-            } else {
-              // Soft midrange curve that still reaches a full ring at high
-              // volume: half-width asymptote sits above LED_COUNT/2, then
-              // clamps so the left and right arcs overflow into each other
-              // (every LED has glow_dist <= 45) instead of leaving a dark
-              // gap at the top.
-              uint16_t e = envelope;
-              // e≈20 → ~27, e≈60 → ~39, e≈120 → ~44, e≥~150 → 45 (full ring)
-              uint16_t ext = 2 + ((uint16_t)e * 50) / (e + 20);
-              if (ext > (LED_COUNT / 2)) {
-                ext = LED_COUNT / 2;
+
+            // Map envelope → target extent/glow, then ease current values
+            // toward the targets so the arc doesn't jump frame-to-frame.
+            uint8_t target_ext = 0;
+            uint8_t target_glow = 0;
+            if (envelope >= 3) {
+              uint16_t ev = envelope;
+              // Soft midrange, reaches full ring (45) when loud.
+              uint16_t ext = 2 + ((uint16_t)ev * 50) / (ev + 20);
+              if (ext > BASS_EXTENT_MAX) {
+                ext = BASS_EXTENT_MAX;
               }
-              bass_extent = (uint8_t)ext;
-              // Soft ceiling on glow so the comet head still wins at peak.
-              uint16_t g = 6 + ((uint16_t)e * 20) / (e + 20);
-              bass_glow = (g > 26) ? 26 : (uint8_t)g;
-              // 256/extent for the ISR radial; extent is always >= 2 here.
-              bass_inv_extent_q8 = (uint8_t)(256u / bass_extent);
+              target_ext = (uint8_t)ext;
+              uint16_t g = 6 + ((uint16_t)ev * 20) / (ev + 20);
+              target_glow = (g > 26) ? 26 : (uint8_t)g;
             }
+            // Attack closes half the gap; release a quarter — snappy open,
+            // smooth close without hard snaps to zero.
+            if (target_ext > bass_extent) {
+              bass_extent += (uint8_t)((target_ext - bass_extent + 1) >> 1);
+            } else if (target_ext < bass_extent) {
+              uint8_t d = (uint8_t)((bass_extent - target_ext + 3) >> 2);
+              bass_extent -= d ? d : 1;
+            }
+            if (target_glow > bass_glow) {
+              bass_glow += (uint8_t)((target_glow - bass_glow + 1) >> 1);
+            } else if (target_glow < bass_glow) {
+              uint8_t d = (uint8_t)((bass_glow - target_glow + 3) >> 2);
+              bass_glow -= d ? d : 1;
+            }
+            bass_inv_extent_q8 = bass_extent ? (uint8_t)(256u / bass_extent) : 0;
           }
 #if MIC_MODE_DIAGNOSTICS
           static uint8_t env_diag = 0;
@@ -976,13 +841,6 @@ accel_read_ok:
         ry_prev = ry;
         rz_prev = rz;
 
-        // The tap that exits solid mode should not immediately kick the
-        // motion pattern into a burst.
-        if (jolt_skip) {
-          jolt_skip = 0;
-          jolt = 0;
-        }
-
         // Apply a deadzone to filter sensor noise when still.
         int16_t active_jolt = 0;
         if (jolt > cfg_jolt_deadzone) {
@@ -993,26 +851,32 @@ accel_read_ok:
         // Isolated jolts decay away; repeated steps build enough charge to wake the pattern.
         uint16_t next_charge = ((uint16_t)motion_charge * MOTION_CHARGE_DECAY) >> 8;
         if (active_jolt > 0) {
-          uint8_t charge_input = active_jolt;
+          uint8_t charge_input = (uint8_t)active_jolt;
           if (charge_input > MOTION_CHARGE_INPUT_MAX) {
             charge_input = MOTION_CHARGE_INPUT_MAX;
           }
           charge_input = (charge_input + (cfg_charge_divisor - 1)) / cfg_charge_divisor;
           next_charge += charge_input;
+          if (next_charge > 255) {
+            next_charge = 255;
+          }
         }
         motion_charge = (uint8_t)next_charge;
 
-        // Decay by about energy/91 per 48 Hz sample (2x the previous
-        // energy/183 rate), still proportional to energy.
+        // Proportional energy decay: one div instead of a subtract-loop.
+        // energy/91 per 48 Hz sample with fractional remainder.
         static uint16_t energy_decay_accum = 0;
         uint16_t next_energy = energy;
         energy_decay_accum += energy;
-        while (energy_decay_accum >= ENERGY_DECAY_DIVISOR && next_energy > 0) {
-          next_energy--;
-          energy_decay_accum -= ENERGY_DECAY_DIVISOR;
-        }
-        if (next_energy == 0) {
-          energy_decay_accum = 0;
+        {
+          uint16_t dec = energy_decay_accum / ENERGY_DECAY_DIVISOR;
+          energy_decay_accum -= dec * ENERGY_DECAY_DIVISOR;
+          if (dec >= next_energy) {
+            next_energy = 0;
+            energy_decay_accum = 0;
+          } else {
+            next_energy -= dec;
+          }
         }
         if (motion_charge > cfg_charge_start) {
           next_energy += motion_charge - cfg_charge_start;
@@ -1021,12 +885,17 @@ accel_read_ok:
         energy = (uint8_t)next_energy;
         still_mode = (energy <= STILL_ENERGY_THRESHOLD && motion_charge <= cfg_charge_start);
 
-        // Precompute the ISR's render parameters here at 48 Hz so the
-        // 7.8 kHz ISR does table lookups and shifts only, no division.
-        glow_width_v = 16 - (uint8_t)(((uint16_t)energy * 9) / 255);
+        // Precompute ISR render params at 48 Hz (no division in the ISR).
+        // energy/255 ≈ energy>>8 for the small coefficients here.
+        glow_width_v = 16 - (uint8_t)(((uint16_t)energy * 9) >> 8);
+        if (glow_width_v < 7) {
+          glow_width_v = 7;
+        }
         glow_scale_v = ((uint16_t)(18 + (energy >> 4)) << 8) / glow_width_v;
         if (energy > 36) {
           frag_threshold_v = 28 - (uint8_t)(((uint16_t)(energy - 36) * 20) / 219);
+        } else {
+          frag_threshold_v = 28;
         }
 
         // 3. Physical Inertia System: bubble rides opposite the gravity projection.
@@ -1044,7 +913,8 @@ accel_read_ok:
             else if (error < -720) error += 1440;
 
             // Spring inertia: calm motion is heavy; charged motion is tighter.
-            uint8_t spring_shift = 4 - ((uint16_t)energy * 2) / 255;
+            // energy*2/255 ≈ energy>>7
+            uint8_t spring_shift = 4 - (energy >> 7);
             int16_t spring_impulse = error >> spring_shift;
             if (spring_impulse == 0 && error != 0) {
               spring_impulse = (error > 0) ? 1 : -1;
@@ -1054,16 +924,20 @@ accel_read_ok:
             if (angular_velocity_q4 > 120) angular_velocity_q4 = 120;
             else if (angular_velocity_q4 < -120) angular_velocity_q4 = -120;
 
-            // Damping moves from about 0.92 at rest to about 0.82 when charged.
-            uint8_t damping = 238 - ((uint16_t)energy * 30) / 255;
+            // Damping ~0.92 at rest → ~0.82 when charged (energy*30/255 ≈ energy>>3 * 30/32)
+            uint8_t damping = 238 - (uint8_t)(((uint16_t)energy * 30) >> 8);
             angular_velocity_q4 = ((int16_t)angular_velocity_q4 * (int16_t)damping) >> 8;
         } else {
             angular_velocity_q4 = ((int16_t)angular_velocity_q4 * 220) >> 8;
         }
 
+        // Velocity is clamped to ±120, so a single wrap is always enough.
         halo_angle_q4 += angular_velocity_q4;
-        while (halo_angle_q4 < 0) halo_angle_q4 += 1440;
-        while (halo_angle_q4 >= 1440) halo_angle_q4 -= 1440;
+        if (halo_angle_q4 < 0) {
+          halo_angle_q4 += 1440;
+        } else if (halo_angle_q4 >= 1440) {
+          halo_angle_q4 -= 1440;
+        }
 
         base_led = (uint8_t)(halo_angle_q4 >> 4);
 
@@ -1118,27 +992,14 @@ accel_read_ok:
         }
 
         // 4b. Settling into stillness: the ring that was lit when motion
-        // stopped drains into the low point. The lit arc starts at the full
-        // half-ring and its boundary falls one LED per sample down both
-        // sides until only the comet remains.
+        // stopped drains into the low point (two LEDs/sample so the hand-off
+        // feels continuous without lingering).
         if (!still_mode) {
           settle_extent = LED_COUNT / 2;
-        } else if (settle_extent > 0) {
-          settle_extent--;
-        }
-
-        // 4c. Resting power: after ~60 s of stillness, ease the comet head
-        // down to a dim glow (one step per 8 samples, ~3 s fade). Any
-        // motion snaps it straight back to full brightness.
-        static uint16_t still_samples = 0;
-        if (still_mode) {
-          if (still_samples < 0xFFFF) still_samples++;
-          if (still_samples > 2880 && (still_samples & 0x07) == 0 && comet_peak > 12) {
-            comet_peak--;
-          }
+        } else if (settle_extent > 1) {
+          settle_extent -= 2;
         } else {
-          still_samples = 0;
-          comet_peak = FULL_BRIGHTNESS;
+          settle_extent = 0;
         }
 
         // Spark dust: a sharp jolt while settled kicks a short-lived ember
@@ -1154,10 +1015,8 @@ accel_read_ok:
           }
         }
 
-        // 5. Base ring brightness follows energy directly: a dim floor when
-        // barely moving, scaling smoothly to full (32/32) at the solid-ring
-        // maximum. No oscillating modulation.
-        breathing_brightness = 2 + (uint8_t)(((uint16_t)energy * 30) / 255);
+        // 5. Base ring brightness follows energy (shift approx of *30/255).
+        breathing_brightness = 2 + (uint8_t)(((uint16_t)energy * 30) >> 8);
 
 
 #if ACCEL_DIAGNOSTICS
@@ -1667,10 +1526,9 @@ uint8_t micEnvFrame(uint16_t *spread_out) {
 #define CFG_MAGIC 0xA5
 
 void printCfg(void) {
-  printf("cfg d=%u s=%u t=%u b=%u\r\n",
-         cfg_jolt_deadzone, cfg_charge_divisor, cfg_charge_start, cfg_charge_burst);
-  printf("cpx group=%u max_sinks=%u blocked=%u\r\n",
-         cpx_group_enabled, GROUP_MAX_SINKS, cpx_unsafe_group_blocks);
+  printf("cfg d=%u s=%u t=%u b=%u cpx=%u\r\n",
+         cfg_jolt_deadzone, cfg_charge_divisor, cfg_charge_start, cfg_charge_burst,
+         cpx_group_enabled);
 }
 
 void cfgLoad(void) {
