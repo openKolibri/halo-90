@@ -19,7 +19,7 @@
 	(property "Value" "SMTSO1610MTJ"
 		(at 0 0 0)
 		(unlocked yes)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "08e209a9-ab04-4086-94aa-f0dbf52b2630")
 		(effects
@@ -29,7 +29,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/SMTSO1610MTJ/SMTSO1610MTJ.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -41,7 +41,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "HW: M1.6x1mm SMT standoff nut SMTSO1610MTJ"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -66,6 +66,41 @@
 			)
 		)
 	)
+	(fp_circle
+		(center 0 0)
+		(end 2.35 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "f0bb9a3b-06c9-46f4-b8c8-24ca16748f95")
+	)
+	(fp_circle
+		(center 0 0)
+		(end 2.1 0)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "3cac6f9f-3b9c-4455-8588-3fd756edd5ad")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 2.8 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "46aafa5e-d6c2-4351-bfe0-35a766334643")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.05)
+			)
+		)
+	)
+
 	(pad "1" thru_hole circle
 		(at 0 0)
 		(size 4.2 4.2)

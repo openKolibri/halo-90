@@ -3,7 +3,7 @@
 	(generator "pcbnew")
 	(generator_version "10.0")
 	(layer "F.Cu")
-	(tags "capacitor")
+	(tags "als photodiode 0603")
 	(property "Reference" "REF**"
 		(at 0.8 0 0)
 		(layer "F.SilkS")
@@ -17,9 +17,9 @@
 			(justify left)
 		)
 	)
-	(property "Value" "C-0402"
+	(property "Value" "ALS-PT19"
 		(at 0 0.9 0)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "b2b2d699-5619-412d-93d5-5a87f91ec87f")
 		(effects
@@ -29,7 +29,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/ALS-PT19/ALS-PT19.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -41,7 +41,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "ALS: 0603 Ambient Light Sensor ALS-PT19-315C/L177/TR8"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -55,26 +55,8 @@
 	)
 	(attr smd)
 	(duplicate_pad_numbers_are_jumpers no)
-	(fp_line
-		(start -0.8 0.3)
-		(end -0.8 -0.3)
-		(stroke
-			(width 0.05)
-			(type solid)
-		)
-		(layer "F.CrtYd")
-		(uuid "d7a8476d-3090-4be2-a05e-9e9a6b80b320")
-	)
-	(fp_line
-		(start 0.8 -0.3)
-		(end 0.8 0.3)
-		(stroke
-			(width 0.05)
-			(type solid)
-		)
-		(layer "F.CrtYd")
-		(uuid "5d636b78-201c-4058-ae7e-438589f9a11e")
-	)
+	
+	
 	(fp_line
 		(start -1.2 -0.4)
 		(end 1.2 -0.4)
@@ -137,6 +119,62 @@
 			)
 		)
 	)
+	(fp_rect
+		(start -1.4 -0.65)
+		(end 1.4 0.65)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "6e63ebac-a5ad-453e-9bf7-62daae476615")
+	)
+	(fp_poly
+		(pts
+			(xy -1.2 -0.4) (xy -1.2 0.4) (xy -0.9 0.4) (xy -0.9 -0.4)
+		)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Fab")
+		(uuid "5f0d7c5b-396c-46f6-bd54-c61b6e65acef")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 0.9 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "205054a9-9947-4d07-9c64-16a1074383fc")
+		(effects
+			(font
+				(size 0.25 0.25)
+				(thickness 0.04)
+			)
+		)
+	)
+	(fp_line
+		(start -1.5 -0.2)
+		(end -1.5 0.2)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "155a0220-e85a-4f5c-ac30-ca7cb4d3375d")
+	)
+	(fp_line
+		(start -0.2 0.7)
+		(end 0.2 0.7)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "4e48b749-6450-4e31-b26f-462607384eaa")
+	)
+
 	(pad "1" smd rect
 		(at -0.75 0)
 		(size 0.8 0.8)

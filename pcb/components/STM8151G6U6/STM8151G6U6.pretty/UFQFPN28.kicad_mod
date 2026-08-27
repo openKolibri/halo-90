@@ -19,7 +19,7 @@
 	(property "Value" "UFQFPN28"
 		(at 0 4 0)
 		(unlocked yes)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "1ffc0bde-5cdd-4d6d-b115-8aa8b002dfe4")
 		(effects
@@ -29,7 +29,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/STM8151G6U6/STM8151G6U6.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -41,7 +41,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "MCU: STM8S105K4T6C / STM8151G6U6 UFQFPN-28 4x4mm"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -289,6 +289,110 @@
 			)
 		)
 	)
+	(fp_line
+		(start -2.55 -2.55)
+		(end -1.8 -2.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "745aa4ed-d6a5-46a7-b7c9-eaeb59dd2235")
+	)
+	(fp_line
+		(start -2.55 -2.55)
+		(end -2.55 -1.8)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "4bca303a-5a19-4f91-a6de-994675885eb4")
+	)
+	(fp_circle
+		(center -2.55 -2.55)
+		(end -2.43 -2.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "4b5482b5-a5b2-4048-b4cf-bb600d7e8c1e")
+	)
+	(fp_line
+		(start 2.55 -2.55)
+		(end 1.8 -2.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "36de8d0e-50a6-4fd9-8190-8ded882f5822")
+	)
+	(fp_line
+		(start 2.55 -2.55)
+		(end 2.55 -1.8)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "e36e826d-632b-49f0-ad3d-3bf334557c61")
+	)
+	(fp_line
+		(start -2.55 2.55)
+		(end -1.8 2.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "4b0c4dba-3ab7-4620-8081-9baa130f8e02")
+	)
+	(fp_line
+		(start -2.55 2.55)
+		(end -2.55 1.8)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5d3ca81c-ef2b-4a4f-85e8-3ed9a03b4822")
+	)
+	(fp_line
+		(start 2.55 2.55)
+		(end 1.8 2.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "dedc94fe-2ebc-4ca6-a0ea-34fde8c65bb3")
+	)
+	(fp_line
+		(start 2.55 2.55)
+		(end 2.55 1.8)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "4fa77732-b5d3-4a4a-96cc-c3641b3553fc")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 2.6 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "cd4ff600-44d9-44cb-bc63-51926aefb3ef")
+		(effects
+			(font
+				(size 0.4 0.4)
+				(thickness 0.06)
+			)
+		)
+	)
+
 	(pad "1" smd roundrect
 		(at -1.9 -1.5 90)
 		(size 0.275 0.5)

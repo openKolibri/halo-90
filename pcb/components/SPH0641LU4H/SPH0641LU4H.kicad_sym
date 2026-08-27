@@ -44,7 +44,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "${KIPRJMOD}/components/SPH0641LU4H/SPH0641LU4H.pdf"
 			(at 0 -27.94 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -55,7 +55,7 @@
 				)
 			)
 		)
-		(property "Description" "MIC: PDM MEMS Mic"
+		(property "Description" "MIC: PDM MEMS microphone SPH0641LU4H-1"
 			(at 0 -39.37 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -99,7 +99,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "res resistor"
+		(property "ki_keywords" "mems microphone pdm knowles"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -110,7 +110,7 @@
 				)
 			)
 		)
-		(property "ki_fp_filters" "R_*"
+		(property "ki_fp_filters" "SPH0641*"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -135,7 +135,7 @@
 			)
 		)
 		(symbol "SPH0641LU4H_1_1"
-			(pin passive line
+			(pin output line
 				(at -13.97 7.62 0)
 				(length 1.27)
 				(name "DATA"
@@ -153,7 +153,7 @@
 					)
 				)
 			)
-			(pin passive line
+			(pin input line
 				(at -13.97 -3.81 0)
 				(length 1.27)
 				(name "SELECT"
@@ -171,10 +171,10 @@
 					)
 				)
 			)
-			(pin passive line
+			(pin power_in line
 				(at 0 -8.89 90)
 				(length 2.54)
-				(name "GROUND"
+				(name "GND"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -189,7 +189,7 @@
 					)
 				)
 			)
-			(pin passive line
+			(pin input line
 				(at -15.24 5.08 0)
 				(length 2.54)
 				(name "CLOCK"
@@ -207,10 +207,10 @@
 					)
 				)
 			)
-			(pin passive line
+			(pin power_in line
 				(at 0 12.7 270)
 				(length 2.54)
-				(name "V_{DD}"
+				(name "VDD"
 					(effects
 						(font
 							(size 1.27 1.27)

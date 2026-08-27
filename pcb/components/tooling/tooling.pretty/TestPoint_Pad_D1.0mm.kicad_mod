@@ -19,7 +19,7 @@
 	)
 	(property "Value" "TestPoint_Pad_D1.0mm"
 		(at 0 1.55 0)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "25a6e09e-59d7-41c5-895b-b6b48084dad2")
 		(effects
@@ -29,7 +29,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "~"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -40,7 +40,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "SMD test point pad, diameter 1.0mm"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -86,6 +86,19 @@
 			)
 		)
 	)
+	(fp_text user "${VALUE}"
+		(at 0 0.95 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "0c224c46-a8a4-458a-9db9-61f26d3dfe5c")
+		(effects
+			(font
+				(size 0.25 0.25)
+				(thickness 0.04)
+			)
+		)
+	)
+
 	(pad "1" smd circle
 		(at 0 0)
 		(size 1 1)

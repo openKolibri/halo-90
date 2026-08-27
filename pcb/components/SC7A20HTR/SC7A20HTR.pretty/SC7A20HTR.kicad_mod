@@ -28,7 +28,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/SC7A20HTR/SC7A20HTR.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -40,7 +40,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "ACCEL: 1.71V~3.6V 500nA SPI/I2C ±16g LGA-12 (2x2)"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -88,6 +88,61 @@
 			)
 		)
 	)
+	(fp_rect
+		(start -1.6 -1.6)
+		(end 1.6 1.6)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "feaae92e-9aad-464f-9c64-aef0d39f5fc8")
+	)
+	(fp_line
+		(start -1.55 -1.55)
+		(end -1.15 -1.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "a3387f85-a0bc-4549-a7d8-c2fb2c3e7b21")
+	)
+	(fp_line
+		(start -1.55 -1.55)
+		(end -1.55 -1.15)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "bcf5c2ed-e671-485d-b4a4-7d1dde6d94fc")
+	)
+	(fp_circle
+		(center -1.45 -1.45)
+		(end -1.35 -1.45)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "bd559153-de73-4329-b832-cdb2325b10a6")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 1.85 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "0a3f31bb-e7bd-4169-8cc6-c7137e3f81ef")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.05)
+			)
+		)
+	)
+
 	(pad "1" smd rect
 		(at -0.974981 -0.750038)
 		(size 0.7 0.28001)

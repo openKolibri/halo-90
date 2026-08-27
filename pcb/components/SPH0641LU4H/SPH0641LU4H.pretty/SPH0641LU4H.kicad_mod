@@ -3,7 +3,7 @@
 	(generator "pcbnew")
 	(generator_version "10.0")
 	(layer "F.Cu")
-	(tags "mic")
+	(tags "mic mems pdm")
 	(property "Reference" "REF**"
 		(at 0.8 0 0)
 		(layer "F.SilkS")
@@ -19,7 +19,7 @@
 	)
 	(property "Value" "SPH0641LU4H"
 		(at 0 0.9 0)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "45b5c8f2-9d17-442c-80f6-efa5d86597c9")
 		(effects
@@ -29,7 +29,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/SPH0641LU4H/SPH0641LU4H.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -41,7 +41,7 @@
 			)
 		)
 	)
-	(property "Description" "MIC: MEMS PDM"
+	(property "Description" "MIC: PDM MEMS microphone SPH0641LU4H-1"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -77,6 +77,82 @@
 			)
 		)
 	)
+	(fp_rect
+		(start -1.58 -2.8)
+		(end 1.58 1.2)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "9538edd4-2b53-45d5-9392-02ccc5407103")
+	)
+	(fp_poly
+		(pts
+			(xy -1.325 -2.55) (xy -1.325 -2.2) (xy -0.95 -2.55)
+		)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Fab")
+		(uuid "27a5bdc1-7ec5-4454-8b9d-d7335fe76425")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 0.7 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "c47daf8a-7bb6-4ec7-ad75-b0cb67dad097")
+		(effects
+			(font
+				(size 0.25 0.25)
+				(thickness 0.04)
+			)
+		)
+	)
+	(fp_line
+		(start -1.45 -2.55)
+		(end -1.45 -2.2)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "233bc65b-18f2-45f7-9023-41b998bb3b14")
+	)
+	(fp_line
+		(start -1.45 -2.55)
+		(end -1.1 -2.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "9eeb28e5-29e1-4aff-b8f2-c2bf0e2f751e")
+	)
+	(fp_line
+		(start -1.2 1.05)
+		(end -0.95 1.05)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "d0cba1cc-8d99-4643-bffc-68f22dda466b")
+	)
+	(fp_line
+		(start 0.95 1.05)
+		(end 1.2 1.05)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "958d25be-a1c7-482d-9f86-fa99da37012c")
+	)
+
 	(pad "1" smd rect
 		(at -0.8375 -2.074)
 		(size 0.725 0.522)

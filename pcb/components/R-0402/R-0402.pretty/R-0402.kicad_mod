@@ -3,7 +3,7 @@
 	(generator "pcbnew")
 	(generator_version "9.0")
 	(layer "F.Cu")
-	(tags "capacitor")
+	(tags "resistor 0402")
 	(property "Reference" "REF**"
 		(at 0.8 0 0)
 		(layer "F.SilkS")
@@ -17,9 +17,9 @@
 			(justify left)
 		)
 	)
-	(property "Value" "C-0402"
+	(property "Value" "R-0402"
 		(at 0 0.9 0)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "441e2090-efb5-4cfd-9c98-a932286356c7")
 		(effects
@@ -29,7 +29,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/R-0402/C25744.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -41,7 +41,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "RES: 10k 150V 62.5mW ±1% 0402"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -145,6 +145,51 @@
 			)
 		)
 	)
+	(fp_poly
+		(pts
+			(xy -0.5 -0.25) (xy -0.5 0.25) (xy -0.35 0.25) (xy -0.35 -0.25)
+		)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Fab")
+		(uuid "11c9db5a-06b2-4a37-a337-3a19d54a93ee")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 0.7 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "573a6858-68e7-49a9-92d3-8807904892c1")
+		(effects
+			(font
+				(size 0.25 0.25)
+				(thickness 0.04)
+			)
+		)
+	)
+	(fp_line
+		(start -0.55 0.55)
+		(end -0.3 0.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "132f744e-641b-460d-ab34-6d49a72526a2")
+	)
+	(fp_line
+		(start -0.12 0.55)
+		(end 0.12 0.55)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "b679e8a2-055c-48b7-bd40-cc698f89b26d")
+	)
+
 	(pad "1" smd roundrect
 		(at -0.5 0)
 		(size 0.6 0.6)

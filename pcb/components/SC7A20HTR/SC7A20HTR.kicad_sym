@@ -6,8 +6,12 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "U"
 			(at 5.08 10.16 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16,6 +20,8 @@
 		)
 		(property "Value" "SC7A20HTR"
 			(at 7.62 -11.43 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24,67 +30,81 @@
 		)
 		(property "Footprint" "SC7A20HTR:SC7A20HTR"
 			(at 0 -25.4 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 					(italic yes)
 				)
-				(hide yes)
 			)
 		)
 		(property "Datasheet" "${KIPRJMOD}/components/SC7A20HTR/SC7A20HTR.pdf"
 			(at -24.13 -27.94 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify left)
-				(hide yes)
 			)
 		)
 		(property "Description" "ACCEL: 1.71V~3.6V 500nA SPI/I2C ±16g LGA-12(2x2)"
 			(at 0 -33.02 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
-		(property "LCSC Part#" "C19274408"
+		(property "LCSC Part #" "C19274408"
 			(at 0 -30.48 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "Manufacturer" "Hangzhou Silan Microelectronics"
 			(at 0 -35.56 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "MPN" "SC7A20HTR"
 			(at 0 -38.1 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(property "ki_keywords" "Accelerometer"
 			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(hide yes)
 			)
 		)
 		(symbol "SC7A20HTR_0_1"
@@ -99,7 +119,7 @@
 					(type background)
 				)
 			)
-			(pin unspecified line
+			(pin input line
 				(at -8.89 3.81 0)
 				(length 2.54)
 				(name "SDO"
@@ -117,7 +137,7 @@
 					)
 				)
 			)
-			(pin unspecified line
+			(pin bidirectional line
 				(at -8.89 1.27 0)
 				(length 2.54)
 				(name "SDx"
@@ -135,79 +155,7 @@
 					)
 				)
 			)
-			(pin unspecified line
-				(at -8.89 -1.27 0)
-				(length 2.54)
-				(name "SCx"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-				(number "12"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-			)
-			(pin unspecified line
-				(at -8.89 -3.81 0)
-				(length 2.54)
-				(name "CS"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-				(number "10"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-			)
-			(pin unspecified line
-				(at -1.27 11.43 270)
-				(length 2.54)
-				(name "VDD"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-				(number "7"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-			)
-			(pin unspecified line
-				(at -1.27 -11.43 90)
-				(length 2.54)
-				(name "GND"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-				(number "9"
-					(effects
-						(font
-							(size 1 1)
-						)
-					)
-				)
-			)
-			(pin unspecified line
+			(pin output line
 				(at 8.89 1.27 180)
 				(length 2.54)
 				(name "INT1"
@@ -225,7 +173,7 @@
 					)
 				)
 			)
-			(pin unspecified line
+			(pin output line
 				(at 8.89 -1.27 180)
 				(length 2.54)
 				(name "INT2"
@@ -243,20 +191,17 @@
 					)
 				)
 			)
-		)
-		(symbol "SC7A20HTR_1_1"
-			(pin unspecified line
-				(at -6.35 -22.86 0)
+			(pin power_in line
+				(at -1.27 11.43 270)
 				(length 2.54)
-				(hide yes)
-				(name "NC"
+				(name "VDD"
 					(effects
 						(font
 							(size 1 1)
 						)
 					)
 				)
-				(number "11"
+				(number "7"
 					(effects
 						(font
 							(size 1 1)
@@ -264,7 +209,63 @@
 					)
 				)
 			)
-			(pin unspecified line
+			(pin power_in line
+				(at -1.27 -11.43 90)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+				(number "9"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+			)
+			(pin input line
+				(at -8.89 -3.81 0)
+				(length 2.54)
+				(name "CS"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+				(number "10"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+			)
+			(pin bidirectional line
+				(at -8.89 -1.27 0)
+				(length 2.54)
+				(name "SCx"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+				(number "12"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+			)
+		)
+		(symbol "SC7A20HTR_1_1"
+			(pin power_in line
 				(at 1.27 11.43 270)
 				(length 2.54)
 				(name "VDDIO"
@@ -282,7 +283,26 @@
 					)
 				)
 			)
-			(pin unspecified line
+			(pin no_connect line
+				(at 7.62 -22.86 0)
+				(length 2.54)
+				(hide yes)
+				(name "NC"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+				(number "4"
+					(effects
+						(font
+							(size 1 1)
+						)
+					)
+				)
+			)
+			(pin power_in line
 				(at 1.27 -11.43 90)
 				(length 2.54)
 				(name "GNDIO"
@@ -300,8 +320,8 @@
 					)
 				)
 			)
-			(pin unspecified line
-				(at 7.62 -22.86 0)
+			(pin no_connect line
+				(at -6.35 -22.86 0)
 				(length 2.54)
 				(hide yes)
 				(name "NC"
@@ -311,7 +331,7 @@
 						)
 					)
 				)
-				(number "4"
+				(number "11"
 					(effects
 						(font
 							(size 1 1)

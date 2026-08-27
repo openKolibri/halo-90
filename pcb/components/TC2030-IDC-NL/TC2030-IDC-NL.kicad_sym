@@ -36,7 +36,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://www.tag-connect.com/wp-content/uploads/TC2030-IDC-NL.pdf"
 			(at -32.385 -13.97 0)
 			(effects
 				(font
@@ -131,7 +131,7 @@
 					)
 				)
 			)
-			(pin output line
+			(pin input line
 				(at 10.16 1.27 180)
 				(length 3.81)
 				(name "~{RESET}"
@@ -149,7 +149,7 @@
 					)
 				)
 			)
-			(pin bidirectional line
+			(pin output line
 				(at 10.16 -1.27 180)
 				(length 3.81)
 				(name "TX"
@@ -167,7 +167,7 @@
 					)
 				)
 			)
-			(pin output line
+			(pin input line
 				(at 10.16 -3.81 180)
 				(length 3.81)
 				(name "RX"

@@ -20,7 +20,7 @@
 	(property "Value" "HAL2041SO"
 		(at 0 -7.7 180)
 		(unlocked yes)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "682db991-da27-4d51-bb57-c2f0ca75cb03")
 		(effects
@@ -30,7 +30,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/HAL2041SO/HAL2041SO.pdf"
 		(at 0 0 180)
 		(layer "F.Fab")
 		(hide yes)
@@ -42,7 +42,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "HALL: 1.5mT 2.5uA 2V~5.5V omnipolar open-drain SOT-23"
 		(at 0 0 180)
 		(layer "F.Fab")
 		(hide yes)
@@ -55,17 +55,7 @@
 		)
 	)
 	(attr smd)
-	(fp_rect
-		(start -0.65 -1.45)
-		(end 0.65 1.45)
-		(stroke
-			(width 0.05)
-			(type solid)
-		)
-		(fill no)
-		(layer "F.CrtYd")
-		(uuid "ed1af1fb-f077-4c1d-9d93-b2e64e862b6b")
-	)
+	
 	(fp_rect
 		(start -0.65 -1.45)
 		(end 0.65 1.45)
@@ -102,6 +92,60 @@
 			)
 		)
 	)
+	(fp_rect
+		(start -1.95 -1.7)
+		(end 1.95 1.7)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "4b1ed752-dd0b-4a9e-a569-adb60032d811")
+	)
+	(fp_line
+		(start -1.45 -1.62)
+		(end -0.95 -1.62)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "8d11a5e6-b4e5-4cea-b96b-4ff880790cfa")
+	)
+	(fp_line
+		(start -0.35 -1.62)
+		(end 0.35 -1.62)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "9ce0c9df-a18a-4434-a73a-e9a549b544a8")
+	)
+	(fp_line
+		(start -0.35 1.62)
+		(end 0.35 1.62)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "69675f88-fc02-4839-97e6-83d6e55b32b6")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 1.9 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "120dcc8b-321e-4764-8838-dda781f5b811")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.05)
+			)
+		)
+	)
+
 	(pad "1" smd roundrect
 		(at -1.2 -0.95 90)
 		(size 0.7 1)

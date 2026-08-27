@@ -1,6 +1,56 @@
 (footprint "24mm-roundTabs" (version 20210108) (generator pcbnew) (layer "F.Cu")
+  (descr "24mm round panelization mouse-bite tabs")
+  (tags "panel tab mousebite")
   (tedit 60103EED)
-  (fp_text reference "REF**" (at 0.15 -11.7 unlocked) (layer "Eco2.User") hide
+  	(property "Reference" "REF**"
+		(at 0.15 -11.7 0)
+		(hide yes)
+		(layer "Eco2.User")
+		(uuid "5be75699-b23a-4326-aa6b-b279e6474967")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "24mm-roundTabs"
+		(at -1.1 -15.7 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "66dd0737-4f0d-4f6b-a8f3-5eada5ce5e22")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.08)
+			)
+		)
+	)
+	(property "Datasheet" "~"
+		(at 0 0 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "a6d0d748-11b2-4eb4-9e85-b710065d3882")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "24mm round panelization mouse-bite tabs"
+		(at 0 0 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "b9360a83-0c7e-4eb4-9eda-b6b91a990e8e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+(fp_text reference "REF**" (at 0.15 -11.7 unlocked) (layer "Eco2.User") hide
     (effects (font (size 1 1) (thickness 0.15)))
     (tstamp dee5c708-a27d-4dee-b5b3-a2404e793652)
   )
@@ -14,7 +64,44 @@
   (fp_arc (start -13.183026 0) (end -1.449 2.43) (angle -23.4) (layer "F.SilkS") (width 0.01) (tstamp adae7b97-025f-4161-b374-46acfb53a31a))
   (fp_arc (start -0.000001 2.730073) (end 1.449 2.43) (angle -156.6) (layer "Edge.Cuts") (width 0.01) (tstamp 83a673cb-94ca-42e0-a8dd-8597427d0501))
   (fp_arc (start 0 -2.730073) (end -1.449002 -2.430001) (angle -156.6) (layer "Edge.Cuts") (width 0.01) (tstamp e6f87d7d-ccc1-4bf3-94a2-c98dfcacfc57))
-  (pad "" np_thru_hole circle (at 1 0.8 180) (size 0.46 0.46) (drill 0.45) (layers F&B.Cu *.Mask) (tstamp 2fe148e0-be6e-4ad7-a5f2-98cff7e5e5e4))
+  	(fp_rect
+		(start -1.5 -2.1)
+		(end 1.5 2.1)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "24471108-b98d-4f4c-894c-9eb78d07b7f8")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "d21e1307-7cf3-4277-8431-afb1140105fa")
+		(effects
+			(font
+				(size 0.4 0.4)
+				(thickness 0.06)
+			)
+		)
+	)
+	(fp_text user "${VALUE}"
+		(at 0 -3 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "4dfd1116-3b5d-4f2d-809d-c5c6ea6b8580")
+		(effects
+			(font
+				(size 0.4 0.4)
+				(thickness 0.06)
+			)
+		)
+	)
+  (fp_arc (start -13.183026 0) (end -1.449 2.43) (angle -23.4) (layer "F.Fab") (width 0.1) (tstamp 6f953ee7-c5d2-48c6-a229-4446f6a5106c))
+  (fp_arc (start 13.183026 0) (end 1.449 -2.43) (angle -23.4) (layer "F.Fab") (width 0.1) (tstamp cbdc87ce-0b51-441e-81ce-a0f195cd8754))
+	(pad "" np_thru_hole circle (at 1 0.8 180) (size 0.46 0.46) (drill 0.45) (layers F&B.Cu *.Mask) (tstamp 2fe148e0-be6e-4ad7-a5f2-98cff7e5e5e4))
   (pad "" np_thru_hole circle (at -1 0.8) (size 0.46 0.46) (drill 0.45) (layers F&B.Cu *.Mask) (tstamp 523250e8-5f17-40f2-91c0-d31b475cb170))
   (pad "" np_thru_hole circle (at 0.975 0 180) (size 0.46 0.46) (drill 0.45) (layers F&B.Cu *.Mask) (tstamp 60a8c1ec-acbc-4e14-aac8-f879e5b7eca2))
   (pad "" np_thru_hole circle (at 1.058 -1.623 180) (size 0.51 0.51) (drill 0.5) (layers F&B.Cu *.Mask) (tstamp 792f2623-5235-4c9a-8a44-1b1408a2a1ab))

@@ -18,7 +18,7 @@
 	)
 	(property "Value" "1.5mm-ToolingHole"
 		(at 0 -2 0)
-		(layer "Eco2.User")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "9fcc46ef-05ee-4ceb-8e58-9951ef8195c6")
 		(effects
@@ -28,7 +28,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "~"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -40,7 +40,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "1.5mm NPTH tooling hole (1.152mm + 0.148mm expansion, JLC)"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -97,6 +97,30 @@
 			)
 		)
 	)
+	(fp_circle
+		(center 0 0)
+		(end 1 0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "8b39f59c-1303-4320-85d2-e82624c71049")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 1.4 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "0d35441f-03b7-40c5-91ce-719bb32dcfcf")
+		(effects
+			(font
+				(size 0.3 0.3)
+				(thickness 0.05)
+			)
+		)
+	)
+
 	(pad "" np_thru_hole circle
 		(at 0 0)
 		(size 1.5 1.5)

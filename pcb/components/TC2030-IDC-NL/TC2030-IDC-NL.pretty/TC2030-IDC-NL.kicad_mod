@@ -29,7 +29,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "https://www.tag-connect.com/wp-content/uploads/TC2030-IDC-NL.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -41,7 +41,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "Tag-Connect TC2030-IDC-NL no-legs programming header"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -298,6 +298,73 @@
 			)
 		)
 	)
+	(fp_line
+		(start -2.2 1.5)
+		(end -1.7 1.5)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c79ed916-abf1-4b9b-ae1b-1181fdb93147")
+	)
+	(fp_line
+		(start -2.2 1.5)
+		(end -2.2 1.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "d0f2fa86-5e7e-4ad2-a456-aa6367e4ae09")
+	)
+	(fp_circle
+		(center -2.2 1.5)
+		(end -2.08 1.5)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "faadc356-8e1f-4ac1-9e8e-71aa6cc6a379")
+	)
+	(fp_text user "${VALUE}"
+		(at 0 -1.8 0)
+		(hide yes)
+		(layer "F.Fab")
+		(uuid "3bbaf19b-0b9d-4311-a041-4c6f2a020ea6")
+		(effects
+			(font
+				(size 0.4 0.4)
+				(thickness 0.06)
+			)
+		)
+	)
+	(fp_rect
+		(start -1.7 -1.05)
+		(end 1.7 1.05)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "41ddecda-d928-4904-abe9-9668c1d60cb6")
+	)
+	(fp_poly
+		(pts
+			(xy -1.7 0.55) (xy -1.7 1.05) (xy -1.2 1.05)
+		)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.Fab")
+		(uuid "90575f2f-e08a-4342-b742-5a3d771bb0b2")
+	)
+
 	(pad "" np_thru_hole circle
 		(at -2.54 0)
 		(size 0.9906 0.9906)

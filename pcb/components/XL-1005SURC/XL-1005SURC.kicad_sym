@@ -9,6 +9,8 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "D"
 			(at 0 3.81 0)
 			(effects
@@ -70,7 +72,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC Part#" "C25503345"
+		(property "LCSC Part #" "C25503345"
 			(at 0 -16.51 0)
 			(effects
 				(font
@@ -89,7 +91,7 @@
 			)
 		)
 		(symbol "XL-1005SURC_0_0"
-			(pin tri_state line
+			(pin passive line
 				(at -3.81 0 0)
 				(length 2.54)
 				(name "K"
@@ -107,7 +109,7 @@
 					)
 				)
 			)
-			(pin tri_state line
+			(pin passive line
 				(at 3.81 0 180)
 				(length 2.54)
 				(name "A"

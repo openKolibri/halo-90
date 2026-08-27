@@ -17,7 +17,7 @@
 	)
 	(property "Value" "BAT-HLD-001"
 		(at 0 -6 0)
-		(layer "F.CrtYd")
+		(layer "F.Fab")
 		(hide yes)
 		(uuid "ae84a4c9-4ca3-47d2-8354-09fbb76fdc62")
 		(effects
@@ -27,7 +27,7 @@
 			)
 		)
 	)
-	(property "Datasheet" ""
+	(property "Datasheet" "${KIPRJMOD}/components/BAT-HLD-001/bat-hld-001.pdf"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
@@ -39,7 +39,7 @@
 			)
 		)
 	)
-	(property "Description" ""
+	(property "Description" "BAT: CR2025/CR2032 SMT coin-cell holder BAT-HLD-001"
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)

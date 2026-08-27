@@ -39,7 +39,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "${KIPRJMOD}/components/R-0402/C25744.pdf"
 			(at 0 -27.94 0)
 			(effects
 				(font
