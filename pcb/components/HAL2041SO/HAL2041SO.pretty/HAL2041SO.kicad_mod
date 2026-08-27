@@ -157,7 +157,7 @@
 		(uuid "49738bc5-b807-435b-a28a-c358bb235fa7")
 	)
 	(embedded_fonts no)
-	(model "${KIPRJMOD}/components/HAL2041SO/HAL2041SO.step"
+	(model "${KIPRJMOD}/components/HAL2041SO/HAL2041SO.wrl"
 		(offset
 			(xyz 0 0 0)
 		)
@@ -165,7 +165,7 @@
 			(xyz 1 1 1)
 		)
 		(rotate
-			(xyz 0 0 90)
+			(xyz 0 0 0)
 		)
 	)
 )

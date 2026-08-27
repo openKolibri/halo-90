@@ -165,7 +165,7 @@
 		(uuid "bf1cf6ed-6396-414f-8a36-ce13f4073256")
 	)
 	(embedded_fonts no)
-	(model "${KIPRJMOD}/components/R-0402/R-0402.stp"
+	(model "${KIPRJMOD}/components/SPH0641LU4H/SPH0641LU4H.wrl"
 		(offset
 			(xyz 0 0 0)
 		)
@@ -173,7 +173,7 @@
 			(xyz 1 1 1)
 		)
 		(rotate
-			(xyz 0 0 90)
+			(xyz 0 0 0)
 		)
 	)
 )
